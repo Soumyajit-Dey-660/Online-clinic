@@ -8,7 +8,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
    <!-- Site Metas -->
-   <title>Life Care - Responsive HTML5 Multi Page Template</title>
+   <title>Life Care - An online 24x7 clinic</title>
    <meta name="keywords" content="">
    <meta name="description" content="">
    <meta name="author" content="">
@@ -77,8 +77,9 @@
                         <li><a data-scroll href="#service">Services</a></li>
                         <li><a data-scroll href="#doctors">Doctors</a></li>
                         <li><a data-scroll href="#price">Price</a></li>
-						<li><a data-scroll href="#testimonials">Testimonials</a></li>
+						      <li><a data-scroll href="#testimonials">Testimonials</a></li>
                         <li><a data-scroll href="#getintouch">Contact</a></li>
+                        <li><a data-scroll href="{{ url_for('nearby_map') }}">Nearby Medical Stores</a></li>
                         {% if current_user.is_authenticated %}
                         <li><a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a></li>
                         <li><a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a></li>
@@ -130,7 +131,7 @@
                   <div class="service-time one" style="background:#2895f1;">
                      <span class="info-icon"><i class="fa fa-ambulance" aria-hidden="true"></i></span>
                      <h3>Emergency Case</h3>
-                     <p>During any sort of emergency you can dial on the toll free number below, aid would reach you within 15 minutes assured.</p>
+                     <p>During any sort of emergency you can dial on the toll free number below, aid would reach you within 30 minutes assured.</p>
                       <p>11204050</p>
                   </div>
                </div>
