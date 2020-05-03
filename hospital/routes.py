@@ -3,8 +3,8 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
-from hospital.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
-                              RequestResetForm, ResetPasswordForm)
+from hospital.forms import (RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, 
+                              LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm)
 from hospital.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -13,8 +13,6 @@ from flask_mail import Message
 @app.route("/")
 @app.route("/home")
 def home():
-    # page = request.args.get('page', 1, type=int)
-    # posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template('home.html')
 
 
@@ -29,13 +27,46 @@ def register():
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        if form.yes_doctor.data and form.no_doctor.data:
+            flash('Please choose any one of the following!', 'danger')
+        elif form.yes_doctor.data:
+            return redirect(url_for('doctor_register'))
+        elif form.no_doctor.data:
+            return redirect(url_for('user_register'))
+        elif not form.yes_doctor.data and not form.no_doctor.data:
+            flash('You have to choose a option!', 'danger')
+        
+    return render_template('register.html', form=form)
+
+
+@app.route("/user_register", methods=['GET', 'POST'])
+def user_register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = UserRegistrationForm()
+    if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('user_register.html', title='User_Register', form=form)
+
+
+@app.route("/doctor_register", methods=['GET', 'POST'])
+def doctor_register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = DoctorRegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('doctor_register.html', title='Doctor_Register', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
