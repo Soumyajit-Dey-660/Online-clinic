@@ -5,7 +5,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
 from hospital.forms import (RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, 
                               LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm)
-from hospital.models import User
+from hospital.models import User, NormalUser, DoctorUser
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -30,12 +30,19 @@ def register():
         if form.yes_doctor.data and form.no_doctor.data:
             flash('Please choose any one of the following!', 'danger')
         elif form.yes_doctor.data:
+            count = DoctorUser.query.count()
+            user = User(user_id=None, doctor_id=count+1)
+            db.session.add(user)
+            db.session.commit()
             return redirect(url_for('doctor_register'))
         elif form.no_doctor.data:
+            count = NormalUser.query.count()
+            user = User(user_id=count+1, doctor_id=None)
+            db.session.add(user)
+            db.session.commit()
             return redirect(url_for('user_register'))
         elif not form.yes_doctor.data and not form.no_doctor.data:
-            flash('You have to choose a option!', 'danger')
-        
+            flash('You have to choose a option!', 'danger')     
     return render_template('register.html', form=form)
 
 
@@ -46,12 +53,12 @@ def user_register():
     form = UserRegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = NormalUser(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
-    return render_template('user_register.html', title='User_Register', form=form)
+    return render_template('user_register.html', title='User-Register', form=form)
 
 
 @app.route("/doctor_register", methods=['GET', 'POST'])
@@ -61,12 +68,12 @@ def doctor_register():
     form = DoctorRegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = DoctorUser(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
-    return render_template('doctor_register.html', title='Doctor_Register', form=form)
+    return render_template('doctor_register.html', title='Doctor-Register', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -75,7 +82,7 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = NormalUser.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
@@ -144,7 +151,7 @@ def reset_request():
         return redirect(url_for('home'))
     form = RequestResetForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = NormalUser.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
         flash('An email has been sent with instructions to reset your password.', 'info')
         return redirect(url_for('login'))
@@ -155,7 +162,7 @@ def reset_request():
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    user = User.verify_reset_token(token)
+    user = NormalUser.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('reset_request'))
