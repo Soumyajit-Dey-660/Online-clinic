@@ -9,7 +9,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=True)
     doctor_id = db.Column(db.Integer, nullable=True)
@@ -28,7 +28,7 @@ class NormalUser(db.Model, UserMixin):
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.user_id}).decode('utf-8')
+        return s.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
@@ -37,7 +37,7 @@ class NormalUser(db.Model, UserMixin):
             user_id = s.loads(token)['user_id']
         except:
             return None
-        return User.query.get(user_id)
+        return NormalUser.query.get(user_id)
 
     def __repr__(self):
         return f"Normal-User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -53,7 +53,7 @@ class DoctorUser(db.Model, UserMixin):
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.doctor_id}).decode('utf-8')
+        return s.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
@@ -62,7 +62,7 @@ class DoctorUser(db.Model, UserMixin):
             user_id = s.loads(token)['user_id']
         except:
             return None
-        return User.query.get(user_id)
+        return DoctorUser.query.get(user_id)
 
     def __repr__(self):
         return f"Doctor('{self.username}', '{self.email}', '{self.image_file}')"
