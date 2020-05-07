@@ -4,7 +4,7 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
 from hospital.forms import (RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, 
-                              LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm)
+                              LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices)
 from hospital.models import User, NormalUser, DoctorUser
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -68,7 +68,8 @@ def doctor_register():
     form = DoctorRegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = DoctorUser(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = DoctorUser(username=form.username.data, email=form.email.data, password=hashed_password, 
+                                consultation_fee=form.consultation_fee.data, location=form.location.data, specialist=dict(specialist_choices).get(form.specialist.data))
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')

@@ -49,6 +49,9 @@ class DoctorUser(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    consultation_fee = db.Column(db.Integer, nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    specialist = db.Column(db.String(50), nullable=False)
     # posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
@@ -71,7 +74,7 @@ class DoctorUser(db.Model, UserMixin):
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     booked_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    booked_for = db.Column()
+    booked_for = db.Column(db.Integer, nullable=False,unique=True)
     doctor_id = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('normal_user.id'), nullable=False)
 

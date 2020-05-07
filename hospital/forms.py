@@ -1,10 +1,11 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import IntegerField, StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from hospital.models import User, NormalUser, DoctorUser
 
+specialist_choices = [('Cardiologist', 'cardiologist'), ('Dermatologist', 'dermatologist'), ('General physician', 'general physician'), ('Pediatrician', 'pediatrician'), ('Neurologist', 'neurologist'), ('Psychiatrist', 'psychiatrist')]
 
 class RegistrationForm(FlaskForm):
     yes_doctor = BooleanField('Yes')
@@ -41,6 +42,9 @@ class DoctorRegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
+    specialist = SelectField(u'Specialist', choices=specialist_choices)
+    consultation_fee = IntegerField('Consultation fee', validators=[DataRequired()])
+    location = StringField('Address', validators=[DataRequired(), Length(max=100)])
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
