@@ -24,7 +24,7 @@ class NormalUser(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    # posts = db.relationship('Post', backref='author', lazy=True)
+    appointments = db.relationship('Appointment', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -66,6 +66,15 @@ class DoctorUser(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Doctor('{self.username}', '{self.email}', '{self.image_file}')"
+
+
+class Appointment(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    booked_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    booked_for = db.Column()
+    doctor_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('normal_user.id'), nullable=False)
+
 
 # class Post(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
