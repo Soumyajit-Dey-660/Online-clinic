@@ -6,25 +6,19 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    user = User.query.get(int(user_id))
+    if user is None:
+        user = Doctor.query.get(int(user_id))
+    return user
 
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=True)
-    doctor_id = db.Column(db.Integer, nullable=True)
-
-    def __repr__(self):
-        return f"User('{self.id}', '{self.user_id}', '{self.doctor_id}')"
-
-
-class NormalUser(db.Model, UserMixin):
-    id = db.Column(db.Integer, db.ForeignKey('user.user_id'), autoincrement=True, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    appointments = db.relationship('Appointment', backref='author', lazy=True)
+    appointments = db.relationship('Appointment', backref='user', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -43,8 +37,8 @@ class NormalUser(db.Model, UserMixin):
         return f"Normal-User('{self.username}', '{self.email}', '{self.image_file}')"
 
 
-class DoctorUser(db.Model, UserMixin):
-    id = db.Column(db.Integer, db.ForeignKey('user.doctor_id'), autoincrement=True, primary_key=True)
+class Doctor(db.Model, UserMixin):
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
@@ -52,6 +46,7 @@ class DoctorUser(db.Model, UserMixin):
     consultation_fee = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String(100), nullable=False)
     specialist = db.Column(db.String(50), nullable=False)
+    appointments = db.relationship('Appointment', backref='doctor', lazy=True)
     # posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
@@ -74,9 +69,9 @@ class DoctorUser(db.Model, UserMixin):
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     booked_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    booked_for = db.Column(db.Integer, nullable=False,unique=True)
-    doctor_id = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('normal_user.id'), nullable=False)
+    booked_for = db.Column(db.Integer, nullable=False, default=datetime.utcnow) # CHANGE LATER
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 # class Post(db.Model):

@@ -3,9 +3,9 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
-from hospital.forms import (RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, 
-                              LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices)
-from hospital.models import User, NormalUser, DoctorUser
+from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, 
+                              LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
+from hospital.models import User, Doctor, Appointment
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -30,16 +30,8 @@ def register():
         if form.yes_doctor.data and form.no_doctor.data:
             flash('Please choose any one of the following!', 'danger')
         elif form.yes_doctor.data:
-            count = DoctorUser.query.count()
-            user = User(user_id=None, doctor_id=count+1)
-            db.session.add(user)
-            db.session.commit()
             return redirect(url_for('doctor_register'))
         elif form.no_doctor.data:
-            count = NormalUser.query.count()
-            user = User(user_id=count+1, doctor_id=None)
-            db.session.add(user)
-            db.session.commit()
             return redirect(url_for('user_register'))
         elif not form.yes_doctor.data and not form.no_doctor.data:
             flash('You have to choose a option!', 'danger')     
@@ -53,7 +45,7 @@ def user_register():
     form = UserRegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = NormalUser(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
@@ -68,7 +60,7 @@ def doctor_register():
     form = DoctorRegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = DoctorUser(username=form.username.data, email=form.email.data, password=hashed_password, 
+        user = Doctor(username=form.username.data, email=form.email.data, password=hashed_password, 
                                 consultation_fee=form.consultation_fee.data, location=form.location.data, specialist=dict(specialist_choices).get(form.specialist.data))
         db.session.add(user)
         db.session.commit()
@@ -83,9 +75,9 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = NormalUser.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is None:
-            user = DoctorUser.query.filter_by(email=form.email.data).first()
+            user = Doctor.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
@@ -154,9 +146,9 @@ def reset_request():
         return redirect(url_for('home'))
     form = RequestResetForm()
     if form.validate_on_submit():
-        user = NormalUser.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is None:
-            user = DoctorUser.query.filter_by(email=form.email.data).first()
+            user = Doctor.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
         flash('An email has been sent with instructions to reset your password.', 'info')
         return redirect(url_for('login'))
@@ -167,9 +159,9 @@ def reset_request():
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    user = NormalUser.verify_reset_token(token)
+    user = Normal.verify_reset_token(token)
     if user is None:
-        user = DoctorUser.verify_reset_token(token)
+        user = Doctor.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('reset_request'))
@@ -183,5 +175,21 @@ def reset_token(token):
     return render_template('reset_token.html', title='Reset Password', form=form)
 
 @app.route("/nearby_medical_stores")
+@login_required
 def nearby_map():
     return render_template('new_map.html')
+
+
+@app.route("/book_appointment", methods=['GET', 'POST'])
+@login_required
+def new_appointment():
+    form = AppointmentForm()
+    if form.validate_on_submit():
+        name = dict(doctor_list).get(form.doctor.data)
+        doctor = Doctor.query.filter_by(username=name).first()
+        appointment = Appointment(doctor_id=doctor.id, user=current_user)
+        db.session.add(appointment)
+        db.session.commit()
+        flash('Your appointment has been booked', 'success')
+        return redirect(url_for('new_appointment'))
+    return render_template('new_appointment.html', title='New Appointment', form=form)
