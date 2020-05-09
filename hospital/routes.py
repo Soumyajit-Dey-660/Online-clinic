@@ -227,10 +227,10 @@ def delete_appointment(appointment_id):
     appointment = Appointment.query.get_or_404(appointment_id)
     if appointment.user != current_user:
         abort(403)
-    db.session.delete(post)
+    db.session.delete(appointment)
     db.session.commit()
-    flash('Your post has been deleted!', 'success')
-    return redirect(url_for('home'))
+    flash('Your appointment has been deleted!', 'success')
+    return redirect(url_for('appointment_history', title="Appointment-History", username=current_user.username))
 
 
 
