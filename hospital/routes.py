@@ -193,3 +193,54 @@ def new_appointment():
         flash('Your appointment has been booked', 'success')
         return redirect(url_for('new_appointment'))
     return render_template('new_appointment.html', title='New Appointment', form=form)
+
+
+@app.route("/appointment/<int:appointment_id>")
+def appointment(appointment_id):
+    appointment = Appointment.query.get_or_404(appointment_id)
+    return render_template('appointment.html', title='Appointment with '+appointment.doctor.username, appointment=appointment)
+
+
+@app.route("/appointment/<int:appointment_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_appointment(appointment_id):
+    appointment = Appointment.query.get_or_404(appointment_id)
+    if appointment.user != current_user:
+        abort(403)
+    form = AppointmentForm()
+    if form.validate_on_submit():
+        name = dict(doctor_list).get(form.doctor.data)
+        doctor = Doctor.query.filter_by(username=name).first()
+        appointment.doctor = doctor
+        db.session.commit()
+        flash('Your appointment has been updated!', 'success')
+        return redirect(url_for('appointment', appointment_id=appointment_id))
+    elif request.method == 'GET':
+        form.doctor.data = appointment.doctor.username
+    return render_template('new_appointment.html', title='Update appointment',
+                           form=form, legend='Update Appointment')
+
+
+@app.route("/appointment/<int:appointment_id>/delete", methods=['POST'])
+@login_required
+def delete_appointment(appointment_id):
+    appointment = Appointment.query.get_or_404(appointment_id)
+    if appointment.user != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home'))
+
+
+
+@app.route("/appointment_history/<string:username>", methods=['GET', 'POST'])
+@login_required
+def appointment_history(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    print(f'User is {user}')
+    appointments = Appointment.query.filter_by(user=user)\
+        .order_by(Appointment.booked_on.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user)
