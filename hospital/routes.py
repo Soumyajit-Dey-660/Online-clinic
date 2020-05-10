@@ -3,17 +3,27 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
+from hospital.models import User, Doctor, Appointment
 from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, 
                               LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
-from hospital.models import User, Doctor, Appointment
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
+count = 0
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html')
+    try:
+        user = User.query.filter_by(username=current_user.username).first()
+        doc = Doctor.query.filter_by(username=current_user.username).first()
+        if user:
+            flag = 1
+        elif doc:
+            flag = 2
+    except:
+        flag = 0
+    return render_template('home.html',flag=flag)
 
 
 @app.route("/about")
@@ -45,7 +55,10 @@ def user_register():
     form = UserRegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        global count
+        count += 1
+        user = User(id=count, username=form.username.data, email=form.email.data, password=hashed_password)
+        print(f'IN USER - COUNT = {count}')
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
@@ -60,8 +73,11 @@ def doctor_register():
     form = DoctorRegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = Doctor(username=form.username.data, email=form.email.data, password=hashed_password, 
+        global count
+        count += 1
+        user = Doctor(id=count, username=form.username.data, email=form.email.data, password=hashed_password, 
                                 consultation_fee=form.consultation_fee.data, location=form.location.data, specialist=dict(specialist_choices).get(form.specialist.data))
+        print(f'IN Doctor - COUNT = {count}')
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')

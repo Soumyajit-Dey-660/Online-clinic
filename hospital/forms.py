@@ -1,16 +1,18 @@
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from wtforms import IntegerField, StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from hospital.models import User, Doctor
+from hospital import app
+from hospital.models import User, Appointment, Doctor
+
 
 specialist_choices = [('Cardiologist', 'cardiologist'), ('Dermatologist', 'dermatologist'), ('General physician', 'general physician'), ('Pediatrician', 'pediatrician'), ('Neurologist', 'neurologist'), ('Psychiatrist', 'psychiatrist')]
 doctor_list = []
-doctors = Doctor.query.all()
-for doc in doctors:
+docs = Doctor.query.all()
+for doc in docs:
     doctor_list.append((doc.username, doc.username))
-
 
 class RegistrationForm(FlaskForm):
     yes_doctor = BooleanField('Yes')
