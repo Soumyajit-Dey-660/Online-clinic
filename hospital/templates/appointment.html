@@ -13,7 +13,7 @@
           </div>
         {% endif %}
       </div>
-      <p class="article-content">{{ appointment.doctor.username }}</p>
+      <p class="article-content">Appointment with {{ appointment.doctor.username }} on {{ appointment.booked_for.strftime('%Y-%m-%d') }} </p>
       <!-- <p class="article-content">{{ appointment.booked_for }}</p> -->
     </div>
   </article>

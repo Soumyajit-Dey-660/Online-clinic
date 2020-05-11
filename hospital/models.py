@@ -69,7 +69,7 @@ class Doctor(db.Model, UserMixin):
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     booked_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    booked_for = db.Column(db.Integer, nullable=False, default=datetime.utcnow) # CHANGE LATER
+    booked_for = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) # CHANGE LATER
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
