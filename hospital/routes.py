@@ -230,7 +230,7 @@ def update_appointment(appointment_id):
         appointment.doctor = doctor
         db.session.commit()
         flash('Your appointment has been updated!', 'success')
-        return redirect(url_for('appointment', appointment_id=appointment_id))
+        return redirect(url_for('appointment_history', username=current_user.username))
     elif request.method == 'GET':
         form.doctor.data = appointment.doctor.username
     return render_template('new_appointment.html', title='Update appointment',
@@ -251,7 +251,6 @@ def delete_appointment(appointment_id):
 
 
 @app.route("/appointment_history/<string:username>", methods=['GET', 'POST'])
-@login_required
 def appointment_history(username):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
@@ -260,3 +259,13 @@ def appointment_history(username):
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=5)
     return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user)
+
+
+@app.route("/appointments_history/<string:username>", methods=['GET', 'POST'])
+def doc_appointment_history(username):
+    page = request.args.get('page', 1, type=int)
+    doctor = Doctor.query.filter_by(username=username).first_or_404()
+    appointments_with = Appointment.query.filter_by(doctor=doctor)\
+        .order_by(Appointment.booked_on.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template('doc_booked_appointments.html', title="Appointment-history", appointments_with=appointments_with, doctor=doctor)

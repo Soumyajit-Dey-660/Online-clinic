@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1 class="mb-3">Appointments booked by {{ user.username }} ({{ appointments.total }})</h1>
+    <h3 class="mb-4">Appointments booked by {{ user.username }} ({{ appointments.total }})</h3>
     {% for appointment in appointments.items %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + appointment.user.image_file) }}">
@@ -9,8 +9,8 @@
               <p class="mr-2">{{ appointment.user.username }}</p> 
               <small class="text-muted">{{ appointment.booked_on.strftime('%Y-%m-%d') }}</small>
             </div>
-            <h4><a class="article-title" href="{{ url_for('appointment', appointment_id=appointment.id) }}">Click here for update or delete</a></h4>
-            <p class="article-content">{{ appointment.doctor.username }}</p>
+            <h6><a class="article-title" href="{{ url_for('appointment', appointment_id=appointment.id) }}">Click here to update or delete</a></h6>
+            <p class="article-content"> Doctor: {{ appointment.doctor.username }}</p>
           </div>
         </article>
     {% endfor %}
