@@ -4,8 +4,8 @@ from PIL import Image
 from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
-from hospital.models import User, Doctor, Appointment
-from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, 
+from hospital.models import User, Doctor, Appointment, Timing, Eprescription
+from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, 
                               LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -78,7 +78,8 @@ def doctor_register():
         count += 1
         user = Doctor(id=count, username=form.username.data, email=form.email.data, password=hashed_password, 
                                 consultation_fee=form.consultation_fee.data, location=form.location.data, specialist=dict(specialist_choices).get(form.specialist.data))
-        print(f'IN Doctor - COUNT = {count}')
+        doc_timing = Timing(id=count)
+        db.session.add(doc_timing)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
@@ -263,7 +264,7 @@ def appointment_history(username):
     print(f'User is {user}')
     appointments = Appointment.query.filter_by(user=user)\
         .order_by(Appointment.booked_on.desc())\
-        .paginate(page=page, per_page=5)
+        .paginate(page=page, per_page=10)
     return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user)
 
 
@@ -275,3 +276,32 @@ def doc_appointment_history(username):
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=5)
     return render_template('doc_booked_appointments.html', title="Appointment-history", appointments_with=appointments_with, doctor=doctor)
+
+@app.route("/timing/<string:doctor_name>", methods=['GET', 'POST'])
+def timing(doctor_name):
+    form = TimingForm()
+    if form.validate_on_submit():
+        timing = Timing.query.get(current_user.id)
+        timing.monday = form.monday.data
+        timing.tuesday = form.tuesday.data
+        timing.wednesday = form.wednesday.data
+        timing.thursday = form.thursday.data
+        timing.friday = form.friday.data
+        timing.saturday = form.saturday.data
+        timing.sunday = form.sunday.data
+        db.session.commit()
+        flash('Your timings has been updated successfully', 'success')
+        return redirect(url_for('timing', doctor_name=current_user.username))
+    elif request.method == 'GET':
+        timing = Timing.query.get(current_user.id)
+        form.monday.data = timing.monday
+        form.tuesday.data = timing.tuesday
+        form.wednesday.data = timing.wednesday
+        form.thursday.data = timing.thursday
+        form.friday.data = timing.friday
+        form.saturday.data = timing.saturday
+        form.sunday.data = timing.sunday
+    return render_template('timing.html', title='Update your timings', doctor_name=current_user.username, form=form)
+
+
+

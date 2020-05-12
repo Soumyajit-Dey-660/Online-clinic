@@ -47,6 +47,7 @@ class Doctor(db.Model, UserMixin):
     location = db.Column(db.String(100), nullable=False)
     specialist = db.Column(db.String(50), nullable=False)
     appointments = db.relationship('Appointment', backref='doctor', lazy=True)
+    timings = db.relationship('Timing', backref='doctor', lazy=True)
     # posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
@@ -73,6 +74,22 @@ class Appointment(db.Model):
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+
+class Timing(db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('doctor.id'), primary_key=True)
+    monday = db.Column(db.String(50), default=None)
+    tuesday = db.Column(db.String(50), default=None)
+    wednesday = db.Column(db.String(50), default=None)
+    thursday = db.Column(db.String(50), default=None)
+    friday = db.Column(db.String(50), default=None)
+    saturday = db.Column(db.String(50), default=None)
+    sunday = db.Column(db.String(50), default=None)
+
+class Eprescription(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    content = db.Column(db.Text(), nullable=False)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 # class Post(db.Model):

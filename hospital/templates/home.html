@@ -97,6 +97,7 @@
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 120px" href="{{ url_for('nearby_map') }}">Pharmacy near me</a>
                   {% elif flag == 2 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('doc_appointment_history', username=current_user.username) }}">Appointments with you</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('timing', doctor_name=current_user.username) }}">Timing</a>
                   {% endif %}
                   
                   {% if current_user.is_authenticated %}
@@ -193,7 +194,7 @@
                <div class="col-md-6">
                   <div class="message-box">
                      <h4>What We Do</h4>
-                     <h2>Medic Assistance</h2>
+                     <h2>Medic Assistance (Coming Soon)</h2>
                      <p class="lead">We are here to provide you medical assistance and all sort of health related solutions.</p>
                      <p> Our services are immediate and legit.   </p>
                      <a href="#services" data-scroll class="btn btn-light btn-radius btn-brd grd1 effect-1">Learn More</a>
@@ -366,7 +367,14 @@
                               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                  <div class="row">
                                     <div class="form-group">
-                                       <div class="center"><button type="submit">Submit</button></div>
+                                       <div class="button center"><a style='display: inline-block;
+                                          background: #21759b;
+                                          border-radius: 4px;
+                                          font-family: "arial-black";
+                                          font-size: 16px;
+                                          color: #FFF;
+                                          padding: 6px 10px;
+                                          cursor: pointer; ' href="/book_appointment">Submit</a></div>
                                     </div>
                                  </div>
                               </div>

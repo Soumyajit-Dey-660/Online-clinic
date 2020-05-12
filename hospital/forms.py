@@ -15,6 +15,8 @@ docs = Doctor.query.all()
 for doc in docs:
     doctor_list.append((doc.username, doc.username))
 
+
+
 class RegistrationForm(FlaskForm):
     yes_doctor = BooleanField('Yes')
     no_doctor = BooleanField('No')
@@ -125,3 +127,13 @@ class AppointmentForm(FlaskForm):
     doctor = SelectField(u'Doctor', choices=doctor_list)
     date = DateField('Date',format='%Y-%m-%d')
     submit = SubmitField('Book Appointment')
+
+class TimingForm(FlaskForm):
+    monday = StringField('Monday')
+    tuesday = StringField('Tuesday')
+    wednesday = StringField('Wednesday')
+    thursday = StringField('Thursday')
+    friday = StringField('Friday')
+    saturday = StringField('Saturday')
+    sunday = StringField('Sunday')
+    submit = SubmitField('Save Timings')
