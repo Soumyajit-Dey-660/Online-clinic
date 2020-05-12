@@ -76,6 +76,7 @@ def doctor_register():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         global count
         count += 1
+        print(f'IN DOCTOR - COUNT = {count}')
         user = Doctor(id=count, username=form.username.data, email=form.email.data, password=hashed_password, 
                                 consultation_fee=form.consultation_fee.data, location=form.location.data, specialist=dict(specialist_choices).get(form.specialist.data))
         doc_timing = Timing(id=count)
