@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     appointments = db.relationship('Appointment', backref='user', lazy=True)
+    eprescriptions = db.relationship('Eprescription', backref='user', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -48,6 +49,7 @@ class Doctor(db.Model, UserMixin):
     specialist = db.Column(db.String(50), nullable=False)
     appointments = db.relationship('Appointment', backref='doctor', lazy=True)
     timings = db.relationship('Timing', backref='doctor', lazy=True)
+    eprescriptions = db.relationship('Eprescription', backref='doctor', lazy=True)
     # posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
@@ -86,8 +88,8 @@ class Timing(db.Model):
     sunday = db.Column(db.String(50), default=None)
 
 class Eprescription(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.Text(), nullable=False)
+    id = db.Column(db.Integer, db.ForeignKey('appointment.id'), primary_key=True)
+    content = db.Column(db.Text(), default=None)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

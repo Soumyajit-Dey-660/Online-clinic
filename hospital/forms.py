@@ -128,6 +128,7 @@ class AppointmentForm(FlaskForm):
     date = DateField('Date',format='%Y-%m-%d')
     submit = SubmitField('Book Appointment')
 
+
 class TimingForm(FlaskForm):
     monday = StringField('Monday')
     tuesday = StringField('Tuesday')
@@ -137,3 +138,8 @@ class TimingForm(FlaskForm):
     saturday = StringField('Saturday')
     sunday = StringField('Sunday')
     submit = SubmitField('Save Timings')
+
+
+class EprescriptionForm(FlaskForm):
+    content = TextAreaField('Prescribe')
+    submit = SubmitField('Save Prescription')

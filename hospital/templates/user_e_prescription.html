@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+  <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + prescription.doctor.image_file) }}">
+    <div class="media-body">
+      <div class="article-metadata">
+        <p class="mr-2"></p>Doctor:  {{ prescription.doctor.username }}</p>
+      </div>
+      <p class="article-content">{{ prescription.content }}</p>
+    </div>
+  </article>
+{% endblock content %}

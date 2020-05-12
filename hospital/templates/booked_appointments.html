@@ -84,6 +84,7 @@
                 <th>Booked for</th>
                 <th>Consultation fee</th>
                 <th>Update or delete</th>
+                <th>E-prescription</th>
             </tr>
           {% for appointment in appointments.items %}
             <tr>
@@ -93,6 +94,7 @@
                 <td>{{ appointment.booked_for.strftime('%Y-%m-%d') }}</td>
                 <td>{{ appointment.doctor.consultation_fee }}</td>
                 <td><a class="article-title" href="{{ url_for('appointment', appointment_id=appointment.id) }}">Click here</a></td>
+                <td><a class="article-title" href="{{ url_for('user_e_prescription', prescription_id=appointment.id) }}">Click here</a></td>
             </tr> 
           {% endfor %}
         </table>

@@ -88,7 +88,7 @@
                     <td>{{ appointment.user.username }}</td>
                     <td>{{ appointment.booked_on.strftime('%Y-%m-%d') }}</td>
                     <td>{{ appointment.booked_for.strftime('%Y-%m-%d') }}</td>
-                    <td><p>Click here</p></td> 
+                    <td><a class="article-title" href="{{ url_for('doc_e_prescription', prescription_id=appointment.id) }}">Click here</a></td>
                 </tr>
             {% endfor %}
             </table>    

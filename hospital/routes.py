@@ -6,7 +6,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
 from hospital.models import User, Doctor, Appointment, Timing, Eprescription
 from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, 
-                              LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
+                              EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -214,6 +214,9 @@ def new_appointment():
             appointment = Appointment(booked_for=form.date.data,doctor_id=doctor.id, user=current_user)
             db.session.add(appointment)
             db.session.commit()
+            e_prescription = Eprescription(id=appointment.id,user=current_user, doctor_id=doctor.id)
+            db.session.add(e_prescription)
+            db.session.commit()
             flash('Your appointment has been booked', 'success')
             return redirect(url_for('new_appointment'))
     return render_template('new_appointment.html', title='New Appointment', form=form)
@@ -276,6 +279,7 @@ def doc_appointment_history(username):
     appointments_with = Appointment.query.filter_by(doctor=doctor)\
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=5)
+    
     return render_template('doc_booked_appointments.html', title="Appointment-history", appointments_with=appointments_with, doctor=doctor)
 
 @app.route("/timing/<string:doctor_name>", methods=['GET', 'POST'])
@@ -305,4 +309,21 @@ def timing(doctor_name):
     return render_template('timing.html', title='Update your timings', doctor_name=current_user.username, form=form)
 
 
+@app.route('/doc_e_prescription/<int:prescription_id>', methods=['GET', 'POST'])
+def doc_e_prescription(prescription_id):
+    prescription = Eprescription.query.get(prescription_id)
+    form = EprescriptionForm()
+    if form.validate_on_submit():
+        prescription.content = form.content.data
+        db.session.commit()
+        flash('Your prescription has been saved!', 'success')
+        return redirect(url_for('doc_appointment_history', username=current_user.username))
+    elif request.method == 'GET':
+        form.content.data = prescription.content
+    return render_template('doc_e_prescription.html', title="Edit-Prescription", form=form)
 
+
+@app.route('/user_e_prescription/<int:prescription_id>', methods=['GET', 'POST'])
+def user_e_prescription(prescription_id):
+    prescription = Eprescription.query.get(prescription_id)
+    return render_template('user_e_prescription.html', title="View-Prescription", prescription=prescription)
