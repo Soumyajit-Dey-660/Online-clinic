@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from wtforms import IntegerField, StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
+from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from hospital import app
 from hospital.models import User, Appointment, Doctor
@@ -122,4 +123,5 @@ class ResetPasswordForm(FlaskForm):
 
 class AppointmentForm(FlaskForm):
     doctor = SelectField(u'Doctor', choices=doctor_list)
+    date = DateField('Date',format='%Y-%m-%d')
     submit = SubmitField('Book Appointment')

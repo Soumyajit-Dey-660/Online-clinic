@@ -1,6 +1,7 @@
 import os
 import secrets
 from PIL import Image
+from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
 from hospital.models import User, Doctor, Appointment
@@ -201,13 +202,18 @@ def nearby_map():
 def new_appointment():
     form = AppointmentForm()
     if form.validate_on_submit():
-        name = dict(doctor_list).get(form.doctor.data)
-        doctor = Doctor.query.filter_by(username=name).first()
-        appointment = Appointment(doctor_id=doctor.id, user=current_user)
-        db.session.add(appointment)
-        db.session.commit()
-        flash('Your appointment has been booked', 'success')
-        return redirect(url_for('new_appointment'))
+        today = date.today()
+        if form.date.data < today:
+            flash('Please choose a valid date!', 'danger')
+            return redirect(url_for('new_appointment'))
+        else:
+            name = dict(doctor_list).get(form.doctor.data)
+            doctor = Doctor.query.filter_by(username=name).first()
+            appointment = Appointment(booked_for=form.date.data,doctor_id=doctor.id, user=current_user)
+            db.session.add(appointment)
+            db.session.commit()
+            flash('Your appointment has been booked', 'success')
+            return redirect(url_for('new_appointment'))
     return render_template('new_appointment.html', title='New Appointment', form=form)
 
 
