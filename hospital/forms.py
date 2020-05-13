@@ -2,11 +2,11 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import IntegerField, StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
+from wtforms import IntegerField, StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, FloatField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from hospital import app
-from hospital.models import User, Appointment, Doctor
+from hospital.models import User, Appointment, Doctor, Eprescription, Medicine
 
 
 specialist_choices = [('Cardiologist', 'cardiologist'), ('Dermatologist', 'dermatologist'), ('General physician', 'general physician'), ('Pediatrician', 'pediatrician'), ('Neurologist', 'neurologist'), ('Psychiatrist', 'psychiatrist')]
@@ -143,3 +143,16 @@ class TimingForm(FlaskForm):
 class EprescriptionForm(FlaskForm):
     content = TextAreaField('Prescribe')
     submit = SubmitField('Save Prescription')
+
+class MedicineForm(FlaskForm):
+    name = StringField('Medicine name', validators=[DataRequired()])
+    disease = StringField('Disease', validators=[DataRequired()])
+    # picture = FileField('Upload medicine picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
+    picture = StringField('Picture filename', validators=[DataRequired()])
+    manufactured_by = StringField('Manufactured by', validators=[DataRequired()])
+    price = FloatField('Price')
+    description = TextAreaField('Description', validators=[DataRequired()])
+    uses = TextAreaField('Uses', validators=[DataRequired()])
+    side_effects = TextAreaField('Side Effects')
+    substitutes = StringField('Substitute')
+    submit = SubmitField('Add Medicine')

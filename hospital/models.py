@@ -94,6 +94,19 @@ class Eprescription(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
+class Medicine(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(40), nullable=False)
+    disease = db.Column(db.String(20), nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    manufactured_by = db.Column(db.String(40), nullable=False)
+    price = db.Column(db.Float, default=None)
+    description = db.Column(db.Text, nullable=False)
+    uses = db.Column(db.Text, nullable=False)
+    side_effects = db.Column(db.Text, default=None)
+    substitutes = db.Column(db.String(30), default=None)
+
+
 # class Post(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     title = db.Column(db.String(100), nullable=False)

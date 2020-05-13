@@ -4,8 +4,8 @@ from PIL import Image
 from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
-from hospital.models import User, Doctor, Appointment, Timing, Eprescription
-from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, 
+from hospital.models import User, Doctor, Appointment, Timing, Eprescription, Medicine
+from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, MedicineForm,
                               EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -327,3 +327,52 @@ def doc_e_prescription(prescription_id):
 def user_e_prescription(prescription_id):
     prescription = Eprescription.query.get(prescription_id)
     return render_template('user_e_prescription.html', title="View-Prescription", prescription=prescription)
+
+
+# def save_med_picture(form_picture):
+#     random_hex = secrets.token_hex(8)
+#     _, f_ext = os.path.splitext(form_picture.filename)
+#     picture_fn = random_hex + f_ext
+#     picture_path = os.path.join(app.root_path, 'static/images/meds/', picture_fn)
+
+#     output_size = (200, 200)
+#     i = Image.open(form_picture)
+#     i.thumbnail(output_size)
+#     i.save(picture_path)
+
+#     return picture_fn
+
+@app.route('/add_medicine', methods=['GET', 'POST'])
+def add_medicine():
+    form = MedicineForm()
+    if form.validate_on_submit():
+        medicine = Medicine(name=form.name.data, disease=form.disease.data, image_file=form.picture.data, manufactured_by=form.manufactured_by.data,
+                                price=form.price.data, description=form.description.data, uses=form.uses.data, side_effects=form.side_effects.data, substitutes=form.substitutes.data)
+        db.session.add(medicine)
+        db.session.commit()
+        flash('Your medicine info has been saved!', 'success')
+        return redirect(url_for('add_medicine'))
+    return render_template('add_medicine.html', title="Add Medicine", form=form)
+
+
+@app.route('/medicines', methods=['GET', 'POST'])
+def medicines_disease():
+    return render_template('medicines.html', title="View Medicines", medicines=None)
+
+
+@app.route('/medicines/<string:disease_type>', methods=['GET', 'POST'])
+def medicines(disease_type):
+    medicines = Medicine.query.filter_by(disease=disease_type).all()
+    return render_template('medicines.html', medicines=medicines, title="View medicines for"+disease_type, disease_type=disease_type)
+
+
+@app.route('/medicine_display/<int:medicine_id>', methods=['GET', 'POST'])
+def medicine_display(medicine_id):
+    med = Medicine.query.get(medicine_id)
+    substitute = med.substitutes
+    if substitute:
+        sub = Medicine.query.filter_by(name=substitute).first()
+    else:
+        sub=None
+    return render_template('medicine_display.html', title="Description of medicine", med=med, sub=sub)
+
