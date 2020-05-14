@@ -1,4 +1,5 @@
 
+import re
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
@@ -10,6 +11,11 @@ from hospital.models import User, Appointment, Doctor, Eprescription, Medicine
 
 
 specialist_choices = [('Cardiologist', 'cardiologist'), ('Dermatologist', 'dermatologist'), ('General physician', 'general physician'), ('Pediatrician', 'pediatrician'), ('Neurologist', 'neurologist'), ('Psychiatrist', 'psychiatrist')]
+state_list = [('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Arunachal Pradesh'), ('Assam', 'Assam'), ('Bihar', 'Bihar'), ('Chhattisgarh', 'Chhattisgarh'), ('Goa', 'Goa'),
+                    ('Gujarat', 'Gujarat'), ('Haryana', 'Haryana'), ('Himachal Pradesh', 'Himachal Pradesh'), ('Jharkhand', 'Jharkhand'), ('Karnataka', 'Karnataka'), ('Kerala', 'Kerala'),
+                    ('Madhya Pradesh', 'Madhya Pradesh'), ('Maharashtra', 'Maharashtra'), ('Manipur', 'Manipur'), ('Meghalaya', 'Meghalaya'), ('Mizoram', 'Mizoram'), ('Nagaland', 'Nagaland'), 
+                    ('Odisha', 'Odisha'), ('Punjab', 'Punjab'), ('Rajasthan', 'Rajasthan'), ('Sikkim', 'Sikkim'), ('Tamil Nadu', 'Tamil Nadu'), ('Telangana', 'Telangana'), ('Tripura', 'Tripura'),
+                    ('Uttar Pradesh', 'Uttar Pradesh'), ('Uttarakhand', 'Uttarakhand'), ('West Bengal', 'West Bengal')]
 doctor_list = []
 docs = Doctor.query.all()
 for doc in docs:
@@ -31,7 +37,24 @@ class UserRegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
+    address = StringField('Address', validators=[DataRequired()])
+    state = SelectField(u'State', choices=state_list)
+    city = StringField('City', validators=[DataRequired()])
+    zipcode = StringField('Zipcode', validators=[DataRequired()])
+    phonenumber = StringField('Phone Number', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
+
+
+    def validate_phonenumber(self, phonenumber):
+        ph_no = phonenumber.data
+        fresh = ph_no.strip()
+        if len(fresh) != 10:
+            raise ValidationError('This is not a valid Phone number! Please enter a valid one')
+
+    def validate_zipcode(self, zipcode):
+        code = re.compile(r"\s*(\w\d\s*){3}\s*")
+        if not code.match(zipcode.data):
+            raise ValidationError('This is not a valid Zipcode! Please enter a valid one')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -148,7 +171,7 @@ class MedicineForm(FlaskForm):
     name = StringField('Medicine name', validators=[DataRequired()])
     disease = StringField('Disease', validators=[DataRequired()])
     # picture = FileField('Upload medicine picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
-    picture = StringField('Picture filename', validators=[DataRequired()])
+    picture = StringField('Picture filename')
     manufactured_by = StringField('Manufactured by', validators=[DataRequired()])
     price = FloatField('Price')
     description = TextAreaField('Description', validators=[DataRequired()])
@@ -156,3 +179,7 @@ class MedicineForm(FlaskForm):
     side_effects = TextAreaField('Side Effects')
     substitutes = StringField('Substitute')
     submit = SubmitField('Add Medicine')
+
+class UpdateCartForm(FlaskForm):
+    quantity = IntegerField('Select quantity', validators=[DataRequired()])
+    submit = SubmitField('Submit')

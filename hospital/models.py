@@ -18,8 +18,15 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    address = db.Column(db.String(80), nullable=False)
+    state = db.Column(db.String(20), nullable=False)
+    city = db.Column(db.String(20), nullable=False)
+    zipcode = db.Column(db.String(8), nullable=False)
+    phone_number = db.Column(db.String(12), unique=True, nullable=False)
     appointments = db.relationship('Appointment', backref='user', lazy=True)
     eprescriptions = db.relationship('Eprescription', backref='user', lazy=True)
+    carts = db.relationship('Cart', backref='user', lazy=True)
+    orders = db.relationship('Order', backref='user', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -76,6 +83,9 @@ class Appointment(db.Model):
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    def __repr__(self):
+        return f"Appointment('{self.booked_on}' with id '{self.id}')"
+
 
 class Timing(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('doctor.id'), primary_key=True)
@@ -87,11 +97,18 @@ class Timing(db.Model):
     saturday = db.Column(db.String(50), default=None)
     sunday = db.Column(db.String(50), default=None)
 
+    def __repr__(self):
+        return f"Timing('Monday {self.monday}', 'Tuesday {self.tuesday}', 'Wednesday {self.wednesday}',\
+                             'Thursday {self.thursday}', 'Friday {self.friday}', 'Saturday {self.saturday}', 'Sunday {self.sunday}')"
+
 class Eprescription(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('appointment.id'), primary_key=True)
     content = db.Column(db.Text(), default=None)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Eprescription('Content {self.content}' for id {self.id})"
 
 
 class Medicine(db.Model):
@@ -105,7 +122,46 @@ class Medicine(db.Model):
     uses = db.Column(db.Text, nullable=False)
     side_effects = db.Column(db.Text, default=None)
     substitutes = db.Column(db.String(30), default=None)
+    stock = db.Column(db.Integer, default=100)
+    carts = db.relationship('Cartitem', backref='medicine', lazy=True)
+    orders = db.relationship('Order', backref='medicine', lazy=True)
 
+    def __repr__(self):
+        return f"Medicine('{self.name}' for {self.disease})"
+
+
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    cartitems = db.relationship('Cartitem', backref='cart', lazy=True)
+
+
+class Cartitem(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cart_id = db.Column(db.Integer, db.ForeignKey('cart.id'))
+    medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
+    quantity = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"CartItem('id  {self.id}', cart_id {self.cart_id})"
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    bill_amount = db.Column(db.Float, nullable=False)
+    oredered_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
+    ordereditems = db.relationship('Ordereditem', backref='order', lazy=True)
+
+    def __repr__(self):
+        return f"Order(id {self.id} with total_amount {self.total_amount})"
+
+
+class Ordereditem(db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('order.id'), primary_key=True)
+    medicine_id = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
 
 # class Post(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)

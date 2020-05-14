@@ -4,8 +4,8 @@ from PIL import Image
 from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
-from hospital.models import User, Doctor, Appointment, Timing, Eprescription, Medicine
-from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, MedicineForm,
+from hospital.models import User, Doctor, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem
+from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, MedicineForm, UpdateCartForm,
                               EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -58,9 +58,13 @@ def user_register():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         global count
         count += 1
-        user = User(id=count, username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(id=count, username=form.username.data, email=form.email.data, password=hashed_password, 
+                                    address=form.address.data, state=form.state.data, city=form.city.data, zipcode=form.zipcode.data, phone_number=form.phonenumber.data)
         print(f'IN USER - COUNT = {count}')
         db.session.add(user)
+        db.session.commit()
+        cart = Cart(user_id=count)
+        db.session.add(cart)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
@@ -356,13 +360,15 @@ def add_medicine():
 
 
 @app.route('/medicines', methods=['GET', 'POST'])
+@login_required
 def medicines_disease():
     return render_template('medicines.html', title="View Medicines", medicines=None)
 
 
 @app.route('/medicines/<string:disease_type>', methods=['GET', 'POST'])
 def medicines(disease_type):
-    medicines = Medicine.query.filter_by(disease=disease_type).all()
+    page = request.args.get('page', 1, type=int)
+    medicines = Medicine.query.filter_by(disease=disease_type).paginate(page=page, per_page=5)
     return render_template('medicines.html', medicines=medicines, title="View medicines for"+disease_type, disease_type=disease_type)
 
 
@@ -375,4 +381,88 @@ def medicine_display(medicine_id):
     else:
         sub=None
     return render_template('medicine_display.html', title="Description of medicine", med=med, sub=sub)
+
+
+@app.route('/view_cart', methods=['GET', 'POST'])
+def view_cart():
+    page = request.args.get('page', 1, type=int)
+    cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
+    return render_template('view_cart.html', title="Shopping Cart", cartitems=cartitems)
+
+
+@app.route('/add_to_cart/<int:medicine_id>', methods=['GET', 'POST'])
+@login_required
+def add_to_cart(medicine_id):
+    try:
+        page = request.args.get('page', 1, type=int)
+        cartitem = Cartitem(cart_id=current_user.id, medicine_id=medicine_id, quantity=1)
+        db.session.add(cartitem)
+        db.session.commit()
+    except:
+        flash('Some unexpected error occured!', 'danger')
+        return redirect(url_for('view_cart'))
+    cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
+    flash('Item added to cart', 'success')
+    return render_template('view_cart.html', title="Shopping cart", cartitems=cartitems)
+
+
+@app.route('/cart/<int:item_id>', methods=['GET', 'POST'])
+def cart(item_id):
+    item = Cartitem.query.get_or_404(item_id)
+    print(f'ITEM {item}')
+    return render_template('cartitem.html', title='Cart-Item', item=item)
+    
+
+# @app.route('/cart/<int:item_id>/update', methods=['GET', 'POST'])
+# def update_cart(item_id):
+#     citem = Cartitem.query.get(item_id)
+#     form = UpdateCartForm()
+#     if form.validate_on_submit():
+#         if form.quantity.data <= 0:
+#             flash('Please select a valid quantity', 'danger')
+#             return redirect(url_for('update_cart', item_id=citem.id))
+#         elif form.quantity.data > 4:
+#             flash('Upto 4 stocks can be given per user', 'warning')
+#             return redirect(url_for('update_cart', item_id=citem.id))
+#         citem.quantity = form.quantity.data
+#         db.session.commit()
+#         flash('Your cart has been updated', 'success')
+#         return redirect(url_for('view_cart'))
+#     elif request.method == 'GET':
+#         form.quantity.data = citem.quantity
+#     return render_template('cartitem.html', title="Update or Delete Cart", form=form, item=citem)
+
+
+
+@app.route("/cart/<int:item_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_cart(item_id):
+    item = Cartitem.query.get_or_404(item_id)
+    form = UpdateCartForm()
+    if form.validate_on_submit():
+        if form.quantity.data <= 0:
+            flash('Please choose a valid quantity', 'danger')
+            return redirect(url_for('update_cart', item_id=item_id))
+        elif form.quantity.data > 4:
+            flash('Only 4 quantity is allowed per person', 'warning')
+            return redirect(url_for('update_cart', item_id=item_id))
+        item.quantity = form.quantity.data
+        db.session.commit()
+        flash('Your shopping cart has been updated!', 'success')
+        return redirect(url_for('view_cart'))
+    elif request.method == 'GET':
+        form.quantity.data = item.quantity
+    return render_template('update_cart.html', title="Update or Delete Cart", form=form, item=item)
+
+
+@app.route("/cart/<int:item_id>/delete", methods=['POST'])
+@login_required
+def delete_cart(item_id):
+    item = Cartitem.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit()
+    flash('Your item has been deleted!', 'success')
+    return redirect(url_for('view_cart'))
+
+
 
