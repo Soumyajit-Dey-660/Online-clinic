@@ -40,7 +40,7 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="{{ url_for('home') }}">Life Care</a>
+          <a class="navbar-brand mr-4" href="{{ url_for('home') }}">Hospital</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -48,7 +48,6 @@
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
-              <a class="nav-item nav-link" href="{{ url_for('medicines_disease') }}">Medicines</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -76,59 +75,48 @@
               {% endfor %}
             {% endif %}
           {% endwith %}        
-          <h3 class="mb-4">Shopping cart of {{ current_user.username }}</h3>
-          <table>
-            <tr>
-                <th>Medicine id</th>
-                <th>Medicine image</th>
-                <th>Medicine name</th>
-                <th>Medicine Price</th>
-                <th>Quantity</th>
-                <th>Update or delete</th>
-                <th>Subtotal</th>
-            </tr>
-          {% for item in cartitems.items %}
-            <tr>
-                <td>{{ item.medicine_id }}</td>
-                <td><img class="img-rounded" src="{{ url_for('static', filename='images/meds/' + item.medicine.image_file) }}"></td>
-                <td>{{ item.medicine.name }}</td>
-                <td>{{ item.medicine.price }}</td>
-                <td>{{ item.quantity }}</td>
-                <td><a class="article-title" href="{{ url_for('cart', item_id=item.id) }}">Click here</a></td>
-                <td>{{ item.total_price }}</td>
-            </tr> 
-          {% endfor %}
-        </table>
-          {% for page_num in cartitems.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          <h3 class="mb-4">Your order details</h3>   
+            <table>
+                <tr>
+                  <th>Medicine Name</th>
+                  <th>Quantity</th>
+                  <th>Total Price</th>
+                </tr>
+            {% for item in items.items %}
+                <tr>
+                    <td>{{ item.medicine_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.total_price }}</td>
+                </tr>
+            {% endfor %}
+            </table>    
+            {% for page_num in items.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
-              {% if cartitems.page == page_num %}
-              </br><a class="btn btn-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
-              {% else %}
-              </br> <a class="btn btn-outline-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
-              {% endif %}
+                {% if items.page == page_num %}
+                </br><a class="btn btn-info mb-4" href="{{ url_for('order_details', order_id=order_id, page=page_num) }}">{{ page_num }}</a>
+                {% else %}
+                </br><a class="btn btn-outline-info mb-4" href="{{ url_for('order_details', order_id=order_id, page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
             {% else %}
-              ...
+                ...
             {% endif %}
-          {% endfor %}
-      </br>
-      <h4>Grand Total:  Rs.{{ grand_total }}</h4>
-    </br><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('place_order') }}">Place Order</a>
+            {% endfor %}
+            </div>
+            <div class="col-md-4">
+            <div class="content-section">
+                <h3>Our Sidebar</h3>
+                <p class='text-muted'>Check these out!
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-light">24x7 Ambulance</li>
+                    <li class="list-group-item list-group-item-light">Announcements</li>
+                    <li class="list-group-item list-group-item-light">Calendars</li>
+                    <li class="list-group-item list-group-item-light">etc</li>
+                </ul>
+                </p>
+            </div>
+            </div>
         </div>
-        <div class="col-md-4">
-          <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p class='text-muted'>Check these out!
-              <ul class="list-group">
-                <li class="list-group-item list-group-item-light">24x7 Ambulance</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
-              </ul>
-            </p>
-          </div>
-        </div>
-      </div>
-      </main>
+        </main>
 
 
 <!-- Optional JavaScript -->

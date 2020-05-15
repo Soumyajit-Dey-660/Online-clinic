@@ -124,7 +124,7 @@ class Medicine(db.Model):
     substitutes = db.Column(db.String(30), default=None)
     stock = db.Column(db.Integer, default=100)
     carts = db.relationship('Cartitem', backref='medicine', lazy=True)
-    orders = db.relationship('Order', backref='medicine', lazy=True)
+
 
     def __repr__(self):
         return f"Medicine('{self.name}' for {self.disease})"
@@ -150,9 +150,8 @@ class Cartitem(db.Model):
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     bill_amount = db.Column(db.Float, nullable=False)
-    oredered_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    ordered_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
     ordereditems = db.relationship('Ordereditem', backref='order', lazy=True)
 
     def __repr__(self):
@@ -160,9 +159,11 @@ class Order(db.Model):
 
 
 class Ordereditem(db.Model):
-    id = db.Column(db.Integer, db.ForeignKey('order.id'), primary_key=True)
-    medicine_id = db.Column(db.Integer, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    medicine_name = db.Column(db.String(30), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
 
 # class Post(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)

@@ -154,7 +154,7 @@ def account():
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password Reset Request',
-                  sender='noreply@demo.com',
+                  sender='soumyajit660@gmail.com',
                   recipients=[user.email])
     msg.body = f'''To reset your password, visit the following link:
 {url_for('reset_token', token=token, _external=True)}
@@ -397,6 +397,7 @@ def view_cart():
 @login_required
 def add_to_cart(medicine_id):
     try:
+        grand_total = 0
         page = request.args.get('page', 1, type=int)
         med = Medicine.query.get(medicine_id)
         price=med.price
@@ -406,9 +407,12 @@ def add_to_cart(medicine_id):
     except:
         flash('Some unexpected error occured!', 'danger')
         return redirect(url_for('view_cart'))
+    page = request.args.get('page', 1, type=int)
     cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
+    for item in cartitems.items:
+        grand_total += item.total_price 
     flash('Item added to cart', 'success')
-    return render_template('view_cart.html', title="Shopping cart", cartitems=cartitems)
+    return render_template('view_cart.html', title="Shopping cart", cartitems=cartitems, grand_total=grand_total)
 
 
 @app.route('/cart/<int:item_id>', methods=['GET', 'POST'])
@@ -472,7 +476,49 @@ def delete_cart(item_id):
     return redirect(url_for('view_cart'))
 
 
+def send_order_acknowledgement(user):
+    msg = Message('Order placed successfully on Life Care',
+                  sender='soumyajit660@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Your order has been placed successfully!
+To view your order history, visit the following link:
+{url_for('order_history', _external=True)}
+Hope you had an amazing time at our website, Thank you.
+
+
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
+
 @app.route('/place_order', methods=['GET', 'POST'])
 def place_order():
-    pass
+    total_amount = 0
+    my_cartitems = Cartitem.query.filter_by(cart_id=current_user.id).all()
+    for item in my_cartitems:
+        total_amount += item.total_price
+    order = Order(bill_amount=total_amount, user_id=current_user.id)
+    db.session.add(order)
+    db.session.commit()
+    current_order = Order.query.filter_by(user=current_user).order_by(Order.ordered_on.desc()).first()
+    for item in my_cartitems:
+        my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, quantity=item.quantity, total_price=item.total_price)
+        db.session.add(my_ordered_items)
+        db.session.delete(item)
+    db.session.commit()
+    send_order_acknowledgement(current_user)
+    flash('Your order has been placed!', 'success')
+    return render_template('order_acknowledgement.html', title="Order Placed Successfully")
 
+@app.route('/order_history', methods=['GET', 'POST'])
+def order_history():
+    page = request.args.get('page', 1, type=int)
+    orders = Order.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=10)
+    return render_template('order_history.html', title="Order History", orders=orders)
+
+
+@app.route('/order_history/<int:order_id>', methods=['GET', 'POST'])
+def order_details(order_id):
+    page = request.args.get('page', 1, type=int)
+    items = Ordereditem.query.filter_by(order_id=order_id).paginate(page=page, per_page=10)
+    return render_template('order_details.html', title="Order Details", items=items, order_id=order_id)
