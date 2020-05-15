@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,7 +18,43 @@
     {% else %}
         <title>Hospital</title>
     {% endif %}
-</head>
+    <style>
+        .dropbtn {
+          background-color: #21759b;
+          color: white;
+          padding: 16px;
+          font-size: 16px;
+          border: none;
+        }
+        
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+        
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f1f1f1;
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          z-index: 1;
+        }
+        
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+        
+        .dropdown-content a:hover {background-color: #ddd;}
+        
+        .dropdown:hover .dropdown-content {display: block;}
+        
+        .dropdown:hover .dropbtn {background-color: #3e8e41;}
+    </style>
+  </head>
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
@@ -27,31 +63,35 @@
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto" style="font-size: 18px;list-style-type: none; margin:0; padding: 0; overflow: hidden; background-color:#2895f1;">
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='cough and cold') }}">Cough and Cold</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='diabetes') }}">Diabetes</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='diarrhoea') }}">Diarrhoea</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='headache') }}">Headache</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='body pain') }}">Body pain</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='stomach ache') }}">Stomach ache</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='tooth ache') }}">Tooth ache</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='eye drops') }}">Eye drops</a>
-              <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines', disease_type='ear drops') }}">Ear drops</a>
-
+          <div class="collapse navbar-collapse" id="navbarToggle"></div>
+            <div class="dropdown">
+            <button class="dropbtn">Disease</button>
+                <div class="dropdown-content">
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='cough and cold') }}">Cough and Cold</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='diabetes') }}">Diabetes</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='diarrhoea') }}">Diarrhoea</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='headache') }}">Headache</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='body pain') }}">Body pain</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='stomach ache') }}">Stomach ache</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='tooth ache') }}">Tooth ache</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='eye drops') }}">Eye drops</a>
+                    <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='ear drops') }}">Ear drops</a>
+                </div>
+            </div>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
               <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('view_cart') }}">View Cart</a>
-                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('account') }}">Account</a>
-                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('logout') }}">Logout</a>
+                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('account') }}"><span class="glyphicon glyphicon-user"></span>Account</a>
+                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
               {% else %}
-                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('login') }}">Login</a>
-                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('register') }}">Register</a>
+                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span>Login</a>
+                <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('register') }}"><span class="glyphicon glyphicon-user"></span>Register</a>
               {% endif %}
             </div>
           </div>
+        </div>
         </div>
       </nav>
     </header>
@@ -71,7 +111,7 @@
           <div class="row">
       
             <div class="col-sm-12">
-                <h1 style="text-align: center;">{{ disease_type }}</h1><br><hr><br>
+                <h3 style="text-align: center;"></br>{{ disease_type }}</h3><br><hr><br>
             </div>
             </div>
             {% for medicine in medicines.items %}
@@ -108,6 +148,7 @@
             {% endif %}
             {% endfor %}
           {% else %}
+        </br>
           <h3>There's Nothing to see here </h3>
           {% endif %}
         </div>
