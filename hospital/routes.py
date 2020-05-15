@@ -385,9 +385,12 @@ def medicine_display(medicine_id):
 
 @app.route('/view_cart', methods=['GET', 'POST'])
 def view_cart():
+    grand_total = 0
     page = request.args.get('page', 1, type=int)
     cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
-    return render_template('view_cart.html', title="Shopping Cart", cartitems=cartitems)
+    for item in cartitems.items:
+        grand_total += item.total_price 
+    return render_template('view_cart.html', title="Shopping Cart", cartitems=cartitems, grand_total=grand_total)
 
 
 @app.route('/add_to_cart/<int:medicine_id>', methods=['GET', 'POST'])
@@ -395,7 +398,9 @@ def view_cart():
 def add_to_cart(medicine_id):
     try:
         page = request.args.get('page', 1, type=int)
-        cartitem = Cartitem(cart_id=current_user.id, medicine_id=medicine_id, quantity=1)
+        med = Medicine.query.get(medicine_id)
+        price=med.price
+        cartitem = Cartitem(cart_id=current_user.id, medicine_id=medicine_id, quantity=1, total_price=price)
         db.session.add(cartitem)
         db.session.commit()
     except:
@@ -438,6 +443,7 @@ def cart(item_id):
 @login_required
 def update_cart(item_id):
     item = Cartitem.query.get_or_404(item_id)
+    med = Medicine.query.get(item.medicine_id)
     form = UpdateCartForm()
     if form.validate_on_submit():
         if form.quantity.data <= 0:
@@ -447,6 +453,7 @@ def update_cart(item_id):
             flash('Only 4 quantity is allowed per person', 'warning')
             return redirect(url_for('update_cart', item_id=item_id))
         item.quantity = form.quantity.data
+        item.total_price = form.quantity.data * med.price
         db.session.commit()
         flash('Your shopping cart has been updated!', 'success')
         return redirect(url_for('view_cart'))
@@ -465,4 +472,7 @@ def delete_cart(item_id):
     return redirect(url_for('view_cart'))
 
 
+@app.route('/place_order', methods=['GET', 'POST'])
+def place_order():
+    pass
 

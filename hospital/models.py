@@ -141,6 +141,7 @@ class Cartitem(db.Model):
     cart_id = db.Column(db.Integer, db.ForeignKey('cart.id'))
     medicine_id = db.Column(db.Integer, db.ForeignKey('medicine.id'))
     quantity = db.Column(db.Integer, nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
         return f"CartItem('id  {self.id}', cart_id {self.cart_id})"

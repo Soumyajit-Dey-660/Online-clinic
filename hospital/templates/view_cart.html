@@ -14,9 +14,9 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     
     {% if title %}
-        <title>Hospital - {{ title }}</title>
+        <title>Life Care - {{ title }}</title>
     {% else %}
-        <title>Hospital</title>
+        <title>Life Care</title>
     {% endif %}
     <style>
       table {
@@ -48,6 +48,7 @@
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+              <a class="nav-item nav-link" href="{{ url_for('medicines_disease') }}">Medicines</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -84,6 +85,7 @@
                 <th>Medicine Price</th>
                 <th>Quantity</th>
                 <th>Update or delete</th>
+                <th>Subtotal</th>
             </tr>
           {% for item in cartitems.items %}
             <tr>
@@ -93,20 +95,23 @@
                 <td>{{ item.medicine.price }}</td>
                 <td>{{ item.quantity }}</td>
                 <td><a class="article-title" href="{{ url_for('cart', item_id=item.id) }}">Click here</a></td>
+                <td>{{ item.total_price }}</td>
             </tr> 
           {% endfor %}
         </table>
           {% for page_num in cartitems.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
               {% if cartitems.page == page_num %}
-                <a class="btn btn-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
+              </br><a class="btn btn-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
               {% else %}
-                <a class="btn btn-outline-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
+              </br> <a class="btn btn-outline-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
               {% endif %}
             {% else %}
               ...
             {% endif %}
           {% endfor %}
+      </br>
+      <h4>Grand Total:  Rs.{{ grand_total }}</h4>
         </div>
         <div class="col-md-4">
           <div class="content-section">
