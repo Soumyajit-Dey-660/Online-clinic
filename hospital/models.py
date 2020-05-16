@@ -9,6 +9,8 @@ def load_user(user_id):
     user = User.query.get(int(user_id))
     if user is None:
         user = Doctor.query.get(int(user_id))
+        if user is None:
+            user = Admin.query.get(int(user_id))
     return user
 
 
@@ -39,7 +41,7 @@ class User(db.Model, UserMixin):
             user_id = s.loads(token)['user_id']
         except:
             return None
-        return NormalUser.query.get(user_id)
+        return User.query.get(user_id)
 
     def __repr__(self):
         return f"Normal-User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -70,14 +72,39 @@ class Doctor(db.Model, UserMixin):
             user_id = s.loads(token)['user_id']
         except:
             return None
-        return DoctorUser.query.get(user_id)
+        return Doctor.query.get(user_id)
 
     def __repr__(self):
         return f"Doctor('{self.username}', '{self.email}', '{self.image_file}')"
 
 
-class Appointment(db.Model):
+class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    announcements = db.relationship('Announcement', backref='admin', lazy=True)
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return Admin.query.get(user_id)
+
+    def __repr__(self):
+        return f"Admin({self.username})"
+
+
+class Appointment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     booked_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     booked_for = db.Column(db.DateTime, nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
@@ -164,6 +191,14 @@ class Ordereditem(db.Model):
     medicine_name = db.Column(db.String(30), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+
+
+class Announcement(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100), nullable=False)
+    created_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
 
 # class Post(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)

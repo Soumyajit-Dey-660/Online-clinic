@@ -4,13 +4,13 @@ from PIL import Image
 from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
-from hospital.models import User, Doctor, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem
+from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
 from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, MedicineForm, UpdateCartForm,
-                              EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
+                              AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
-count = 0
+count = 1
 
 @app.route("/")
 @app.route("/home")
@@ -18,10 +18,13 @@ def home():
     try:
         user = User.query.filter_by(username=current_user.username).first()
         doc = Doctor.query.filter_by(username=current_user.username).first()
+        admin = Admin.query.filter_by(username=current_user.username).first()
         if user:
             flag = 1
         elif doc:
             flag = 2
+        elif admin:
+            flag = 3
     except:
         flag = 0
     return render_template('home.html',flag=flag)
@@ -92,6 +95,21 @@ def doctor_register():
     return render_template('doctor_register.html', title='Doctor-Register', form=form)
 
 
+@app.route('/admin_register', methods=['GET', 'POST'])
+def admin_register():
+    form = AdminRegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        global count
+        count += 1
+        admin = Admin(id=count, username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(admin)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('admin_register.html', title='Admin-Register', form=form)
+
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -101,6 +119,8 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             user = Doctor.query.filter_by(email=form.email.data).first()
+            if user is None:
+               user = Admin.query.filter_by(email=form.email.data).first() 
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
@@ -172,6 +192,8 @@ def reset_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             user = Doctor.query.filter_by(email=form.email.data).first()
+            if user is None:
+                user = Admin.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
         flash('An email has been sent with instructions to reset your password.', 'info')
         return redirect(url_for('login'))
@@ -185,6 +207,8 @@ def reset_token(token):
     user = Normal.verify_reset_token(token)
     if user is None:
         user = Doctor.verify_reset_token(token)
+    if user is None:
+        user = Admin.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('reset_request'))
