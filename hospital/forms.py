@@ -195,6 +195,7 @@ class MedicineForm(FlaskForm):
     picture = StringField('Picture filename')
     manufactured_by = StringField('Manufactured by', validators=[DataRequired()])
     price = FloatField('Price')
+    stock = IntegerField('Stock', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     uses = TextAreaField('Uses', validators=[DataRequired()])
     side_effects = TextAreaField('Side Effects')

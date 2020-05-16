@@ -145,6 +145,7 @@ class Medicine(db.Model):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     manufactured_by = db.Column(db.String(40), nullable=False)
     price = db.Column(db.Float, default=None)
+    stock = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text, nullable=False)
     uses = db.Column(db.Text, nullable=False)
     side_effects = db.Column(db.Text, default=None)

@@ -375,7 +375,7 @@ def add_medicine():
     form = MedicineForm()
     if form.validate_on_submit():
         medicine = Medicine(name=form.name.data, disease=form.disease.data, image_file=form.picture.data, manufactured_by=form.manufactured_by.data,
-                                price=form.price.data, description=form.description.data, uses=form.uses.data, side_effects=form.side_effects.data, substitutes=form.substitutes.data)
+                                price=form.price.data, stock=form.stock.data, description=form.description.data, uses=form.uses.data, side_effects=form.side_effects.data, substitutes=form.substitutes.data)
         db.session.add(medicine)
         db.session.commit()
         flash('Your medicine info has been saved!', 'success')
@@ -480,6 +480,9 @@ def update_cart(item_id):
         elif form.quantity.data > 4:
             flash('Only 4 quantity is allowed per person', 'warning')
             return redirect(url_for('update_cart', item_id=item_id))
+        elif form.quantity.data > med.stock:
+            flash("Sorry but we don't have that many stocks left", 'warning')
+            return redirect(url_for('update_cart', item_id=item_id))
         item.quantity = form.quantity.data
         item.total_price = form.quantity.data * med.price
         db.session.commit()
@@ -527,6 +530,7 @@ def place_order():
     current_order = Order.query.filter_by(user=current_user).order_by(Order.ordered_on.desc()).first()
     for item in my_cartitems:
         my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, quantity=item.quantity, total_price=item.total_price)
+        item.medicine.stock -= item.quantity
         db.session.add(my_ordered_items)
         db.session.delete(item)
     db.session.commit()
