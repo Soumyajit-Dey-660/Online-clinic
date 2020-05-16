@@ -199,8 +199,8 @@ def reset_token(token):
 
 @app.route("/nearby_medical_stores")
 @login_required
-def nearby_map():
-    return render_template('new_map.html')
+def nearby_medical_stores_map():
+    return render_template('medical_store_map.html')
 
 
 @app.route("/book_appointment", methods=['GET', 'POST'])
@@ -522,3 +522,20 @@ def order_details(order_id):
     page = request.args.get('page', 1, type=int)
     items = Ordereditem.query.filter_by(order_id=order_id).paginate(page=page, per_page=10)
     return render_template('order_details.html', title="Order Details", items=items, order_id=order_id)
+
+@app.route('/necessary_information', methods=['GET', 'POST'])
+def necessary_information():
+    return render_template('important_contacts.html', title="Necessary information")
+
+@app.route('/necessary_hospital_info', methods=['GET', 'POST'])
+def important_hospital_contacts():
+    return render_template('important_hospital_contacts.html', title="Hospital Contacts")
+
+@app.route('/necessary_bloodbank_info', methods=['GET', 'POST'])
+def important_blood_bank_contacts():
+    return render_template('important_blood_bank_contacts.html', title="Blood Bank Contacts")
+
+@app.route("/nearby_hospitals")
+@login_required
+def nearby_hospital_map():
+    return render_template('medical_store_map.html')
