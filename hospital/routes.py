@@ -539,6 +539,7 @@ If you did not make this request then simply ignore this email and no changes wi
 @app.route('/place_order', methods=['GET', 'POST'])
 def place_order():
     total_amount = 0
+    first_order = True
     my_cartitems = Cartitem.query.filter_by(cart_id=current_user.id).all()
     print(my_cartitems)
     if len(my_cartitems) == 0:
@@ -550,19 +551,30 @@ def place_order():
     if order is None:
         total_amount *= 0.7
     else:
+        first_order = False
         total_amount *= 0.8
     if int(total_amount) < 500:
         flash('Total bill amount should be over 500 rupees!', 'warning')
         return redirect(url_for('view_cart'))
-    order = Order(bill_amount=total_amount, user_id=current_user.id)
+    if first_order:
+        order = Order(bill_amount=total_amount*0.7, user_id=current_user.id)
+    else:
+        order = Order(bill_amount=total_amount*0.8, user_id=current_user.id)
     db.session.add(order)
     db.session.commit()
     current_order = Order.query.filter_by(user=current_user).order_by(Order.ordered_on.desc()).first()
-    for item in my_cartitems:
-        my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, quantity=item.quantity, total_price=item.total_price)
-        item.medicine.stock -= item.quantity
-        db.session.add(my_ordered_items)
-        db.session.delete(item)
+    if first_order:
+        for item in my_cartitems:
+            my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, quantity=item.quantity, total_price=item.total_price*0.7)
+            item.medicine.stock -= item.quantity
+            db.session.add(my_ordered_items)
+            db.session.delete(item)
+    else:
+        for item in my_cartitems:
+            my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, quantity=item.quantity, total_price=item.total_price*0.8)
+            item.medicine.stock -= item.quantity
+            db.session.add(my_ordered_items)
+            db.session.delete(item)
     db.session.commit()
     send_order_acknowledgement(current_user)
     flash('Your order has been placed!', 'success')
