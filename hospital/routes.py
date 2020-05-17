@@ -14,7 +14,7 @@ users_count = User.query.count()
 doctors_count = Doctor.query.count()
 admin_count = Admin.query.count()
 count = users_count + doctors_count + admin_count
-
+print(count)
 
 @app.route("/")
 @app.route("/home")
@@ -271,13 +271,13 @@ def update_appointment(appointment_id):
         name = dict(doctor_list).get(form.doctor.data)
         doctor = Doctor.query.filter_by(username=name).first()
         appointment.doctor = doctor
-        appointment.booked_on = form.date.data
+        appointment.booked_for = form.date.data
         db.session.commit()
         flash('Your appointment has been updated!', 'success')
         return redirect(url_for('appointment_history', username=current_user.username))
     elif request.method == 'GET':
         form.doctor.data = appointment.doctor.username
-        form.date.data = appointment.booked_on
+        form.date.data = appointment.booked_for
     return render_template('new_appointment.html', title='Update appointment',
                            form=form, legend='Update Appointment')
 
@@ -286,9 +286,11 @@ def update_appointment(appointment_id):
 @login_required
 def delete_appointment(appointment_id):
     appointment = Appointment.query.get_or_404(appointment_id)
+    eprescription = Eprescription.query.get_or_404(appointment_id)
     if appointment.user != current_user:
         abort(403)
     db.session.delete(appointment)
+    db.session.delete(eprescription)
     db.session.commit()
     flash('Your appointment has been deleted!', 'success')
     return redirect(url_for('appointment_history', title="Appointment-History", username=current_user.username))
