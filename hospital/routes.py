@@ -14,7 +14,7 @@ users_count = User.query.count()
 doctors_count = Doctor.query.count()
 admin_count = Admin.query.count()
 count = users_count + doctors_count + admin_count
-
+print(count)
 @app.route("/")
 @app.route("/home")
 def home():
@@ -652,7 +652,7 @@ def make_announcement():
         db.session.commit()
         flash('Your mail has been sent!', 'success')
         # Redirect to announcement history
-        return redirect(url_for('make_announcement'))
+        return redirect(url_for('view_announcement'))
     return render_template("new_announcement.html", title="New announcement", form=form)
 
 
