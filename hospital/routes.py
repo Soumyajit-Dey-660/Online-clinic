@@ -5,7 +5,7 @@ from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
 from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
-from hospital.forms import (AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, MedicineForm, UpdateCartForm,
+from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, MedicineForm, UpdateCartForm,
                               AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -224,11 +224,6 @@ def reset_token(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
-
-@app.route("/nearby_medical_stores")
-@login_required
-def nearby_medical_stores_map():
-    return render_template('medical_store_map.html')
 
 
 @app.route("/book_appointment", methods=['GET', 'POST'])
@@ -530,6 +525,10 @@ If you did not make this request then simply ignore this email and no changes wi
 def place_order():
     total_amount = 0
     my_cartitems = Cartitem.query.filter_by(cart_id=current_user.id).all()
+    print(my_cartitems)
+    if len(my_cartitems) == 0:
+        flash("You don't have anything in your cart at the moment! Cannot place order.", 'warning')
+        return redirect(url_for('view_cart'))
     for item in my_cartitems:
         total_amount += item.total_price
     order = Order(bill_amount=total_amount, user_id=current_user.id)
@@ -571,7 +570,47 @@ def important_hospital_contacts():
 def important_blood_bank_contacts():
     return render_template('important_blood_bank_contacts.html', title="Blood Bank Contacts")
 
+
+@app.route('/nearby_map')
+def nearby_map():
+    return render_template('nearby_maps.html')
+
+
 @app.route("/nearby_hospitals")
 @login_required
 def nearby_hospital_map():
+    return render_template('hospital_map.html')
+
+
+@app.route("/nearby_bloodbnaks")
+@login_required
+def nearby_bloodbank_map():
+    return render_template('bloodbank_map.html')
+
+
+@app.route("/nearby_medical_stores")
+@login_required
+def nearby_medical_stores_map():
     return render_template('medical_store_map.html')
+
+@app.route('/make_announcement', methods=['GET', 'POST'])
+@login_required
+def make_announcement():
+    users_list = []
+    form = AnnouncementForm()
+    if form.validate_on_submit():
+        announcement = Announcement(title=form.title.data, content=form.content.data ,admin=current_user)
+        users = User.query.all()
+        for user in users:
+            users_list.append(user.email)
+        msg = Message(form.title.data,
+                  sender='soumyajit660@gmail.com',
+                  recipients=users_list)
+        header = "This mail is from Life Care.\n\n"
+        footer = "If you are not a user of Life Care, then simply ignore this email and no changes will be made. Sorry for the inconvinience"
+        msg.body = f'{header}\n{form.content.data}\n\n{footer}'
+        mail.send(msg)
+        flash('Your mail has been sent!', 'success')
+        # Redirect to announcement history
+        return redirect(url_for('make_announcement'))
+    return render_template("new_announcement.html", title="New announcement", form=form)

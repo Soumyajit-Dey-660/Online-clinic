@@ -94,7 +94,7 @@
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('appointment_history', username=current_user.username) }}">Apoointment History</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines_disease') }}">Order Medicine</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('order_history') }}">Order History</a>
-                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 120px" href="{{ url_for('nearby_medical_stores_map') }}">Pharmacy near me</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 120px" href="{{ url_for('nearby_map') }}">Maps Assistance</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 140px" href="{{ url_for('view_cart') }}">View Cart </a>
                   {% elif flag == 2 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('doc_appointment_history', username=current_user.username) }}">Appointments with you</a>
@@ -102,6 +102,7 @@
                   {% elif flag == 3 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('add_medicine') }}">Add Medicine</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('admin_register') }}">Add new admin</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('make_announcement') }}">Make an announcement</a>
                   {% endif %}
                   
                   {% if current_user.is_authenticated %}

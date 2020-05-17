@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('nearby_hospital_map') }}">Hospitals near me</a>
+</br><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('nearby_bloodbank_map') }}">Blood Banks near me</a>
+</br><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('nearby_medical_stores_map') }}">Pharmacy near me</a>
+{% endblock content %}
