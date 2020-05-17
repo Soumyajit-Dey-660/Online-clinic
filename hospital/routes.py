@@ -610,7 +610,17 @@ def make_announcement():
         footer = "If you are not a user of Life Care, then simply ignore this email and no changes will be made. Sorry for the inconvinience"
         msg.body = f'{header}\n{form.content.data}\n\n{footer}'
         mail.send(msg)
+        db.session.add(announcement)
+        db.session.commit()
         flash('Your mail has been sent!', 'success')
         # Redirect to announcement history
         return redirect(url_for('make_announcement'))
     return render_template("new_announcement.html", title="New announcement", form=form)
+
+
+@app.route('/view_announcements', methods=['GET'])
+def view_announcement():
+    page = request.args.get('page', 1, type=int)
+    announcements = Announcement.query.order_by(Announcement.created_on.desc())\
+        .paginate(page=page, per_page=5)
+    return render_template("view_announcements.html", title="View announcements", announcements=announcements)
