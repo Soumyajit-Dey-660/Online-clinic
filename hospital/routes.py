@@ -14,7 +14,6 @@ users_count = User.query.count()
 doctors_count = Doctor.query.count()
 admin_count = Admin.query.count()
 count = users_count + doctors_count + admin_count
-print(count)
 
 @app.route("/")
 @app.route("/home")
@@ -56,6 +55,18 @@ def register():
     return render_template('register.html', form=form)
 
 
+def send_registration_mail(user):
+    msg = Message("Thank you for registering on Life Care",
+                  sender='soumyajit660@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Welcome {user.username} to Life Care. To view our website, visit the following link: 
+{url_for('home', _external=True)}
+We give flat 20% off on every order. You'll get 30% off on your first order from Life care. 
+If you have not registered on our webpage then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
+
 @app.route("/user_register", methods=['GET', 'POST'])
 def user_register():
     if current_user.is_authenticated:
@@ -73,6 +84,8 @@ def user_register():
         cart = Cart(user_id=count)
         db.session.add(cart)
         db.session.commit()
+        user = User.query.filter_by(email=form.email.data).first()
+        send_registration_mail(user)
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('user_register.html', title='User-Register', form=form)
@@ -417,6 +430,8 @@ def view_cart():
     cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
     for item in cartitems.items:
         grand_total += item.total_price 
+    if Cartitem.query.filter_by(cart_id=current_user.id).first() is None:
+        cartitems = None  
     return render_template('view_cart.html', title="Shopping Cart", cartitems=cartitems, grand_total=grand_total)
 
 
@@ -531,6 +546,14 @@ def place_order():
         return redirect(url_for('view_cart'))
     for item in my_cartitems:
         total_amount += item.total_price
+    order = Order.query.filter_by(user=current_user).first()
+    if order is None:
+        total_amount *= 0.7
+    else:
+        total_amount *= 0.8
+    if int(total_amount) < 500:
+        flash('Total bill amount should be over 500 rupees!', 'warning')
+        return redirect(url_for('view_cart'))
     order = Order(bill_amount=total_amount, user_id=current_user.id)
     db.session.add(order)
     db.session.commit()
@@ -554,9 +577,12 @@ def order_history():
 
 @app.route('/order_history/<int:order_id>', methods=['GET', 'POST'])
 def order_details(order_id):
+    total = 0
     page = request.args.get('page', 1, type=int)
     items = Ordereditem.query.filter_by(order_id=order_id).paginate(page=page, per_page=10)
-    return render_template('order_details.html', title="Order Details", items=items, order_id=order_id)
+    for item in items.items:
+        total += item.total_price
+    return render_template('order_details.html', title="Order Details", items=items, order_id=order_id, total=total)
 
 @app.route('/necessary_information', methods=['GET', 'POST'])
 def necessary_information():

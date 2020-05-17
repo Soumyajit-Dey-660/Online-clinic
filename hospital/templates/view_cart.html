@@ -75,7 +75,8 @@
                 </div>
               {% endfor %}
             {% endif %}
-          {% endwith %}        
+          {% endwith %}       
+      {% if cartitems != None %} 
           <h3 class="mb-4">Shopping cart of {{ current_user.username }}</h3>
           <table>
             <tr>
@@ -110,9 +111,9 @@
               ...
             {% endif %}
           {% endfor %}
-      </br>
-      <h4>Grand Total:  Rs.{{ grand_total }}</h4>
-    </br><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('place_order') }}">Place Order</a>
+          </br>
+          <h5>Grand Total:  Rs.{{ grand_total }}</h5>&nbsp;&nbsp;&nbsp;&nbsp; <h5>Check out:  Rs.{{ grand_total*0.8 }}</h5>
+            </br><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('place_order') }}">Place Order</a>
         </div>
         <div class="col-md-4">
           <div class="content-section">
@@ -127,6 +128,9 @@
             </p>
           </div>
         </div>
+        {% else %}
+      <h4>Your Shopping cart is empty</h4>
+      {% endif %}
       </div>
       </main>
 
