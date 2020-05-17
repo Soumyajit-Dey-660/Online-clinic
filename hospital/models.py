@@ -44,7 +44,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"Normal-User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
 
 class Doctor(db.Model, UserMixin):
