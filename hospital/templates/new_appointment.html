@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="content-section">
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('appointment_history', username=current_user.username) }}">Appointment History</a> 
         <form method="POST" action="">
+        </br>
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Book Your Appointment</legend>

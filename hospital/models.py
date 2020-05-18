@@ -184,7 +184,7 @@ class Order(db.Model):
     ordereditems = db.relationship('Ordereditem', backref='order', lazy=True)
 
     def __repr__(self):
-        return f"Order(id {self.id} with total_amount {self.total_amount})"
+        return f"Order(id {self.id} with total_amount {self.bill_amount})"
 
 
 class Ordereditem(db.Model):

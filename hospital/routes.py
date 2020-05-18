@@ -277,6 +277,10 @@ def update_appointment(appointment_id):
         abort(403)
     form = AppointmentForm()
     if form.validate_on_submit():
+        today = date.today()
+        if form.date.data < today:
+            flash('Please choose a valid date!', 'danger')
+            return redirect(url_for('update_appointment', appointment_id=appointment.id))
         name = dict(doctor_list).get(form.doctor.data)
         doctor = Doctor.query.filter_by(username=name).first()
         appointment.doctor = doctor
@@ -288,7 +292,7 @@ def update_appointment(appointment_id):
         form.doctor.data = appointment.doctor.username
         form.date.data = appointment.booked_for
     return render_template('new_appointment.html', title='Update appointment',
-                           form=form, legend='Update Appointment')
+                           form=form, legend='Update Appointment', appointment=appointment)
 
 
 @app.route("/appointment/<int:appointment_id>/delete", methods=['POST'])
@@ -439,6 +443,10 @@ def view_cart():
 @app.route('/add_to_cart/<int:medicine_id>', methods=['GET', 'POST'])
 @login_required
 def add_to_cart(medicine_id):
+    first_order = True
+    order = Order.query.filter_by(user=current_user).first()
+    if order:
+        first_order = False
     try:
         grand_total = 0
         page = request.args.get('page', 1, type=int)
@@ -449,7 +457,7 @@ def add_to_cart(medicine_id):
         db.session.commit()
     except:
         flash('Some unexpected error occured!', 'danger')
-        return redirect(url_for('view_cart'))
+        return redirect(url_for('view_cart', flag=first_order))
     page = request.args.get('page', 1, type=int)
     cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
     for item in cartitems.items:
@@ -489,8 +497,12 @@ def cart(item_id):
 @app.route("/cart/<int:item_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_cart(item_id):
+    first_order = True
     item = Cartitem.query.get_or_404(item_id)
     med = Medicine.query.get(item.medicine_id)
+    order = Order.query.filter_by(user=current_user).first()
+    if order:
+        first_order = False
     form = UpdateCartForm()
     if form.validate_on_submit():
         if form.quantity.data <= 0:
@@ -506,7 +518,7 @@ def update_cart(item_id):
         item.total_price = form.quantity.data * med.price
         db.session.commit()
         flash('Your shopping cart has been updated!', 'success')
-        return redirect(url_for('view_cart'))
+        return redirect(url_for('view_cart', flag=first_order))
     elif request.method == 'GET':
         form.quantity.data = item.quantity
     return render_template('update_cart.html', title="Update or Delete Cart", form=form, item=item)
@@ -515,11 +527,16 @@ def update_cart(item_id):
 @app.route("/cart/<int:item_id>/delete", methods=['POST'])
 @login_required
 def delete_cart(item_id):
+    first_order = True
     item = Cartitem.query.get_or_404(item_id)
+    order = Order.query.filter_by(user=current_user).first()
+    if order:
+        first_order = False
     db.session.delete(item)
     db.session.commit()
     flash('Your item has been deleted!', 'success')
-    return redirect(url_for('view_cart'))
+    print(f'FIRST ORDER {first_order}')
+    return redirect(url_for('view_cart', flag=first_order))
 
 
 def send_order_acknowledgement(user):
@@ -541,11 +558,14 @@ If you did not make this request then simply ignore this email and no changes wi
 def place_order():
     total_amount = 0
     first_order = True
+    orde = Order.query.filter_by(user=current_user).first()
+    if orde:
+        first_order = False
     my_cartitems = Cartitem.query.filter_by(cart_id=current_user.id).all()
     print(my_cartitems)
     if len(my_cartitems) == 0:
         flash("You don't have anything in your cart at the moment! Cannot place order.", 'warning')
-        return redirect(url_for('view_cart'))
+        return redirect(url_for('view_cart', flag=first_order))
     for item in my_cartitems:
         total_amount += item.total_price
     order = Order.query.filter_by(user=current_user).first()
@@ -556,7 +576,7 @@ def place_order():
         total_amount *= 0.8
     if int(total_amount) < 500:
         flash('Total bill amount should be over 500 rupees!', 'warning')
-        return redirect(url_for('view_cart'))
+        return redirect(url_for('view_cart', flag=first_order))
     if first_order:
         order = Order(bill_amount=total_amount*0.7, user_id=current_user.id)
     else:

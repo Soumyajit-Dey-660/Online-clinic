@@ -112,7 +112,11 @@
             {% endif %}
           {% endfor %}
           </br>
-          <h5>Grand Total:  Rs.{{ grand_total }}</h5>&nbsp;&nbsp;&nbsp;&nbsp; <h5>Check out:  Rs.{{ grand_total*0.8 }}</h5>
+          {% if flag  %}
+          <h5>Grand Total:  Rs.{{ grand_total }}</h5>&nbsp;&nbsp;&nbsp;&nbsp; <h5>Check out:  Rs.{{ grand_total*0.7 }} (-30%)</h5>
+          {% else %}
+          <h5>Grand Total:  Rs.{{ grand_total }}</h5>&nbsp;&nbsp;&nbsp;&nbsp; <h5>Check out:  Rs.{{ grand_total*0.8 }} (-20%)</h5>
+          {% endif %}
             </br><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('place_order') }}">Place Order</a>
         </div>
         <div class="col-md-4">
