@@ -240,3 +240,8 @@ class UpdateMedicineForm(FlaskForm):
     side = TextAreaField('Side Effects', validators=[DataRequired()])
     substitutes = StringField('Substitute')
     submit = SubmitField('Update Medicine')
+
+class ChooseDoctorForm(FlaskForm):
+    speciality = SelectField(u'Type of Doctor', choices=specialist_choices)
+    submit = SubmitField('Submit')
+

@@ -7,7 +7,7 @@ from hospital import app, db, bcrypt, mail
 from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
 from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm,
                               MedicineForm, UpdateCartForm, AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm,
-                              ResetPasswordForm, ChooseMedicineForm, UpdateMedicineForm, specialist_choices, doctor_list)
+                              ResetPasswordForm, ChooseMedicineForm, UpdateMedicineForm, ChooseDoctorForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -664,6 +664,7 @@ def view_announcement():
         .paginate(page=page, per_page=5)
     return render_template("view_announcements.html", title="View announcements", announcements=announcements)
 
+
 @app.route('/update_medicine', methods=['GET', 'POST'])
 def choose_medicine():
     form = ChooseMedicineForm()
@@ -671,6 +672,7 @@ def choose_medicine():
         medicine = form.medicine.data
         return redirect(url_for('update_medicine', medicine_name=medicine))
     return render_template('choose_medicine.html', title="Update Medicine", form=form)
+
 
 @app.route('/update_medicine/<string:medicine_name>', methods=['GET', 'POST'])
 def update_medicine(medicine_name):
@@ -700,4 +702,34 @@ def update_medicine(medicine_name):
         flash('Your medicine info has been updated', 'success')
         return redirect(url_for('choose_medicine'))
     return render_template('update_medicine.html', title="Update medicine", form=form)
+
+
+@app.route('/all_doctors', methods=['GET', 'POST'])
+def all_doctors():
+    page = request.args.get('page', 1, type=int)
+    doctors = Doctor.query.paginate(page=page, per_page=15)
+    return render_template('all_doctors.html', title="All doctors", doctors=doctors)
+
+
+@app.route('/choose_doctor', methods=['GET', 'POST'])
+def choose_doctor():
+    form = ChooseDoctorForm()
+    if form.validate_on_submit():
+        speciality = form.speciality.data
+        return redirect(url_for('specialist_doctor', speciality=speciality))
+    return render_template('choose_doctor.html', title="Choose a doctor", form=form)
+        
+@app.route('/choose_doctor/<string:speciality>', methods=['GET', 'POST'])
+def specialist_doctor(speciality):
+    page = request.args.get('page', 1, type=int)
+    doctors = Doctor.query.filter_by(specialist=speciality).paginate(page=page, per_page=15)
+    return render_template('specialist_doctor.html', title="Specialist doctor", doctors=doctors, speciality=speciality)
+
+
+@app.route('/doctor_description/<int:doctor_id>', methods=['GET', 'POST'])
+def doctor_description(doctor_id):
+    doc = Doctor.query.get_or_404(doctor_id)
+    timing = Timing.query.get_or_404(doctor_id)
+    return render_template('doctor_description.html', title="Doctor description", doc=doc, timing=timing)
+
         
