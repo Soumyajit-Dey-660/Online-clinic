@@ -5,8 +5,9 @@ from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail
 from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
-from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm, MedicineForm, UpdateCartForm,
-                              AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, specialist_choices, doctor_list)
+from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm,
+                              MedicineForm, UpdateCartForm, AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm,
+                              ResetPasswordForm, ChooseMedicineForm, UpdateMedicineForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -101,7 +102,7 @@ def doctor_register():
         global count
         count += 1
         print(f'IN DOCTOR - COUNT = {count}')
-        user = Doctor(id=count, username=form.username.data, email=form.email.data, password=hashed_password, 
+        user = Doctor(id=count, username=form.username.data, email=form.email.data, password=hashed_password, description=form.description.data, 
                                 consultation_fee=form.consultation_fee.data, location=form.location.data, specialist=dict(specialist_choices).get(form.specialist.data))
         doc_timing = Timing(id=count)
         db.session.add(doc_timing)
@@ -662,3 +663,41 @@ def view_announcement():
     announcements = Announcement.query.order_by(Announcement.created_on.desc())\
         .paginate(page=page, per_page=5)
     return render_template("view_announcements.html", title="View announcements", announcements=announcements)
+
+@app.route('/update_medicine', methods=['GET', 'POST'])
+def choose_medicine():
+    form = ChooseMedicineForm()
+    if form.validate_on_submit():
+        medicine = form.medicine.data
+        return redirect(url_for('update_medicine', medicine_name=medicine))
+    return render_template('choose_medicine.html', title="Update Medicine", form=form)
+
+@app.route('/update_medicine/<string:medicine_name>', methods=['GET', 'POST'])
+def update_medicine(medicine_name):
+    medicine = Medicine.query.filter_by(name=medicine_name).first()
+    form = UpdateMedicineForm()
+    if request.method == 'GET':
+        form.disease.data = medicine.disease
+        form.picture.data = medicine.image_file
+        form.manufactured_by.data = medicine.manufactured_by
+        form.price.data = medicine.price
+        form.stock.data = medicine.stock
+        form.description.data = medicine.description
+        form.uses.data = medicine.uses
+        form.side.data = medicine.side_effects
+        form.substitutes.data = medicine.substitutes
+    elif form.validate_on_submit():
+        medicine.disease = form.disease.data
+        medicine.image_file = form.picture.data
+        medicine.manufactured_by = form.manufactured_by.data
+        medicine.price = form.price.data
+        medicine.stock = form.stock.data
+        medicine.description = form.description.data
+        medicine.uses = form.uses.data
+        medicine.side_effects = form.side.data
+        medicine.substitutes = form.substitutes.data
+        db.session.commit()
+        flash('Your medicine info has been updated', 'success')
+        return redirect(url_for('choose_medicine'))
+    return render_template('update_medicine.html', title="Update medicine", form=form)
+        

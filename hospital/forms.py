@@ -10,18 +10,30 @@ from hospital import app
 from hospital.models import User, Appointment, Doctor, Eprescription, Medicine, Admin
 
 
-specialist_choices = [('Cardiologist', 'cardiologist'), ('Dermatologist', 'dermatologist'), ('General physician', 'general physician'), ('Pediatrician', 'pediatrician'), ('Neurologist', 'neurologist'), ('Psychiatrist', 'psychiatrist')]
+specialist_choices = [('Family Physician', 'Family Physician'), ('Internal Medicine Physician', 'Internal Medicine Physician'), ('Pediatrician', 'Pediatrician'), ('Obstetrician/Gynecologist', 'Obstetrician/Gynecologist'),
+                         ('Surgeon', 'Surgeon'), ('Psychiatrist', 'Psychiatrist'), ('Cardiologist', 'Cardiologist'), ('Dermatologist', 'Dermatologist'), ('Endocrinologist', 'Endocrinologist'), ('Gastroenterologist', 'Gastroenterologist'), 
+                         ('Gastroenterologist', 'Gastroenterologist'), ('Infectious Disease Physician', 'Infectious Disease Physician'), ('Nephrologist', 'Nephrologist'), ('Ophthalmologist', 'Ophthalmologist'), ('Otolaryngologist', 'Otolaryngologist'),
+                         ('Pulmonologist', 'Pulmonologist'), ('Neurologist', 'Neurologist'), ('Physician Executive', 'Physician Executive'), ('Radiologist', 'Radiologist'), ('Anesthesiologist', 'Anesthesiologist'), ('Oncologist', 'Oncologist')]
+specialist_choices.sort()
+
 state_list = [('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Arunachal Pradesh'), ('Assam', 'Assam'), ('Bihar', 'Bihar'), ('Chhattisgarh', 'Chhattisgarh'), ('Goa', 'Goa'),
                     ('Gujarat', 'Gujarat'), ('Haryana', 'Haryana'), ('Himachal Pradesh', 'Himachal Pradesh'), ('Jharkhand', 'Jharkhand'), ('Karnataka', 'Karnataka'), ('Kerala', 'Kerala'),
                     ('Madhya Pradesh', 'Madhya Pradesh'), ('Maharashtra', 'Maharashtra'), ('Manipur', 'Manipur'), ('Meghalaya', 'Meghalaya'), ('Mizoram', 'Mizoram'), ('Nagaland', 'Nagaland'), 
                     ('Odisha', 'Odisha'), ('Punjab', 'Punjab'), ('Rajasthan', 'Rajasthan'), ('Sikkim', 'Sikkim'), ('Tamil Nadu', 'Tamil Nadu'), ('Telangana', 'Telangana'), ('Tripura', 'Tripura'),
                     ('Uttar Pradesh', 'Uttar Pradesh'), ('Uttarakhand', 'Uttarakhand'), ('West Bengal', 'West Bengal')]
+
 doctor_list = []
+medicine_list = []
+
 docs = Doctor.query.all()
 for doc in docs:
     doctor_list.append((doc.username, doc.username))
+doctor_list.sort()
 
-
+medicines = Medicine.query.all()
+for medicine in medicines:
+    medicine_list.append((medicine.name, medicine.name))
+medicine_list.sort()
 
 class RegistrationForm(FlaskForm):
     yes_doctor = BooleanField('Yes')
@@ -96,9 +108,10 @@ class DoctorRegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
+    description = TextAreaField('Tell us about your achievements', validators=[DataRequired()])
     specialist = SelectField(u'Specialist', choices=specialist_choices)
     consultation_fee = IntegerField('Consultation fee', validators=[DataRequired()])
-    location = StringField('Address', validators=[DataRequired(), Length(max=100)])
+    location = StringField('Chamber Address', validators=[DataRequired(), Length(max=100)])
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
@@ -210,3 +223,20 @@ class AnnouncementForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class ChooseMedicineForm(FlaskForm):
+    medicine = SelectField(u'Medicine name', choices=medicine_list)
+    submit = SubmitField('Submit')
+
+class UpdateMedicineForm(FlaskForm):
+    disease = StringField('Disease', validators=[DataRequired()])
+    # picture = FileField('Upload medicine picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
+    picture = StringField('Picture filename')
+    manufactured_by = StringField('Manufactured by', validators=[DataRequired()])
+    price = FloatField('Price')
+    stock = IntegerField('Stock', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    uses = TextAreaField('Uses', validators=[DataRequired()])
+    side = TextAreaField('Side Effects', validators=[DataRequired()])
+    substitutes = StringField('Substitute')
+    submit = SubmitField('Update Medicine')

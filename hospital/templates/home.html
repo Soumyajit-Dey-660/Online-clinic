@@ -101,6 +101,7 @@
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('timing', doctor_name=current_user.username) }}">Timing</a>
                   {% elif flag == 3 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('add_medicine') }}">Add Medicine</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('choose_medicine') }}">Update Medicine</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('admin_register') }}">Add new admin</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 170px" href="{{ url_for('make_announcement') }}">Make an announcement</a>
                   {% endif %}

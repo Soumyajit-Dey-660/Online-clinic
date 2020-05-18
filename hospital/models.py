@@ -53,6 +53,7 @@ class Doctor(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    description = db.Column(db.Text, nullable=False)
     consultation_fee = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String(100), nullable=False)
     specialist = db.Column(db.String(50), nullable=False)
