@@ -1,21 +1,30 @@
 import os
 import secrets
+import time
 from PIL import Image
 from datetime import date
 from flask import render_template, url_for, flash, redirect, request, abort
-from hospital import app, db, bcrypt, mail
+from hospital import app, db, bcrypt, mail, socketio
 from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
 from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm,
                               MedicineForm, UpdateCartForm, AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm,
                               ResetPasswordForm, ChooseMedicineForm, UpdateMedicineForm, ChooseDoctorForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
+from flask_socketio import SocketIO, join_room, leave_room, send
+
 
 users_count = User.query.count()
 doctors_count = Doctor.query.count()
 admin_count = Admin.query.count()
 count = users_count + doctors_count + admin_count
 print(count)
+
+
+# Predefined rooms for chat
+ROOMS = ["lounge", "news", "games", "coding"]
+
+
 @app.route("/")
 @app.route("/home")
 def home():
@@ -86,7 +95,7 @@ def user_register():
         db.session.add(cart)
         db.session.commit()
         user = User.query.filter_by(email=form.email.data).first()
-        send_registration_mail(user)
+        #send_registration_mail(user)
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('user_register.html', title='User-Register', form=form)
@@ -238,6 +247,17 @@ def reset_token(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
+
+
+@app.route("/chat", methods=['GET', 'POST'])
+def chat():
+
+    if not current_user.is_authenticated:
+        flash('Please login', 'danger')
+        return redirect(url_for('login'))
+
+    return render_template("chat.html", username=current_user.username, rooms=ROOMS)
+
 
 
 @app.route("/book_appointment", methods=['GET', 'POST'])
@@ -753,3 +773,41 @@ def doctor_description(doctor_id):
     return render_template('doctor_description.html', title="Doctor description", doc=doc, timing=timing)
 
         
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
+
+
+@socketio.on('incoming-msg')
+def on_message(data):
+    """Broadcast messages"""
+
+    msg = data["msg"]
+    username = data["username"]
+    room = data["room"]
+    # Set timestamp
+    time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
+    send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
+
+
+@socketio.on('join')
+def on_join(data):
+    """User joins a room"""
+
+    username = data["username"]
+    room = data["room"]
+    join_room(room)
+
+    # Broadcast that new user has joined
+    send({"msg": username + " has joined the " + room + " room."}, room=room)
+
+
+@socketio.on('leave')
+def on_leave(data):
+    """User leaves a room"""
+
+    username = data['username']
+    room = data['room']
+    leave_room(room)
+    send({"msg": username + " has left the room"}, room=room)

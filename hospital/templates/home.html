@@ -86,9 +86,8 @@
                </button>
                <div class="collapse navbar-collapse" id="navbarToggle">
                <div class="navbar-nav mr-auto" style="font-size: 18px;list-style-type: none; margin:0; padding: 0; overflow: hidden; background-color:#2895f1;">
-                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('home') }}"> Home </a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="#doctors">Doctors </a>
-                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('admin_register') }}">Add new admin</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('chat') }}">Chat now</a>
                   {% if flag == 1 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 140px" href="{{ url_for('new_appointment') }}">New Appointment</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('appointment_history', username=current_user.username) }}">Apoointment History</a>
