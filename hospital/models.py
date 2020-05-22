@@ -191,6 +191,7 @@ class Ordereditem(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     medicine_name = db.Column(db.String(30), nullable=False)
+    medicine_image = db.Column(db.String(20), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
 

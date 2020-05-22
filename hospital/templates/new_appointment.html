@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
+<a class="btn btn-secondary btn-sm mt-2 mb-3" href="{{ url_for('appointment_history', username=current_user.username) }}">Appointment History</a> 
     <div class="content-section">
-        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('appointment_history', username=current_user.username) }}">Appointment History</a> 
         <form method="POST" action="">
         </br>
             {{ form.hidden_tag() }}

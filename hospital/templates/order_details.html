@@ -79,12 +79,14 @@
             <table>
                 <tr>
                   <th>Medicine Name</th>
+                  <th>Image</th>
                   <th>Quantity</th>
                   <th>Total Price</th>
                 </tr>
             {% for item in items.items %}
                 <tr>
                     <td>{{ item.medicine_name }}</td>
+                    <td><img class="rounded float-left article-img" src="{{ url_for('static', filename='images/meds/' + item.medicine_image) }}"></td>
                     <td>{{ item.quantity }}</td>
                     <td>{{ item.total_price }}</td>
                 </tr>

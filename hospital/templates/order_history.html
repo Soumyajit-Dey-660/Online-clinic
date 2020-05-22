@@ -85,7 +85,7 @@
             {% for order in orders.items %}
                 <tr>
                     <td>{{ order.id }}</td>
-                    <td>{{ order.ordered_on.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ order.ordered_on.strftime('%b-%d-%Y %I:%M%p') }}</td>
                     <td><a class="article-title" href="{{ url_for('order_details', order_id=order.id) }}">Click here</a></td>
                 </tr>
             {% endfor %}

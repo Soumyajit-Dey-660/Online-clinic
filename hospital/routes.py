@@ -1,8 +1,9 @@
 import os
 import secrets
 import time
+import calendar
 from PIL import Image
-from datetime import date
+from datetime import date, datetime
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail, socketio
 from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
@@ -22,7 +23,7 @@ print(count)
 
 
 # Predefined rooms for chat
-ROOMS = ["lounge", "news", "games", "coding"]
+ROOMS = ["lounge", "premium"]
 
 
 @app.route("/")
@@ -272,6 +273,31 @@ def new_appointment():
         else:
             name = dict(doctor_list).get(form.doctor.data)
             doctor = Doctor.query.filter_by(username=name).first()
+            times = Timing.query.filter_by(doctor=doctor).first()
+            #LOGIC for date handling
+            day = form.date.data 
+            day_of_week = calendar.day_name[day.weekday()].lower()
+            if day_of_week == 'monday' and not times.monday:
+                flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+                return redirect(url_for('new_appointment'))
+            elif day_of_week == 'tuesday' and not times.tuesday:
+                flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+                return redirect(url_for('new_appointment'))
+            elif day_of_week == 'wednesday' and not times.wednesday:
+                flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+                return redirect(url_for('new_appointment'))
+            elif day_of_week == 'thursday' and not times.thursday:
+                flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+                return redirect(url_for('new_appointment'))
+            elif day_of_week == 'friday' and not times.friday:
+                flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+                return redirect(url_for('new_appointment'))
+            elif day_of_week == 'saturday' and not times.saturday:
+                flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+                return redirect(url_for('new_appointment'))
+            elif day_of_week == 'sunday' and not times.sunday:
+                flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+                return redirect(url_for('new_appointment'))
             appointment = Appointment(booked_for=form.date.data,doctor_id=doctor.id, user=current_user)
             db.session.add(appointment)
             db.session.commit()
@@ -332,13 +358,14 @@ def delete_appointment(appointment_id):
 
 @app.route("/appointment_history/<string:username>", methods=['GET', 'POST'])
 def appointment_history(username):
+    now = datetime.now()
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
     print(f'User is {user}')
     appointments = Appointment.query.filter_by(user=user)\
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=10)
-    return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user)
+    return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user, now=now)
 
 
 @app.route("/appointments_history/<string:username>", methods=['GET', 'POST'])
@@ -451,13 +478,17 @@ def medicine_display(medicine_id):
 @app.route('/view_cart', methods=['GET', 'POST'])
 def view_cart():
     grand_total = 0
+    first_order = False
     page = request.args.get('page', 1, type=int)
     cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
     for item in cartitems.items:
         grand_total += item.total_price 
     if Cartitem.query.filter_by(cart_id=current_user.id).first() is None:
         cartitems = None  
-    return render_template('view_cart.html', title="Shopping Cart", cartitems=cartitems, grand_total=grand_total)
+    first_order = Order.query.filter_by(user=current_user).first()
+    if not first_order:
+        first_order = True
+    return render_template('view_cart.html', title="Shopping Cart", cartitems=cartitems, grand_total=grand_total, flag=first_order)
 
 
 @app.route('/add_to_cart/<int:medicine_id>', methods=['GET', 'POST'])
@@ -594,6 +625,7 @@ def place_order():
     else:
         first_order = False
         total_amount *= 0.8
+    print(first_order)
     if int(total_amount) < 500:
         flash('Total bill amount should be over 500 rupees!', 'warning')
         return redirect(url_for('view_cart', flag=first_order))
@@ -606,18 +638,18 @@ def place_order():
     current_order = Order.query.filter_by(user=current_user).order_by(Order.ordered_on.desc()).first()
     if first_order:
         for item in my_cartitems:
-            my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, quantity=item.quantity, total_price=item.total_price*0.7)
+            my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, medicine_image=item.medicine.image_file, quantity=item.quantity, total_price=item.total_price*0.7)
             item.medicine.stock -= item.quantity
             db.session.add(my_ordered_items)
             db.session.delete(item)
     else:
         for item in my_cartitems:
-            my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, quantity=item.quantity, total_price=item.total_price*0.8)
+            my_ordered_items = Ordereditem(order_id=current_order.id, medicine_name=item.medicine.name, medicine_image=item.medicine.image_file, quantity=item.quantity, total_price=item.total_price*0.8)
             item.medicine.stock -= item.quantity
             db.session.add(my_ordered_items)
             db.session.delete(item)
     db.session.commit()
-    send_order_acknowledgement(current_user)
+    # send_order_acknowledgement(current_user)
     flash('Your order has been placed!', 'success')
     return render_template('order_acknowledgement.html', title="Order Placed Successfully")
 
@@ -787,7 +819,7 @@ def on_message(data):
     username = data["username"]
     room = data["room"]
     # Set timestamp
-    time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
+    time_stamp = datetime.utcnow().strftime('%b-%d %I:%M%p')
     send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
 
 

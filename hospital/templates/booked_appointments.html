@@ -40,7 +40,7 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Hospital</a>
+          <a class="navbar-brand mr-4" href="{{ url_for('home') }}">Life Care</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -75,25 +75,29 @@
               {% endfor %}
             {% endif %}
           {% endwith %}        
-          <h3 class="mb-4">Appointments booked by {{ user.username }} ({{ appointments.total }})</h3>
-          <table>
+          <h4 class="mb-4">Appointments booked by {{ user.username }} ({{ appointments.total }})</h4>
+          <table style="width: 100%;">
             <tr>
-                <th>Doctor</th>
+                <th style="width: 140px; text-align: center;">Doctor</th>
                 <th>Specialist</th>
-                <th>Booked on</th>
-                <th>Booked for</th>
-                <th>Consultation fee</th>
-                <th>Update or delete</th>
-                <th>E-prescription</th>
+                <th style="width: 170px; text-align: center;">Booked on</th>
+                <th style="width: 170px; text-align:center;">Booked for</th>
+                <th style="width: 100px; text-align: center;">Visit fee</th>
+                <th style="width: 140px; text-align: center;">Update or delete</th>
+                <th style="width: 140px; text-align: center;">Eprescription</th>
             </tr>
           {% for appointment in appointments.items %}
             <tr>
-                <td>{{ appointment.doctor.username }}</td>
+                <td><a href="{{ url_for('doctor_description', doctor_id=appointment.doctor.id) }}">{{ appointment.doctor.username }}</a></td>
                 <td>{{ appointment.doctor.specialist }}</td>
-                <td>{{ appointment.booked_on.strftime('%Y-%m-%d') }}</td>
-                <td>{{ appointment.booked_for.strftime('%Y-%m-%d') }}</td>
+                <td>{{ appointment.booked_on.strftime('%b-%d-%Y %I:%M%p') }}</td>
+                <td>{{ appointment.booked_for.strftime('%b-%d-%Y %A') }}</td>
                 <td>{{ appointment.doctor.consultation_fee }}</td>
+                {% if appointment.booked_for > now %}
                 <td><a class="article-title" href="{{ url_for('appointment', appointment_id=appointment.id) }}">Click here</a></td>
+                {% else %}
+                <td>You cannot update today's or previous appointments</td>
+                {% endif %}
                 <td><a class="article-title" href="{{ url_for('user_e_prescription', prescription_id=appointment.id) }}">Click here</a></td>
             </tr> 
           {% endfor %}
@@ -101,9 +105,9 @@
           {% for page_num in appointments.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
               {% if appointments.page == page_num %}
-                <a class="btn btn-info mb-4" href="{{ url_for('appointment_history', username=user.username, page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-info mb-4 mt-2" href="{{ url_for('appointment_history', username=user.username, page=page_num) }}">{{ page_num }}</a>
               {% else %}
-                <a class="btn btn-outline-info mb-4" href="{{ url_for('appointment_history', username=user.username, page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-outline-info mb-4 mt-2" href="{{ url_for('appointment_history', username=user.username, page=page_num) }}">{{ page_num }}</a>
               {% endif %}
             {% else %}
               ...
