@@ -186,6 +186,10 @@ class AppointmentForm(FlaskForm):
     submit = SubmitField('Book Appointment')
 
 
+class CheckAppointmentForm(FlaskForm):
+    date = DateField('Date',format='%Y-%m-%d')
+    submit = SubmitField('Check')
+
 class TimingForm(FlaskForm):
     monday = StringField('Monday')
     tuesday = StringField('Tuesday')

@@ -62,7 +62,7 @@
                 <img class="rounded float-left article-img" src="{{ url_for('static', filename='profile_pics/' + doc.image_file) }}">
                 <div class="media-body">
                 <div class="article-metadata">
-                    <h3 class="mr-2" >Doctor name: {{ doc.username }}</h3>
+                    <h3 class="mr-2" >Doctor: {{ doc.username }}</h3>
                 </div>
                 <h4 class="article-title mr-2">Specialist: </h4><p>{{ doc.specialist }}</p>
                 <h4 class="article-title mr-2">Consultation fee: </h4><p>{{ doc.consultation_fee }}</p>
@@ -74,37 +74,37 @@
                 {% if timing.monday != "" %}
                 <p class="article-content">Monday: {{ timing.monday }}</p>
                 {% else %}
-                <p class="article-content">Sorry but he doesn't attend patients on Monday</p>
+                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Monday</p>
                 {% endif %}
                 {% if timing.tuesday != "" %}
                 <p class="article-content">Tuesday: {{ timing.tuesday }}</p>
                 {% else %}
-                <p class="article-content">Sorry but he doesn't attend patients on Tuesday</p>
+                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Tuesday</p>
                 {% endif %}
                 {% if timing.wednesday != "" %}
                 <p class="article-content">Wednesday: {{ timing.wednesday }}</p>
                 {% else %}
-                <p class="article-content">Sorry but he doesn't attend patients on Wednesday</p>
+                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Wednesday</p>
                 {% endif %}
                 {% if timing.thursday != "" %}
                 <p class="article-content">Thursday: {{ timing.thursday }}</p>
                 {% else %}
-                <p class="article-content">Sorry but he doesn't attend patients on Thursday</p>
+                <p class="article-content">Sorry, {{ doc.username }} don't attend patients on Thursday</p>
                 {% endif %}
                 {% if timing.friday != "" %}
                 <p class="article-content">Friday: {{ timing.friday }}</p>
                 {% else %}
-                <p class="article-content">Sorry but he doesn't attend patients on Friday</p>
+                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Friday</p>
                 {% endif %}
                 {% if timing.saturday != "" %}
                 <p class="article-content">Saturday: {{ timing.saturday }}</p>
                 {% else %}
-                <p class="article-content">Sorry but he doesn't attend patients on Saturday</p>
+                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Saturday</p>
                 {% endif %}
                 {% if timing.sunday != "" %}
                 <p class="article-content">Sunday: {{ timing.monday }}</p>
                 {% else %}
-                <p class="article-content">Sorry but he doesn't attend patients on Sunday</p>
+                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Sunday</p>
                 {% endif %}
                 </div>
             </article>

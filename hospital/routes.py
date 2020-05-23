@@ -3,13 +3,13 @@ import secrets
 import time
 import calendar
 from PIL import Image
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail, socketio
 from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
 from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm,
                               MedicineForm, UpdateCartForm, AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm,
-                              ResetPasswordForm, ChooseMedicineForm, UpdateMedicineForm, ChooseDoctorForm, specialist_choices, doctor_list)
+                              CheckAppointmentForm, ResetPasswordForm, ChooseMedicineForm, UpdateMedicineForm, ChooseDoctorForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from flask_socketio import SocketIO, join_room, leave_room, send
@@ -267,8 +267,8 @@ def new_appointment():
     form = AppointmentForm()
     if form.validate_on_submit():
         today = date.today()
-        if form.date.data < today:
-            flash('Please choose a valid date!', 'danger')
+        if form.date.data <= today:
+            flash("You cannot choose today's or any previous date!", 'danger')
             return redirect(url_for('new_appointment'))
         else:
             name = dict(doctor_list).get(form.doctor.data)
@@ -298,7 +298,20 @@ def new_appointment():
             elif day_of_week == 'sunday' and not times.sunday:
                 flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
                 return redirect(url_for('new_appointment'))
-            appointment = Appointment(booked_for=form.date.data,doctor_id=doctor.id, user=current_user)
+            if day_of_week == 'monday':
+                appointment = Appointment(booked_for=form.date.data, booked_for_time=times.monday,doctor_id=doctor.id, user=current_user)
+            elif day_of_week == 'tuesday':
+                appointment = Appointment(booked_for=form.date.data, booked_for_time=times.tuesday,doctor_id=doctor.id, user=current_user)
+            elif day_of_week == 'wednesday':
+                appointment = Appointment(booked_for=form.date.data, booked_for_time=times.wednesday,doctor_id=doctor.id, user=current_user)
+            elif day_of_week == 'thursday':
+                appointment = Appointment(booked_for=form.date.data, booked_for_time=times.thursday,doctor_id=doctor.id, user=current_user)
+            elif day_of_week == 'friday':
+                appointment = Appointment(booked_for=form.date.data, booked_for_time=times.friday,doctor_id=doctor.id, user=current_user)
+            elif day_of_week == 'saturday':
+                appointment = Appointment(booked_for=form.date.data, booked_for_time=times.saturday,doctor_id=doctor.id, user=current_user)
+            elif day_of_week == 'sunday':
+                appointment = Appointment(booked_for=form.date.data, booked_for_time=times.sunday,doctor_id=doctor.id, user=current_user)
             db.session.add(appointment)
             db.session.commit()
             e_prescription = Eprescription(id=appointment.id,user=current_user, doctor_id=doctor.id)
@@ -324,11 +337,56 @@ def update_appointment(appointment_id):
     form = AppointmentForm()
     if form.validate_on_submit():
         today = date.today()
-        if form.date.data < today:
-            flash('Please choose a valid date!', 'danger')
+        day = form.date.data 
+        day_of_week = calendar.day_name[day.weekday()].lower()
+        date_after_three_months = today + timedelta(days=90)
+        if form.date.data <= today:
+            flash("Please choose a valid date! You cannot update the date to today's date or any previous date.", 'danger')
+            return redirect(url_for('update_appointment', appointment_id=appointment.id))
+        if form.date.data >= date_after_three_months:
+            flash("You cannot book an appointment 3 months in advance!", 'danger')
             return redirect(url_for('update_appointment', appointment_id=appointment.id))
         name = dict(doctor_list).get(form.doctor.data)
         doctor = Doctor.query.filter_by(username=name).first()
+        times = Timing.query.filter_by(doctor=doctor).first()
+        
+        if day_of_week == 'monday' and not times.monday:
+            flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+            return redirect(url_for('update_appointment',appointment_id=appointment_id))
+        elif day_of_week == 'tuesday' and not times.tuesday:
+            flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+            return redirect(url_for('update_appointment',appointment_id=appointment_id))
+        elif day_of_week == 'wednesday' and not times.wednesday:
+            flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+            return redirect(url_for('update_appointment',appointment_id=appointment_id))
+        elif day_of_week == 'thursday' and not times.thursday:
+            flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+            return redirect(url_for('update_appointment',appointment_id=appointment_id))
+        elif day_of_week == 'friday' and not times.friday:
+            flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+            return redirect(url_for('update_appointment',appointment_id=appointment_id))
+        elif day_of_week == 'saturday' and not times.saturday:
+            flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+            return redirect(url_for('update_appointment',appointment_id=appointment_id))
+        elif day_of_week == 'sunday' and not times.sunday:
+            flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
+            return redirect(url_for('update_appointment',appointment_id=appointment_id))
+
+        if day_of_week == 'monday':
+            booked_for_time = times.monday
+        elif day_of_week == 'tuesday':
+            booked_for_time = times.tuesday
+        elif day_of_week == 'wednesday':
+            booked_for_time = times.wednesday
+        elif day_of_week == 'thursday':
+            booked_for_time = times.thursday
+        elif day_of_week == 'friday':
+            booked_for_time = times.friday
+        elif day_of_week == 'saturday':
+            booked_for_time = times.saturday
+        elif day_of_week == 'sunday':
+            booked_for_time = times.sunday
+
         appointment.doctor = doctor
         appointment.booked_for = form.date.data
         db.session.commit()
@@ -368,15 +426,47 @@ def appointment_history(username):
     return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user, now=now)
 
 
-@app.route("/appointments_history/<string:username>", methods=['GET', 'POST'])
+@app.route('/show_appointment_history/<string:date>', methods=['GET', 'POST'])
+def show_history(date):
+    has_appointment = True
+    page = request.args.get('page', 1, type=int)
+    doctor = Doctor.query.filter_by(username=current_user.username).first_or_404()
+    format = "%m-%d-%Y"
+    str_date = datetime.strptime(date, format)
+    appointments = Appointment.query.filter_by(doctor=doctor).filter_by(booked_for=str_date)\
+        .order_by(Appointment.booked_on.desc())\
+        .paginate(page=page, per_page=10)
+    check = Appointment.query.filter_by(doctor=doctor).filter_by(booked_for=str_date).first()
+    if not check:
+        has_appointment = False
+    print(f'Appointments {appointments}')
+    return render_template('show_booked_appointments.html', title="Appointment history by date", date=str_date, flag=has_appointment, appointments=appointments, doctor=doctor)
+
+
+@app.route('/appointments_history', methods=['GET', 'POST'])
+def appointment_history_by_date():
+    doctor = Doctor.query.filter_by(username=current_user.username).first_or_404()
+    form = CheckAppointmentForm()
+    if form.validate_on_submit():
+        date_to_check = form.date.data
+        string_date_to_check = date_to_check.strftime("%m-%d-%Y")
+        return redirect(url_for('show_history', date=string_date_to_check))
+    return render_template('check_appointment_history_by_date.html', title="Appointment history by date",form=form)
+
+
+@app.route("/appointments_history/<string:username>/all", methods=['GET', 'POST'])
 def doc_appointment_history(username):
+    has_appointment = True
     page = request.args.get('page', 1, type=int)
     doctor = Doctor.query.filter_by(username=username).first_or_404()
     appointments_with = Appointment.query.filter_by(doctor=doctor)\
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=5)
-    
-    return render_template('doc_booked_appointments.html', title="Appointment-history", appointments_with=appointments_with, doctor=doctor)
+    check = Appointment.query.filter_by(doctor=doctor).first()
+    if not check:
+        has_appointment = False
+    print(f'Appointments {appointments_with}')
+    return render_template('doc_booked_appointments.html', title="Appointment-history",flag=has_appointment, appointments_with=appointments_with, doctor=doctor)
 
 @app.route("/timing/<string:doctor_name>", methods=['GET', 'POST'])
 def timing(doctor_name):

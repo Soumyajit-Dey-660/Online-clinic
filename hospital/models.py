@@ -108,6 +108,7 @@ class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booked_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     booked_for = db.Column(db.DateTime, nullable=False)
+    booked_for_time = db.Column(db.String(15), nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

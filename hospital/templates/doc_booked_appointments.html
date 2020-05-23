@@ -74,7 +74,8 @@
                 </div>
               {% endfor %}
             {% endif %}
-          {% endwith %}        
+          {% endwith %}  
+          {% if flag %}      
           <h3 class="mb-4">Appointments booked with {{ doctor.username }} ({{ appointments_with.total }})</h3>   
             <table>
                 <tr>
@@ -83,6 +84,7 @@
                   <th>Booked for</th>
                   <th>E-prescription</th>
                 </tr>
+            
             {% for appointment in appointments_with.items %}
                 <tr>
                     <td>{{ appointment.user.username }}</td>
@@ -103,6 +105,9 @@
                 ...
             {% endif %}
             {% endfor %}
+            {% else %}
+            <h5>You don't have any appointments booked on this day.</h5>
+            {% endif %}
             </div>
             <div class="col-md-4">
             <div class="content-section">
