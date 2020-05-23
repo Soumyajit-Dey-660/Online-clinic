@@ -40,7 +40,7 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Hospital</a>
+          <a class="navbar-brand mr-4" href="{{ url_for('home') }}">Life Care</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -74,7 +74,8 @@
                 </div>
               {% endfor %}
             {% endif %}
-          {% endwith %}  
+          {% endwith %} 
+          <a class="btn btn-secondary btn-sm mt-3 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('appointment_history_by_date') }}">Check appointments by date</a> 
           {% if flag %}      
           <h3 class="mb-4">Appointments booked with {{ doctor.username }} ({{ appointments_with.total }})</h3>   
             <table>
@@ -88,8 +89,8 @@
             {% for appointment in appointments_with.items %}
                 <tr>
                     <td>{{ appointment.user.username }}</td>
-                    <td>{{ appointment.booked_on.strftime('%Y-%m-%d') }}</td>
-                    <td>{{ appointment.booked_for.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ appointment.booked_on.strftime('%b-%d-%Y %I:%M%p') }}</td>
+                    <td>{{ appointment.booked_for.strftime('%b-%d-%Y') }} &nbsp; {{ appointment.booked_for_time }}</td>
                     <td><a class="article-title" href="{{ url_for('doc_e_prescription', prescription_id=appointment.id) }}">Click here</a></td>
                 </tr>
             {% endfor %}
@@ -97,9 +98,9 @@
             {% for page_num in appointments_with.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
                 {% if appointments_with.page == page_num %}
-                <a class="btn btn-info mb-4" href="{{ url_for('doc_appointment_history', username=doctor.username, page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-info mb-4 mt-2" href="{{ url_for('doc_appointment_history', username=doctor.username, page=page_num) }}">{{ page_num }}</a>
                 {% else %}
-                <a class="btn btn-outline-info mb-4" href="{{ url_for('doc_appointment_history', username=doctor.username, page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-outline-info mb-4 mt-2" href="{{ url_for('doc_appointment_history', username=doctor.username, page=page_num) }}">{{ page_num }}</a>
                 {% endif %}
             {% else %}
                 ...

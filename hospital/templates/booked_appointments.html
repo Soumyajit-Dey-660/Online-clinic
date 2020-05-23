@@ -92,7 +92,7 @@
                 <td>{{ appointment.doctor.specialist }}</td>
                 <td>{{ appointment.booked_on.strftime('%b-%d-%Y %I:%M%p') }}</td>
                 <td style="width: 220px;">{{ appointment.booked_for.strftime('%b-%d-%Y') }}</br> {{ appointment.booked_for_time }} </td>
-                <td>{{ appointment.doctor.consultation_fee }}</td>
+                <td style="width: 100px;">Rs. {{ appointment.doctor.consultation_fee }}</td>
                 {% if appointment.booked_for > now %}
                 <td><a class="article-title" href="{{ url_for('appointment', appointment_id=appointment.id) }}">Click here</a></td>
                 {% else %}

@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<a class="btn btn-secondary btn-sm mt-2 mb-3" href="{{ url_for('appointment_history', username=current_user.username) }}">Appointment History</a> 
+<a class="btn btn-secondary btn-sm mt-2 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('appointment_history', username=current_user.username) }}">Appointment History</a> 
     <div class="content-section">
         <form method="POST" action="">
         </br>

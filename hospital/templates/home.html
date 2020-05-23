@@ -87,7 +87,7 @@
                <div class="collapse navbar-collapse" id="navbarToggle">
                <div class="navbar-nav mr-auto" style="font-size: 18px;list-style-type: none; margin:0; padding: 0; overflow: hidden; background-color:#2895f1;">
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="#doctors">Doctors </a>
-                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('chat') }}">Chat now</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 130px" href="{{ url_for('chat') }}">Chat now</a>
                   {% if flag == 1 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 140px" href="{{ url_for('new_appointment') }}">New Appointment</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('appointment_history', username=current_user.username) }}">Apoointment History</a>
@@ -97,7 +97,7 @@
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 140px" href="{{ url_for('view_cart') }}">View Cart </a>
                   {% elif flag == 2 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('appointment_history_by_date') }}">Appointments with you</a>
-                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('timing', doctor_name=current_user.username) }}">Timing</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('timing', doctor_name=current_user.username) }}">Timing</a>
                   {% elif flag == 3 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('add_medicine') }}">Add Medicine</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('choose_medicine') }}">Update Medicine</a>

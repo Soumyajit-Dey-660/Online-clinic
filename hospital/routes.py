@@ -298,6 +298,15 @@ def new_appointment():
             elif day_of_week == 'sunday' and not times.sunday:
                 flash(doctor.username+" doesn't attend patients on "+day_of_week, 'danger') 
                 return redirect(url_for('new_appointment'))
+
+            chosen_date = datetime.combine(form.date.data, datetime.min.time())
+            appointment_on_chosen_date = Appointment.query.filter_by(doctor=doctor).filter_by(booked_for=chosen_date).first()
+            if appointment_on_chosen_date:
+                flash('You have already booked an appointment with this doctor on this date!', 'danger')
+                return redirect(url_for('new_appointment'))
+            print(appointment_on_chosen_date)
+            print(f'Form date {form.date.data}')
+            print(f'Doctor {doctor}')
             if day_of_week == 'monday':
                 appointment = Appointment(booked_for=form.date.data, booked_for_time=times.monday,doctor_id=doctor.id, user=current_user)
             elif day_of_week == 'tuesday':
@@ -419,7 +428,6 @@ def appointment_history(username):
     now = datetime.now()
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
-    print(f'User is {user}')
     appointments = Appointment.query.filter_by(user=user)\
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=10)
@@ -439,7 +447,6 @@ def show_history(date):
     check = Appointment.query.filter_by(doctor=doctor).filter_by(booked_for=str_date).first()
     if not check:
         has_appointment = False
-    print(f'Appointments {appointments}')
     return render_template('show_booked_appointments.html', title="Appointment history by date", date=str_date, flag=has_appointment, appointments=appointments, doctor=doctor)
 
 
@@ -465,8 +472,8 @@ def doc_appointment_history(username):
     check = Appointment.query.filter_by(doctor=doctor).first()
     if not check:
         has_appointment = False
-    print(f'Appointments {appointments_with}')
     return render_template('doc_booked_appointments.html', title="Appointment-history",flag=has_appointment, appointments_with=appointments_with, doctor=doctor)
+
 
 @app.route("/timing/<string:doctor_name>", methods=['GET', 'POST'])
 def timing(doctor_name):
@@ -511,8 +518,11 @@ def doc_e_prescription(prescription_id):
 
 @app.route('/user_e_prescription/<int:prescription_id>', methods=['GET', 'POST'])
 def user_e_prescription(prescription_id):
+    has_prescribed = True
     prescription = Eprescription.query.get(prescription_id)
-    return render_template('user_e_prescription.html', title="View-Prescription", prescription=prescription)
+    if not prescription:
+        has_prescribed = False
+    return render_template('user_e_prescription.html', title="View-Prescription", prescription=prescription, flag=has_prescribed)
 
 
 # def save_med_picture(form_picture):

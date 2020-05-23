@@ -187,7 +187,7 @@ class AppointmentForm(FlaskForm):
 
 
 class CheckAppointmentForm(FlaskForm):
-    date = DateField('Date',format='%Y-%m-%d')
+    date = DateField('Choose a Date',format='%Y-%m-%d')
     submit = SubmitField('Check')
 
 class TimingForm(FlaskForm):

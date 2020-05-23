@@ -4,9 +4,13 @@
     <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + prescription.doctor.image_file) }}">
     <div class="media-body">
       <div class="article-metadata">
-        <p class="mr-2"></p>Doctor:  {{ prescription.doctor.username }}</p>
+        <p class="mr-2"><a href="{{ url_for('doctor_description', doctor_id=prescription.doctor.id) }}">Doctor:  {{ prescription.doctor.username }}</p>
       </div>
+      {% if has_prescribed %}
       <p class="article-content">{{ prescription.content }}</p>
+      {% else %}
+      <p style="color: rgb(139, 0, 81);">Your doctor hasn't prescribed you anything yet. </br>Are you sure that you've visited your doctor?!</p>
+      {% endif %}
     </div>
   </article>
 {% endblock content %}
