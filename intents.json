@@ -1,0 +1,189 @@
+{"intents": [
+    {"tag": "greeting",
+     "patterns": ["Hi there", "How are you", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
+     "responses": ["Hello, thanks for asking", "Good to see you again", "Hi there, how can I help?"],
+     "context": [""]
+    },
+    {"tag": "goodbye",
+     "patterns": ["Bye", "See you later", "Goodbye", "Nice chatting to you, bye", "Till next time"],
+     "responses": ["See you!", "Have a nice day", "Bye! Come back again soon."],
+     "context": [""]
+    },
+    {"tag": "thanks",
+     "patterns": ["Thanks", "Thank you", "That's helpful", "Awesome, thanks", "Thanks for helping me"],
+     "responses": ["Happy to help!", "Any time!", "My pleasure"],
+     "context": [""]
+    },
+    {"tag": "noanswer",
+     "patterns": [],
+     "responses": ["Sorry, can't understand you", "Please give me more info", "Not sure I understand"],
+     "context": [""]
+    },
+    {"tag": "options",
+     "patterns": ["How you could help me?", "What you can do?", "What help you provide?", "How you can be helpful?", "What support is offered"],
+     "responses": ["I can guide you through to book an appointment with a doctor and order medicine from our online shop, help you find nearby pharmacies, hospitals and blood banks", "If you are having trouble with oredering medicine or booking an appointmnet with our doctors I can help you."],
+     "context": [""]
+    },
+    
+    {"tag": "pharmacy_search",
+     "patterns": ["Find me a pharmacy", "Find pharmacy", "List of pharmacies nearby", "Locate pharmacy", "Search pharmacy", "Pharmacy near me" ],
+     "responses": ["You can find pharmacies near you at |nearby_medical_stores_map", "Here you go |nearby_medical_stores_map"],
+     "context": ["search_pharmacy"]
+    },
+    {"tag": "hospital_search",
+     "patterns": ["Lookup for hospital", "Searching for hospital to transfer patient", "I want to search hospital data", "Hospital lookup for patient", "Looking up hospital details" ],
+     "responses": ["You can find hospitals near you at |nearby_hospital_map", "These are the nearby hospitals |nearby_hospital_map"],
+     "context": ["search_hospital"]
+    },
+    {"tag": "blood_bank_search",
+    "patterns": ["Lookup for blood bank", "Searching for blood banks", "I want to search nearby blood banks", "Blood banks near me" ],
+    "responses": ["You can find blood banks near you at |nearby_bloodbank_map", "These are the nearby blood banks |nearby_bloodbank_map"],
+    "context": ["search_blood_bank"]
+    },
+    {"tag": "blood_bank_details",
+    "patterns": ["Lookup for blood bank details", "Searching for blood banks in kolkata", "I want to search blood bank contact details", "Blood banks list", "Location of blood banks"],
+    "responses": ["Go to this link to get the list of blood banks in kolkata |important_blood_bank_contacts", "You can find the list of blood banks in kolkata here |important_blood_bank_contacts"],
+    "context": ["search_blood_bank_details"]
+    },
+    {"tag": "hospital_details",
+    "patterns": ["Lookup for hospital details", "Searching for hospitals in kolkata", "I want to search hospital contact details", "Hospitals list", "Location of hospitals"],
+    "responses": ["Go to this link to get the list of hospitals in kolkata |important_hospital_contacts", "You can find the list of hospitals in kolkata here |important_hospital_contacts"],
+    "context": ["search_hospital_details"]
+    },
+    {"tag": "list of doctors",
+    "patterns": ["Show me the doctors available", "Show me the full list of doctors", "I want to search for a doctor", "Doctors list", "Who are the doctors"],
+    "responses": ["Go to this link to get the list of doctors |all_doctors", "You can find the list of doctors in life care here |all_doctors"],
+    "context": ["search_for_doctors"]
+    },
+    {"tag": "specialist doctors",
+    "patterns": ["How many types of specialist doctors do you have", "I want to choose a specialist doctor", "I want to choose a doctor"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor", "You can find the list of doctors in life care here |choose_doctor", "You can choose a doctor here |choose_doctor"],
+    "context": ["search_for_specialist_doctors"]
+    },
+    {"tag": "family physician doctors",
+    "patterns": ["Give me the list of family physician doctors", "I want to choose a family physician", "Who are the family physicians in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Family Physician", "You can find the list of doctors in life care |choose_doctor(speciality{Family Physician", "You can choose a doctor |choose_doctor(speciality{Family Physician"],
+    "context": ["search_for_family_physician"]
+    },
+    {"tag": "internal medicine physician doctors",
+    "patterns": ["Give me the list of internal medicine physician doctors", "I want to choose a internal medicine physician", "Who are the internal medicine physicians in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Internal Medicine Physician", "You can find the list of doctors in life care |choose_doctor(speciality{Internal Medicine Physician", "You can choose a doctor |choose_doctor(speciality{Internal Medicine Physician"],
+    "context": ["search_for_internal_medicine_physician"]
+    },
+    {"tag": "pediatrician doctors",
+    "patterns": ["Give me the list of pediatrician doctors", "I want to choose a pediatrician", "Who are the pediatricians in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Pediatrician", "You can find the list of doctors in life care |choose_doctor(speciality{Pediatrician", "You can choose a doctor |choose_doctor(speciality{Pediatrician"],
+    "context": ["search_for_pediatrician"]
+    },
+    {"tag": "gynecologist doctors",
+    "patterns": ["Give me the list of gynecologist doctors", "I want to choose a gynecologist", "Who are the gynecologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Gynecologist", "You can find the list of doctors in life care |choose_doctor(speciality{Gynecologist", "You can choose a doctor |choose_doctor(speciality{Gynecologist"],
+    "context": ["search_for_gynecologist"]
+    },
+    {"tag": "surgeon doctors",
+    "patterns": ["Give me the list of surgeon doctors", "I want to choose a surgeon", "Who are the surgeons in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Surgeon", "You can find the list of doctors in life care |choose_doctor(speciality{Surgeon", "You can choose a doctor |choose_doctor(speciality{Surgeon"],
+    "context": ["search_for_surgeon"]
+    },
+    {"tag": "psychiatrist doctors",
+    "patterns": ["Give me the list of psychiatrist doctors", "I want to choose a psychiatrist", "Who are the psychiatrists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Psychiatrist", "You can find the list of doctors in life care |choose_doctor(speciality{Psychiatrist", "You can choose a doctor |choose_doctor(speciality{Psychiatrist"],
+    "context": ["search_for_psychiatrist"]
+    },
+    {"tag": "cardiologist doctors",
+    "patterns": ["Give me the list of cardiologist doctors", "I want to choose a cardiologist", "Who are the cardiologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Cardiologist", "You can find the list of doctors in life care |choose_doctor(speciality{Cardiologist", "You can choose a doctor |choose_doctor(speciality{Cardiologist"],
+    "context": ["search_for_cardiologist"]
+    },
+    {"tag": "dermatologist doctors",
+    "patterns": ["Give me the list of dermatologist doctors", "I want to choose a dermatologist", "Who are the dermatologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Dermatologist", "You can find the list of doctors in life care |choose_doctor(speciality{Dermatologist", "You can choose a doctor |choose_doctor(speciality{Dermatologist"],
+    "context": ["search_for_dermatologist"]
+    },
+    {"tag": "endocrinologist doctors",
+    "patterns": ["Give me the list of endocrinologist doctors", "I want to choose a endocrinologist", "Who are the endocrinologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Endocrinologist", "You can find the list of doctors in life care |choose_doctor(speciality{Endocrinologist", "You can choose a doctor here |choose_doctor(speciality{Endocrinologist"],
+    "context": ["search_for_endocrinologist"]
+    },
+    {"tag": "gastroenterologist doctors",
+    "patterns": ["Give me the list of gastroenterologist doctors", "I want to choose a gastroenterologist", "Who are the gastroenterologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Gastroenterologist", "You can find the list of doctors in life care |choose_doctor(speciality{Gastroenterologist", "You can choose a doctor here |choose_doctor(speciality{Gastroenterologist"],
+    "context": ["search_for_gastroenterologist"]
+    },
+    {"tag": "infectious disease physician doctors",
+    "patterns": ["Give me the list of gastroenterologist doctors", "I want to choose a infectious disease physician", "Who are the infectious disease physicians in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Infectious Disease Physician", "You can find the list of doctors in life care |choose_doctor(speciality{Infectious Disease Physician", "You can choose a doctor |choose_doctor(speciality{Infectious Disease Physician"],
+    "context": ["search_for_infectious_disease_physician"]
+    },
+    {"tag": "nephrologist doctors",
+    "patterns": ["Give me the list of nephrologist doctors", "I want to choose a nephrologist", "Who are the nephrologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Nephrologist", "You can find the list of doctors in life care |choose_doctor(speciality{Nephrologist", "You can choose a doctor here |choose_doctor(speciality{Nephrologist"],
+    "context": ["search_for_nephrologist"]
+    },
+    {"tag": "ophthalmologist doctors",
+    "patterns": ["Give me the list of ophthalmologist doctors", "I want to choose a ophthalmologist", "Who are the ophthalmologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Ophthalmologist", "You can find the list of doctors in life care |choose_doctor(speciality{Ophthalmologist", "You can choose a doctor |choose_doctor(speciality{Ophthalmologist"],
+    "context": ["search_for_ophthalmologist"]
+    },
+    {"tag": "otolaryngologist doctors",
+    "patterns": ["Give me the list of otolaryngologist doctors", "I want to choose a otolaryngologist", "Who are the otolaryngologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Otolaryngologist", "You can find the list of doctors in life care |choose_doctor(speciality{Otolaryngologist", "You can choose a doctor |choose_doctor(speciality{Otolaryngologist"],
+    "context": ["search_for_otolaryngologist"]
+    },
+    {"tag": "pulmonologist doctors",
+    "patterns": ["Give me the list of pulmonologist doctors", "I want to choose a pulmonologist", "Who are the pulmonologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Pulmonologist", "You can find the list of doctors in life care |choose_doctor(speciality{Pulmonologist", "You can choose a doctor here |choose_doctor(speciality{Pulmonologist"],
+    "context": ["search_for_pulmonologist"]
+    },
+    {"tag": "neurologist doctors",
+    "patterns": ["Give me the list of neurologist doctors", "I want to choose a neurologist", "Who are the neurologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Neurologist", "You can find the list of doctors in life care |choose_doctor(speciality{Neurologist", "You can choose a doctor |choose_doctor(speciality{Neurologist"],
+    "context": ["search_for_neurologist"]
+    },
+    {"tag": "physician executive doctors",
+    "patterns": ["Give me the list of physician executive doctors", "I want to choose a physician executive", "Who are the physician executives in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Physician Executive", "You can find the list of doctors in life care |choose_doctor(speciality{Physician Executive", "You can choose a doctor |choose_doctor(speciality{Physician Executive"],
+    "context": ["search_for_physician_executive"]
+    },
+    {"tag": "radiologist doctors",
+    "patterns": ["Give me the list of radiologist doctors", "I want to choose a radiologist", "Who are the radiologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Radiologist", "You can find the list of doctors in life care |choose_doctor(speciality{Radiologist", "You can choose a doctor |choose_doctor(speciality{Radiologist"],
+    "context": ["search_for_radiologist"]
+    },
+    {"tag": "anesthesiologist doctors",
+    "patterns": ["Give me the list of anesthesiologist doctors", "I want to choose a anesthesiologist", "Who are the anesthesiologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Anesthesiologist", "You can find the list of doctors in life care |choose_doctor(speciality{Anesthesiologist", "You can choose a doctor |choose_doctor(speciality{Anesthesiologist"],
+    "context": ["search_for_anesthesiologist"]
+    },
+    {"tag": "oncologist doctors",
+    "patterns": ["Give me the list of oncologist doctors", "I want to choose a oncologist", "Who are the oncologists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Oncologist", "You can find the list of doctors in life care |choose_doctor(speciality{Oncologist", "You can choose a doctor |choose_doctor(speciality{Oncologist"],
+    "context": ["search_for_oncologist"]
+    },
+    {"tag": "book an appointment",
+    "patterns": ["I want to book an appointment", "How to book an appointment with a doctor", "Book my appointment", "Can I book an appointment"],
+    "responses": ["You can book an appointment |new_appointment", "Book an appointment with a doctor through Life Care |new_appointment", "Want to book an appointment? |new_appointment"],
+    "context": ["appointment_booking"]
+    },
+    {"tag": "order medicine",
+    "patterns": ["I want to order medicine", "How to order medicines", "Order medicine", "Can I order medicine"],
+    "responses": ["You can order medicines |medicines_disease", "Choose your medicines from |medicines_disease", "Want to order medicines? Check this |medicines_disease"],
+    "context": ["order_medicine"]
+    },
+    {"tag": "about bot",
+    "patterns": ["Who are you", "Chatbot", "Are you a bot", "Are you human"],
+    "responses": ["Hello, I am Life Care bot. I can help you exploring the wesbite.", "I am a bot. I am here to help you with this website", "I am not a human, I am just an AI bot"],
+    "context": ["about_chatbot"]
+    },
+    {"tag": "about life care",
+    "patterns": ["What is life care", "Life Care", "Is Life Care a online medical service provider", "Is Life Care an offline organisation", "Does Life Care only provide online services"],
+    "responses": ["Life Care is an online medical service provider.", "Life care doesn't have any offline branches, it is a fully online service provider", "Life Care provides 24x7 online service."],
+    "context": ["about_company"]
+    },
+    {"tag": "services provided",
+    "patterns": ["What are the services provided by Life Care", "Life Care services", "What services does Life Care provide"],
+    "responses": ["Life Care is an online medical service provider. You can book an appointment, order medicines, view nearby medical stores, hospitals, blood banks and much more", "Life care lets you book an appointment with a doctor, order medicines online which will be delivered at your doorstep within 2 days. It has emergency contact numbers of hospital and blood banks as well as maps assistance."],
+    "context": ["services_provided"]
+    }
+]
+}

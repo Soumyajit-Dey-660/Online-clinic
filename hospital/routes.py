@@ -5,14 +5,88 @@ import calendar
 from PIL import Image
 from datetime import date, datetime, timedelta
 from flask import render_template, url_for, flash, redirect, request, abort
-from hospital import app, db, bcrypt, mail, socketio
-from hospital.models import User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine, Cart, Cartitem, Order, Ordereditem, Announcement
-from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm, UserRegistrationForm, DoctorRegistrationForm, TimingForm,
-                              MedicineForm, UpdateCartForm, AdminRegistrationForm ,EprescriptionForm, LoginForm, UpdateAccountForm, RequestResetForm,
-                              CheckAppointmentForm, ResetPasswordForm, ChooseMedicineForm, UpdateMedicineForm, ChooseDoctorForm, specialist_choices, doctor_list)
+from hospital import app, db, bcrypt, mail, socketio, fujs
+from hospital.models import (User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine,
+                             Cart, Cartitem, Order, Ordereditem, Announcement)
+from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm,
+                            UserRegistrationForm, DoctorRegistrationForm, TimingForm,
+                            MedicineForm, UpdateCartForm, AdminRegistrationForm,
+                            EprescriptionForm, LoginForm, UpdateAccountForm,
+                            RequestResetForm, CheckAppointmentForm, ResetPasswordForm,
+                            ChooseMedicineForm, UpdateMedicineForm,
+                            ChooseDoctorForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from flask_socketio import SocketIO, join_room, leave_room, send
+from flask import Flask, render_template, jsonify, request
+from flask_util_js import FlaskUtilJs
+import nltk
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+import pickle
+import numpy as np
+
+from tensorflow.keras.models import load_model
+model = load_model('chatbot_model.h5')
+import json
+import random
+intents = json.loads(open('intents.json').read())
+words = pickle.load(open('words.pkl','rb'))
+classes = pickle.load(open('classes.pkl','rb'))
+
+
+
+
+
+def clean_up_sentence(sentence):
+    # tokenize the pattern - split words into array
+    sentence_words = nltk.word_tokenize(sentence)
+    # stem each word - create short form for word
+    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
+    return sentence_words
+
+# return bag of words array: 0 or 1 for each word in the bag that exists in the sentence
+
+def bow(sentence, words, show_details=True):
+    # tokenize the pattern
+    sentence_words = clean_up_sentence(sentence)
+    # bag of words - matrix of N words, vocabulary matrix
+    bag = [0]*len(words)  
+    for s in sentence_words:
+        for i,w in enumerate(words):
+            if w == s: 
+                # assign 1 if current word is in the vocabulary position
+                bag[i] = 1
+                if show_details:
+                    print ("found in bag: %s" % w)
+    return(np.array(bag))
+
+def predict_class(sentence, model):
+    # filter out predictions below a threshold
+    p = bow(sentence, words,show_details=False)
+    res = model.predict(np.array([p]))[0]
+    ERROR_THRESHOLD = 0.25
+    results = [[i,r] for i,r in enumerate(res) if r>ERROR_THRESHOLD]
+    # sort by strength of probability
+    results.sort(key=lambda x: x[1], reverse=True)
+    return_list = []
+    for r in results:
+        return_list.append({"intent": classes[r[0]], "probability": str(r[1])})
+    return return_list
+
+def getResponse(ints, intents_json):
+    tag = ints[0]['intent']
+    list_of_intents = intents_json['intents']
+    for i in list_of_intents:
+        if(i['tag']== tag):
+            result = random.choice(i['responses'])
+            break
+    return result
+
+def chatbot_response(msg):
+    ints = predict_class(msg, model)
+    res = getResponse(ints, intents)
+    return res
 
 
 users_count = User.query.count()
@@ -41,7 +115,7 @@ def home():
             flag = 3
     except:
         flag = 0
-    return render_template('home.html',flag=flag)
+    return render_template('home.html', flag=flag)
 
 
 @app.route("/about")
@@ -62,7 +136,7 @@ def register():
         elif form.no_doctor.data:
             return redirect(url_for('user_register'))
         elif not form.yes_doctor.data and not form.no_doctor.data:
-            flash('You have to choose a option!', 'danger')     
+            flash('You have to choose a option!', 'danger')
     return render_template('register.html', form=form)
 
 
@@ -70,7 +144,7 @@ def send_registration_mail(user):
     msg = Message("Thank you for registering on Life Care",
                   sender='soumyajit660@gmail.com',
                   recipients=[user.email])
-    msg.body = f'''Welcome {user.username} to Life Care. To view our website, visit the following link: 
+    msg.body = f'''Welcome {user.username} to Life Care. To view our website, visit the following link:
 {url_for('home', _external=True)}
 We give flat 20% off on every order. You'll get 30% off on your first order from Life care. 
 If you have not registered on our webpage then simply ignore this email and no changes will be made.
@@ -87,8 +161,11 @@ def user_register():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         global count
         count += 1
-        user = User(id=count, username=form.username.data, email=form.email.data, password=hashed_password, 
-                                    address=form.address.data, state=form.state.data, city=form.city.data, zipcode=form.zipcode.data, phone_number=form.phonenumber.data)
+        user = User(id=count, username=form.username.data, email=form.email.data,
+                    password=hashed_password, address=form.address.data,
+                    state=form.state.data, city=form.city.data,
+                    zipcode=form.zipcode.data,
+                    phone_number=form.phonenumber.data)
         print(f'IN USER - COUNT = {count}')
         db.session.add(user)
         db.session.commit()
@@ -112,8 +189,10 @@ def doctor_register():
         global count
         count += 1
         print(f'IN DOCTOR - COUNT = {count}')
-        user = Doctor(id=count, username=form.username.data, email=form.email.data, password=hashed_password, description=form.description.data, 
-                                consultation_fee=form.consultation_fee.data, location=form.location.data, specialist=dict(specialist_choices).get(form.specialist.data))
+        user = Doctor(id=count, username=form.username.data, email=form.email.data,
+                      password=hashed_password, description=form.description.data,
+                      consultation_fee=form.consultation_fee.data, location=form.location.data,
+                      specialist=dict(specialist_choices).get(form.specialist.data))
         doc_timing = Timing(id=count)
         db.session.add(doc_timing)
         db.session.add(user)
@@ -148,7 +227,7 @@ def login():
         if user is None:
             user = Doctor.query.filter_by(email=form.email.data).first()
             if user is None:
-               user = Admin.query.filter_by(email=form.email.data).first() 
+                user = Admin.query.filter_by(email=form.email.data).first() 
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
@@ -232,7 +311,7 @@ def reset_request():
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    user = Normal.verify_reset_token(token)
+    user = User.verify_reset_token(token)
     if user is None:
         user = Doctor.verify_reset_token(token)
     if user is None:
@@ -943,3 +1022,36 @@ def on_leave(data):
     room = data['room']
     leave_room(room)
     send({"msg": username + " has left the room"}, room=room)
+    
+    
+@app.route('/background_process')
+def background_process():
+    msg = request.args.get('query', 0, type=str)
+    print(f'Me: {msg}')
+    response = chatbot_response(str(msg))
+    response_link = ""
+    response_args = ""
+    response_value = ""
+    if "("  in response:
+        txt_div = response.index("|")
+        response_text = response[:txt_div]
+        url_div = response.index("(")
+        response_link = response[txt_div+1:url_div]
+        arg_div = response.index("{")
+        response_args = response[url_div+1:arg_div]
+        value = response[arg_div+1:]
+        response_value = value.replace(" ", '%20')
+    elif "|" in response:
+        txt_div = response.index("|")
+        response_text = response[:txt_div]
+        response_link = response[txt_div+1:]
+    else:
+        response_text = response
+    # print(f'Response text: {response_text}')
+    # print(f'Response link: {response_link}')
+    # print(f'Response args: {response_args}')
+    # print(f'Response value: {response_value}')
+
+    #background: url('../img/bg.jpeg'); 
+    #background-image: "{{ url_for('static', filename='images/chat-back.jpg') }}"; 
+    return jsonify(result_text=response_text, result_link=str(response_link), result_args=response_args, result_value=response_value)
