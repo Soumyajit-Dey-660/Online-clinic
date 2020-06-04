@@ -835,13 +835,13 @@
             const v1 = document.createElement('div');
             const v2 = document.createElement('div');
             const v3 = document.createElement('div');
-            // $("#user-chat").text($('input[name="query"]').val());
-            // PRINTING BOT ANSWER
+            
+            // Fetching The RESPONSE 
                $.getJSON('/background_process', {
                  query: $('input[name="query"]').val(),
                }, function(data) {
-               // PRINTING RESPONSE DATA
-               // $("#bot-chat").text(data.result_text)
+               
+               // Cleaning the input text box after each message
                document.getElementById('user-text').value = '';
                scrollDownChatWindow();
                    if (data.result_link == ""){

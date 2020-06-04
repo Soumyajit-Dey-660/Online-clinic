@@ -75,7 +75,7 @@
               {% endfor %}
             {% endif %}
           {% endwith %} 
-          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('choose_doctor') }}">Doctor from specific field</a> </br></br>   
+          <a class="btn btn-secondary btn-sm mt-2 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('choose_doctor') }}">Doctor from specific field</a> 
             <h3 class="mb-4">All {{ speciality }} list</h3> 
             <table>
               <tr>
@@ -94,9 +94,9 @@
           {% for page_num in doctors.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
                 {% if doctors.page == page_num %}
-                    <a class="btn btn-info mb-4" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
+                    <a class="btn btn-info mb-4 mt-2" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
                 {% else %}
-                    <a class="btn btn-outline-info mb-4" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
+                    <a class="btn btn-outline-info mb-4 mt-2" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
                 {% endif %}
             {% else %}
                 ...

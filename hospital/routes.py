@@ -547,7 +547,7 @@ def doc_appointment_history(username):
     doctor = Doctor.query.filter_by(username=username).first_or_404()
     appointments_with = Appointment.query.filter_by(doctor=doctor)\
         .order_by(Appointment.booked_on.desc())\
-        .paginate(page=page, per_page=5)
+        .paginate(page=page, per_page=10)
     check = Appointment.query.filter_by(doctor=doctor).first()
     if not check:
         has_appointment = False

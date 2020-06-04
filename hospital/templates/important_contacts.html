@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
 {% block content %}
-    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('important_hospital_contacts') }}">Hospital Contacts</a>
-</br><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('important_blood_bank_contacts') }}">Blood Bank Contacts</a>
+<a class="btn btn-secondary btn-sm mt-2 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('important_hospital_contacts') }}">Hospital Contacts</a> 
+<a class="btn btn-secondary btn-sm mt-2 mb-3 ml-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('important_blood_bank_contacts') }}">Blood Bank Contacts</a>    
 {% endblock content %}

@@ -49,8 +49,8 @@
         }
         .alert {
             padding: 20px;
-            background-color:  #cc6699;
-            color: white;
+            background-color:  #79dacd;
+            color: black;
           }
 
         .closebtn {
@@ -72,7 +72,7 @@
         
         .dropdown:hover .dropdown-content {display: block;}
         
-        .dropdown:hover .dropbtn {background-color: #3e8e41;}
+        .dropdown:hover .dropbtn {background-color: rgb(56, 161, 161); color: black; cursor: pointer;}
     </style>
   </head>
 <body>
@@ -80,11 +80,7 @@
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
           <a class="navbar-brand mr-4" href="{{ url_for('home') }}">Life Care</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarToggle"></div>
-            <div class="dropdown">
+          <div class="dropdown">
             <button class="dropbtn">Disease</button>
                 <div class="dropdown-content">
                     <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='cough and cold') }}">Cough and Cold</a>
@@ -98,7 +94,11 @@
                     <a class="nav-item nav-link" href="{{ url_for('medicines', disease_type='ear drops') }}">Ear drops</a>
                 </div>
             </div>
+          <div class="collapse navbar-collapse" id="navbarToggle"></div>
             </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
@@ -138,18 +138,17 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="card">
-                        <img src="{{ url_for('static', filename='images/meds/' + medicine.image_file) }}" class="card-img-top" alt="/" height="200">
-                        <div class="card-body"> 
-                            <a href="{{ url_for('medicine_display', medicine_id=medicine.id) }}" class="card-text" style="text-align: center;"><b>{{ medicine.name }}</b></a>
-                            <p> {{ medicine.id }}
-                            <br>Price: {{ medicine.price }} </br></p>
-                            </br>
-                            {% if medicine.stock <= 20 %}
+                      {% if medicine.stock <= 20 %}
                             <div class="alert">
                               <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
                               <strong>Hurry!</strong> only {{ medicine.stock }} left!
                             </div>
                             {% endif %}
+                        <img src="{{ url_for('static', filename='images/meds/' + medicine.image_file) }}" class="card-img-top" alt="/" height="200">
+                        <div class="card-body"> 
+                            <a href="{{ url_for('medicine_display', medicine_id=medicine.id) }}" class="card-text" style="text-align: center;"><b>{{ medicine.name }}</b></a>
+                            <p> {{ medicine.id }} <br>
+                            Price: {{ medicine.price }}</p>
                             <div class="button center"><a style='display: inline-block;
                                 background: #21759b;
                                 border-radius: 4px;
