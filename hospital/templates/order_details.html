@@ -88,10 +88,10 @@
                     <td>{{ item.medicine_name }}</td>
                     <td><img class="rounded float-left article-img" src="{{ url_for('static', filename='images/meds/' + item.medicine_image) }}"></td>
                     <td>{{ item.quantity }}</td>
-                    <td>{{ item.total_price }}</td>
+                    <td> Rs. {{'%0.2f'%(item.total_price) }}</td>
                 </tr>
             {% endfor %}
-            <h4>Total bill: Rs. {{ total }}
+            <h4>Total bill: Rs. {{ '%0.2f'%(total) }}
             </table>    
             {% for page_num in items.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}

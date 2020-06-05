@@ -10,7 +10,9 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}" media="screen" title="no title" charset="utf-8">
+    <script src="https://code.jquery.com/jquery-2.2.4.js" charset="utf-8"></script>
+    <meta name="robots" content="noindex,follow" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     
     {% if title %}
@@ -65,79 +67,91 @@
       </nav>
     </header>
     <main role="main" class="container">
-      <div class="row">
-        <div class="col-md-8">
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}       
-      {% if cartitems != None %} 
-          <h3 class="mb-4">Shopping cart of {{ current_user.username }}</h3>
-          <table>
-            <tr>
-                <th>Medicine id</th>
-                <th>Medicine image</th>
-                <th>Medicine name</th>
-                <th>Medicine Price</th>
-                <th>Quantity</th>
-                <th>Update or delete</th>
-                <th>Subtotal</th>
-            </tr>
-          {% for item in cartitems.items %}
-            <tr>
-                <td style="text-align: center">{{ item.medicine_id }}</td>
-                <td><img class="img-rounded" src="{{ url_for('static', filename='images/meds/' + item.medicine.image_file) }}"></td>
-                <td>{{ item.medicine.name }}</td>
-                <td>{{ item.medicine.price }}</td>
-                <td style="text-align: center">{{ item.quantity }}</td>
-                <td><a class="article-title" href="{{ url_for('cart', item_id=item.id) }}">Click here</a></td>
-                <td>{{ item.total_price }}</td>
-            </tr> 
-          {% endfor %}
-        </table>
-          {% for page_num in cartitems.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-            {% if page_num %}
-              {% if cartitems.page == page_num %}
-              </br><a class="btn btn-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
-              {% else %}
-              </br> <a class="btn btn-outline-info mb-4" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
+          <!-- Title -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">
+                    {{ message }}
+                  </div>
+                {% endfor %}
               {% endif %}
-            {% else %}
-              ...
-            {% endif %}
-          {% endfor %}
-          </br>
-          {% if flag == 1 %}
-          <h5 style="display: inline">Grand Total:  Rs.{{ '%0.2f'%(grand_total) }}</h5>&nbsp;&nbsp;&nbsp;&nbsp; <h5 style="display: inline">Check out:  Rs.{{ '%0.2f'%(grand_total*0.7) }} (-30%)</h5>
-          {% else %}
-          <h5 style="display:inline">Grand Total:  Rs.{{ '%0.2f'%(grand_total) }}</h5>&nbsp;&nbsp;&nbsp;&nbsp; <h5 style="display: inline">Check out:  Rs.{{ '%0.2f'%(grand_total*0.8) }} (-20%)</h5>
-          {% endif %}
-            </br><a class="btn btn-secondary btn-sm mt-3 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('place_order') }}">Place Order</a>
-        </div>
-        <div class="col-md-4">
-          <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p class='text-muted'>Check these out!
-              <ul class="list-group">
-                <li class="list-group-item list-group-item-light"><a href="{{ url_for('necessary_information') }}">Necessary information</a></li>
-                <li class="list-group-item list-group-item-light"><a href="{{ url_for('view_announcement') }}">View announcements</a></li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
-              </ul>
-            </p>
+            {% endwith %}       
+          {% if cartitems != None %} 
+          <div class="title" style="border-bottom: none; margin-bottom: 7px; text-align: left;">
+            <h4>Shopping cart of {{ current_user.username }}</h4>
           </div>
+          {% for item in cartitems.items %}
+          <!-- Product #1 -->
+          <div class="item" style="max-width: fit-content;border-style: ridge;">
+            <div class="buttons" style=" max-width: 20px;">
+              <span class="delete-btn" style="background: url( {{ url_for('static', filename='images/delete-icn.svg') }}) no-repeat center;" data-toggle="modal" data-target="#deleteModal"></span>
+              <span class="like-btn" style="background: url( {{ url_for('static', filename='images/twitter-heart.png') }}); position: absolute;top: 9px;left: 15px;display: inline-block;width: 60px;height: 60px;background-size: 2900%;background-repeat: no-repeat;cursor: pointer;"></span>
+            </div>
+    
+            <div class="image">
+              <img style="max-width: 40%; display: block; margin-left: auto; margin-right: auto;" src="{{ url_for('static', filename='images/meds/' + item.medicine.image_file) }}" alt="" />
+            </div>
+    
+            <div class="description" style="max-width: 100px;">
+              <span> ID: {{ item.medicine_id }}</span>
+                <span style="color: black; font-size:18px;">{{ item.medicine.name }}</span>
+                <span style="color: black; font-size: 14px;">{{ item.medicine.disease }}</span>
+            </div>
+            <div class="quantity" style="max-width: 80px;">
+              <p style="width: 70px;margin-bottom: 3px;">Quantity:{{ item.quantity }}<br><a class="article-title mt-2"  style="width: 70px;" href="{{ url_for('update_cart', item_id=item.id) }}"><b>Add more</b></a></p>
+            </div>
+            <div class="total-price">Rs. {{ item.medicine.price*item.quantity }}</div>
+          </div>
+         <!-- Modal -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">Delete Cart Item?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-info " data-dismiss="modal" style="width: 72px; height: 39px; text-align: center; background-color: rgb(15, 150, 204)">Close</button>
+                  <form action="{{ url_for('delete_cart', item_id=item.id) }}" method="POST">
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% for page_num in cartitems.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          {% if page_num %}
+            {% if cartitems.page == page_num %}
+            <a class="btn btn-info mb-4 mt-3" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+            <a class="btn btn-outline-info mb-4 mt-3" href="{{ url_for('view_cart', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+          {% else %}
+            ...
+          {% endif %}
+        {% endfor %}
+        </br>
+          {% if flag == 1 %}
+          <h5 style="display: inline">Grand Total:  Rs.{{ '%0.2f'%(grand_total) }}</h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <h5 style="display: inline">Check out:  Rs.{{ '%0.2f'%(grand_total*0.7) }} (-30%)</h5>
+          {% else %}
+          <h5 style="display:inline">Grand Total:  Rs.{{ '%0.2f'%(grand_total) }}</h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <h5 style="display: inline">Check out:  Rs.{{ '%0.2f'%(grand_total*0.8) }} (-20%)</h5>
+          {% endif %}
+          </br><a class="btn btn-secondary btn-sm mt-3 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('place_order') }}">Place Order</a>
         </div>
-        {% else %}
+          
+      {% else %}
       <h4>Your Shopping cart is empty</h4>
       {% endif %}
-      </div>
       </main>
-
+      <script type="text/javascript">
+        $('.like-btn').on('click', function() {
+          $(this).toggleClass('is-active');
+        });
+      </script>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

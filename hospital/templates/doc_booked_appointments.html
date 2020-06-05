@@ -98,9 +98,9 @@
             {% for page_num in appointments_with.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
                 {% if appointments_with.page == page_num %}
-                <a class="btn btn-info mb-4 mt-2" href="{{ url_for('doc_appointment_history', username=doctor.username, page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-info mb-4 mt-2" href="{{ url_for('doc_appointment_history', page=page_num) }}">{{ page_num }}</a>
                 {% else %}
-                <a class="btn btn-outline-info mb-4 mt-2" href="{{ url_for('doc_appointment_history', username=doctor.username, page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-outline-info mb-4 mt-2" href="{{ url_for('doc_appointment_history', page=page_num) }}">{{ page_num }}</a>
                 {% endif %}
             {% else %}
                 ...

@@ -95,7 +95,7 @@
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 130px" href="{{ url_for('chat') }}">Chat now</a>
                   {% if flag == 1 %}
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 140px" href="{{ url_for('new_appointment') }}">New Appointment</a>
-                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('appointment_history', username=current_user.username) }}">Apoointment History</a>
+                  <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 150px" href="{{ url_for('appointment_history') }}">Appointment History</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('medicines_disease') }}">Order Medicine</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 110px" href="{{ url_for('order_history') }}">Order History</a>
                   <a class="nav-item nav-link" style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; width: 120px" href="{{ url_for('nearby_map') }}">Maps Assistance</a>
@@ -143,7 +143,7 @@
                   <div class="text-contant">
                      <h2>
                         <span class="center"><span class="icon"><img src="static/images/icon-logo.png" alt="#" /></span></span>
-                        <a href="" class="typewrite" data-period="2000" data-type='[ "Welcome to Life Care", "We Care about Your Health", "We are Expert!", "B.P Poddar institute of Management and Technology" ]'>
+                        <a href="" class="typewrite" data-period="2000" style="color: #0071d1; text-shadow: 1px 1px black" data-type='[ "Welcome to Life Care", "We Care about Your Health", "Your 24x7 online medical service provider" ]'>
                         <span class="wrap"></span>
                         </a>
                      </h2>
@@ -796,10 +796,10 @@
             <div class="chat-header">
                <div class="profile">
                   <div class="left">
-                     <img src="static/images/lifebot.gif" class="pp" style="margin-bottom: 5px;">
+                     <img src="static/images/lifebot.gif" class="pp" style="margin-bottom: 2px; width: 60px; height: 60px;">
                      <button style="border-radius: 50%; position: fixed; right: 20px; bottom: 750px; padding-right: 5px; margin-right: 2px;background-color: white; border-width: thin;" onclick="closeForm()"><i class="fa fa-close" style="margin-left: 5px ;font-size:20px; cursor: pointer; "></i></button>
-                     <h3 style="margin-left: 16px; margin-bottom: 14px;">Life-Care Bot</h3>
-                     <span style="margin-top: 4px ;padding-top: 6px;color: white; margin-left: 8px; margin-bottom: 12px;">Ask me questions about this website</span>
+                     <h3 style="margin-left: 18px; margin-bottom: 20px;">Life-Care Bot</h3>
+                     <span style="padding-top: 6px;color: white; margin-left: 8px; margin-bottom: 16px; font-size: 15px;">Ask me questions about this website</span>
                   </div>
                </div>
             </div>
@@ -836,6 +836,9 @@
             const v2 = document.createElement('div');
             const v3 = document.createElement('div');
             
+            a.setAttribute("class", "user-chat");
+            a.setAttribute("style", "font-size: 18px");
+            
             // Fetching The RESPONSE 
                $.getJSON('/background_process', {
                  query: $('input[name="query"]').val(),
@@ -843,27 +846,24 @@
                
                // Cleaning the input text box after each message
                document.getElementById('user-text').value = '';
-               scrollDownChatWindow();
                    if (data.result_link == ""){
                        } else if (data.result_args == ""){
-                     a.setAttribute("class", "user-chat");
-                     a.setAttribute("href", flask_util.url_for(data.result_link));
-                     a.setAttribute("style", "font-size: 18px");
-                     a.innerHTML += "here";
-                     document.querySelector('.chat-box').append(a);
-                   //$("#goto").attr("href", flask_util.url_for(data.result_link));
-                   //$("#goto").text("here");
+                        a.setAttribute("href", flask_util.url_for(data.result_link));  
+                        a.innerHTML += "here";
                        }else{
                            var args = data.result_args;
                            var value = data.result_value;
-                           a.setAttribute("class", "user-chat");
-                           a.setAttribute("href", flask_util.url_for(data.result_link)+"/"+value);
-                           a.setAttribute("style", "font-size: 18px");
+                           var link = data.result_link;
+                           if(args == "disease_type"){
+                              a.setAttribute("href", flask_util.url_for(data.result_link, {disease_type:value}));
+                           } else {
+                              a.setAttribute("href", flask_util.url_for(data.result_link)+"/"+value);
+                           }
                            a.innerHTML += "here";
-                   // console.log(flask_util.url_for(data.result_link,  {args : value} ));
+                  //console.log(flask_util.url_for(data.result_link));
                  }
                  p.innerHTML += data.result_text;
-                 p.setAttribute("style", "color:black;display:inline");
+                 p.setAttribute("style", "color:black;display:inline;word-break: break-word;");
                  p.setAttribute("id", "bot-chat");
 
                  v1.setAttribute("class", "chat-l");

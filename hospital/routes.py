@@ -331,11 +331,9 @@ def reset_token(token):
 
 @app.route("/chat", methods=['GET', 'POST'])
 def chat():
-
     if not current_user.is_authenticated:
         flash('Please login', 'danger')
         return redirect(url_for('login'))
-
     return render_template("chat.html", username=current_user.username, rooms=ROOMS)
 
 
@@ -479,7 +477,7 @@ def update_appointment(appointment_id):
         appointment.booked_for = form.date.data
         db.session.commit()
         flash('Your appointment has been updated!', 'success')
-        return redirect(url_for('appointment_history', username=current_user.username))
+        return redirect(url_for('appointment_history'))
     elif request.method == 'GET':
         form.doctor.data = appointment.doctor.username
         form.date.data = appointment.booked_for
@@ -498,19 +496,19 @@ def delete_appointment(appointment_id):
     db.session.delete(eprescription)
     db.session.commit()
     flash('Your appointment has been deleted!', 'success')
-    return redirect(url_for('appointment_history', title="Appointment-History", username=current_user.username))
+    return redirect(url_for('appointment_history', title="Appointment-History"))
 
 
 
-@app.route("/appointment_history/<string:username>", methods=['GET', 'POST'])
-def appointment_history(username):
+@app.route("/appointment_history", methods=['GET', 'POST'])
+def appointment_history():
     now = datetime.now()
     page = request.args.get('page', 1, type=int)
-    user = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter_by(username=current_user.username).first_or_404()
     appointments = Appointment.query.filter_by(user=user)\
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=10)
-    return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user, now=now)
+    return render_template("booked_appointments.html", title="Appointment-History", appointments=appointments, user=user, now=now,)
 
 
 @app.route('/show_appointment_history/<string:date>', methods=['GET', 'POST'])
@@ -540,11 +538,11 @@ def appointment_history_by_date():
     return render_template('check_appointment_history_by_date.html', title="Appointment history by date",form=form)
 
 
-@app.route("/appointments_history/<string:username>/all", methods=['GET', 'POST'])
-def doc_appointment_history(username):
+@app.route("/appointments_history/all", methods=['GET', 'POST'])
+def doc_appointment_history():
     has_appointment = True
     page = request.args.get('page', 1, type=int)
-    doctor = Doctor.query.filter_by(username=username).first_or_404()
+    doctor = Doctor.query.filter_by(username=current_user.username).first_or_404()
     appointments_with = Appointment.query.filter_by(doctor=doctor)\
         .order_by(Appointment.booked_on.desc())\
         .paginate(page=page, per_page=10)
@@ -589,7 +587,7 @@ def doc_e_prescription(prescription_id):
         prescription.content = form.content.data
         db.session.commit()
         flash('Your prescription has been saved!', 'success')
-        return redirect(url_for('doc_appointment_history', username=current_user.username))
+        return redirect(url_for('doc_appointment_history'))
     elif request.method == 'GET':
         form.content.data = prescription.content
     return render_template('doc_e_prescription.html', title="Edit-Prescription", form=form)
@@ -681,7 +679,7 @@ def add_to_cart(medicine_id):
         grand_total = 0
         page = request.args.get('page', 1, type=int)
         med = Medicine.query.get(medicine_id)
-        price=med.price
+        price = med.price
         cartitem = Cartitem(cart_id=current_user.id, medicine_id=medicine_id, quantity=1, total_price=price)
         db.session.add(cartitem)
         db.session.commit()
@@ -691,7 +689,7 @@ def add_to_cart(medicine_id):
     page = request.args.get('page', 1, type=int)
     cartitems = Cartitem.query.filter_by(cart_id=current_user.id).paginate(page=page, per_page=5)
     for item in cartitems.items:
-        grand_total += item.total_price 
+        grand_total += item.total_price
     flash('Item added to cart', 'success')
     return render_template('view_cart.html', title="Shopping cart", cartitems=cartitems, grand_total=grand_total)
 
@@ -872,7 +870,7 @@ def nearby_hospital_map():
     return render_template('hospital_map.html')
 
 
-@app.route("/nearby_bloodbnaks")
+@app.route("/nearby_bloodbanks")
 @login_required
 def nearby_bloodbank_map():
     return render_template('bloodbank_map.html')
@@ -1039,19 +1037,20 @@ def background_process():
         response_link = response[txt_div+1:url_div]
         arg_div = response.index("{")
         response_args = response[url_div+1:arg_div]
-        value = response[arg_div+1:]
-        response_value = value.replace(" ", '%20')
+        if response_args == "disease_type":
+            response_value = response[arg_div+1:]
+        else:    
+            value = response[arg_div+1:]
+            response_value = value.replace(" ", '%20')
     elif "|" in response:
         txt_div = response.index("|")
         response_text = response[:txt_div]
         response_link = response[txt_div+1:]
     else:
         response_text = response
-    # print(f'Response text: {response_text}')
-    # print(f'Response link: {response_link}')
-    # print(f'Response args: {response_args}')
-    # print(f'Response value: {response_value}')
-
-    #background: url('../img/bg.jpeg'); 
-    #background-image: "{{ url_for('static', filename='images/chat-back.jpg') }}"; 
+    print(f'Response text: {response_text}')
+    print(f'Response link: {response_link}')
+    print(f'Response args: {response_args}')
+    print(f'Response value: {response_value}')
+    
     return jsonify(result_text=response_text, result_link=str(response_link), result_args=response_args, result_value=response_value)

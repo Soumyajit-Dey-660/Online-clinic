@@ -161,7 +161,7 @@
     "context": ["search_for_oncologist"]
     },
     {"tag": "book an appointment",
-    "patterns": ["I want to book an appointment", "How to book an appointment with a doctor", "Book my appointment", "Can I book an appointment"],
+    "patterns": ["I want to book an appointment", "How to book an appointment with a doctor", "Book my appointment", "Can I book an appointment", "I want to consult a doctor"],
     "responses": ["You can book an appointment |new_appointment", "Book an appointment with a doctor through Life Care |new_appointment", "Want to book an appointment? |new_appointment"],
     "context": ["appointment_booking"]
     },
@@ -177,13 +177,98 @@
     },
     {"tag": "about life care",
     "patterns": ["What is life care", "Life Care", "Is Life Care a online medical service provider", "Is Life Care an offline organisation", "Does Life Care only provide online services"],
-    "responses": ["Life Care is an online medical service provider.", "Life care doesn't have any offline branches, it is a fully online service provider", "Life Care provides 24x7 online service."],
+    "responses": ["Life Care is an online medical service provider.  You can book an appointment, order medicines, view nearby medical stores, hospitals, blood banks and much more.", "Life care doesn't have any offline branches, it is a fully online service provider", "Life Care provides 24x7 online service. Life care lets you book an appointment with a doctor, order medicines online which will be delivered at your doorstep within 2 days. It has emergency contact numbers of hospital and blood banks as well as maps assistance."],
     "context": ["about_company"]
     },
     {"tag": "services provided",
     "patterns": ["What are the services provided by Life Care", "Life Care services", "What services does Life Care provide"],
-    "responses": ["Life Care is an online medical service provider. You can book an appointment, order medicines, view nearby medical stores, hospitals, blood banks and much more", "Life care lets you book an appointment with a doctor, order medicines online which will be delivered at your doorstep within 2 days. It has emergency contact numbers of hospital and blood banks as well as maps assistance."],
+    "responses": ["Life Care is an online medical service provider.", "Life care lets you book an appointment with a doctor, order medicines online which will be delivered at your doorstep within 2 days. It has emergency contact numbers of hospital and blood banks as well as maps assistance."],
     "context": ["services_provided"]
+    },
+    {"tag": "account details",
+    "patterns": ["My account", "Account info", "Update account info", "Update my profile picture", "Update username", "Update email"],
+    "responses": ["You can view your account info |account", "You can update your account info |account", "Want to update account info? |account"],
+    "context": ["account_info"]
+    },
+    {"tag": "register",
+    "patterns": ["Register", "I want to register", "Register another account"],
+    "responses": ["Want to register? |register", "You can register another account |register"],
+    "context": ["register"]
+    },
+    {"tag": "login",
+    "patterns": ["Login", "I want to login to my account", "How to login"],
+    "responses": ["You can login |login", "Want to login to your account |login"],
+    "context": ["login"]
+    },
+    {"tag": "logout",
+    "patterns": ["Logout", "How can I log out from my account", "I want to logout from my account"],
+    "responses": ["You can logout from your account |logout", "Want to logout? |logout"],
+    "context": ["logout"]
+    },
+    {"tag": "reset password",
+    "patterns": ["Reset my password", "How to reset my password", "I want to reset my account password", "I want to change my password", "How can I change my password", "Change my password"],
+    "responses": ["You can reset your password  |reset_request", "you can update your password |reset_request", "Want to change password? |reset_request"],
+    "context": ["reset_password"]
+    },
+    {"tag": "chat",
+    "patterns": ["Chat", "I want to chat with others", "How can I chat with others", "I want to chat with a doctor"],
+    "responses": ["You can chat |chat", "Chat |chat"],
+    "context": ["chat"]
+    },
+    {"tag": "appointment history",
+    "patterns": ["I want to view my appointment histort", "How can I update my booked appointments", "I want to cancel my appointment", "How to cancel my appointment", "How to view my appointment history"],
+    "responses": ["You can view your appointment history, update and delete appointments |appointment_history", "You can update and delete your appointments |appointment_history"],
+    "context": ["appointment_history"]
+    },
+    {"tag": "cough and cold",
+    "patterns": ["I have cough", "I have cold", "Show me the medicines for cough and cold", "I want to order medicines for cough and cold", "How can I order medicines for cough and cold"],
+    "responses": ["You can find medicines for cough and cold |medicines(disease_type{cough and cold", "These are the medicines for cough and cold |medicines(disease_type{cough and cold", "Want to order medicines for cough and cold? |medicines(disease_type{cough and cold"],
+    "context": ["disease_cough_and_cold"]
+    },
+    {"tag": "diabetes",
+    "patterns": ["I have diabetes", "Show me the medicines for diabetes", "I want to order medicines for diabetes", "How can I order medicines for diabetes"],
+    "responses": ["You can find medicines for diabetes |medicines(disease_type{diabetes", "These are the medicines for diabetes |medicines(disease_type{diabetes", "Want to order medicines for diabetes? |medicines(disease_type{diabetes"],
+    "context": ["disease_diabetes"]
+    },
+    {"tag": "diarrhoea",
+    "patterns": ["I have diarrhoea", "Show me the medicines for diarrhoea", "I want to order medicines for diarrhoea", "How can I order medicines for diarrhoea"],
+    "responses": ["You can find medicines for diarrhoea |medicines(disease_type{diarrhoea", "These are the medicines for diarrhoea |medicines(disease_type{diarrhoea", "Want to order medicines for diarrhoea? |medicines(disease_type{diarrhoea"],
+    "context": ["disease_diarrhoea"]
+    },
+    {"tag": "headache",
+    "patterns": ["I have headache", "Show me the medicines for headache", "I want to order medicines for headache", "How can I order medicines for headache"],
+    "responses": ["You can find medicines for headache |medicines(disease_type{headache", "These are the medicines for headache |medicines(disease_type{headache", "Want to order medicines for headache? |medicines(disease_type{headache"],
+    "context": ["disease_headache"]
+    },
+    {"tag": "body pain",
+    "patterns": ["I have body pain", "Show me the medicines for body pain", "I want to order medicines for body pain", "How can I order medicines for body pain"],
+    "responses": ["You can find medicines for body pain |medicines(disease_type{body pain", "These are the medicines for body pain |medicines(disease_type{body pain", "Want to order medicines for body pain? |medicines(disease_type{body pain"],
+    "context": ["disease_body_pain"]
+    },
+    {"tag": "stomach ache",
+    "patterns": ["I have stomach ache", "Show me the medicines for stomach ache", "I want to order medicines for stomach ache", "How can I order medicines for stomach ache"],
+    "responses": ["You can find medicines for stomach ache |medicines(disease_type{stomach ache", "These are the medicines for stomach ache |medicines(disease_type{stomach ache", "Want to order medicines for stomach ache? |medicines(disease_type{stomach ache"],
+    "context": ["disease_stomach_ache"]
+    },
+    {"tag": "tooth ache",
+    "patterns": ["I have tooth ache", "Show me the medicines for tooth ache", "I want to order medicines for tooth ache", "How can I order medicines for tooth ache"],
+    "responses": ["You can find medicines for tooth ache |medicines(disease_type{tooth ache", "These are the medicines for tooth ache |medicines(disease_type{tooth ache", "Want to order medicines for tooth ache? |medicines(disease_type{tooth ache"],
+    "context": ["disease_tooth_ache"]
+    },
+    {"tag": "ear drops",
+    "patterns": ["I have ear drops", "Show me the medicines for ear drops", "I want to order medicines for ear drops", "How can I order medicines for ear drops"],
+    "responses": ["You can find medicines for ear drops |medicines(disease_type{ear drops", "These are the medicines for ear drops |medicines(disease_type{ear drops", "Want to order medicines for ear drops? |medicines(disease_type{ear drops"],
+    "context": ["disease_ear_drops"]
+    },
+    {"tag": "eye drops",
+    "patterns": ["I have eye drops", "Show me the medicines for eye drops", "I want to order medicines for eye drops", "How can I order medicines for eye drops"],
+    "responses": ["You can find medicines for eye drops |medicines(disease_type{eye drops", "These are the medicines for eye drops |medicines(disease_type{eye drops", "Want to order medicines for eye drops? |medicines(disease_type{eye drops"],
+    "context": ["disease_eye_drops"]
+    },
+    {"tag": "view announcements",
+    "patterns": ["I want to show the announcements made", "Show me the announcements", "What are the recent announcements", "Show me the latest offers"],
+    "responses": ["You can view the latest announcements |view_announcements", "Announcements history |view_announcements", "You can find all the announcements and offers here |view_announcements"],
+    "context": ["view_announcements"]
     }
 ]
 }
