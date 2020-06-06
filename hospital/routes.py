@@ -7,7 +7,7 @@ from datetime import date, datetime, timedelta
 from flask import render_template, url_for, flash, redirect, request, abort
 from hospital import app, db, bcrypt, mail, socketio, fujs
 from hospital.models import (User, Doctor, Admin, Appointment, Timing, Eprescription, Medicine,
-                             Cart, Cartitem, Order, Ordereditem, Announcement)
+                             Cart, Cartitem, Order, Ordereditem, Announcement, ChatHistory)
 from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm,
                             UserRegistrationForm, DoctorRegistrationForm, TimingForm,
                             MedicineForm, UpdateCartForm, AdminRegistrationForm,
@@ -17,7 +17,7 @@ from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm,
                             ChooseDoctorForm, specialist_choices, doctor_list)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
-from flask_socketio import SocketIO, join_room, leave_room, send
+from flask_socketio import SocketIO, join_room, leave_room, send, emit
 from flask import Flask, render_template, jsonify, request
 from flask_util_js import FlaskUtilJs
 import nltk
@@ -334,6 +334,8 @@ def chat():
     if not current_user.is_authenticated:
         flash('Please login', 'danger')
         return redirect(url_for('login'))
+    #SAVE MESSAGE HISTORY
+
     return render_template("chat.html", username=current_user.username, rooms=ROOMS)
 
 
@@ -997,6 +999,11 @@ def on_message(data):
     room = data["room"]
     # Set timestamp
     time_stamp = datetime.utcnow().strftime('%b-%d %I:%M%p')
+
+    message = ChatHistory(message=msg, username=username, room=room, sent_on=datetime.utcnow())
+    db.session.add(message)
+    db.session.commit()
+
     send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
 
 
@@ -1006,10 +1013,20 @@ def on_join(data):
 
     username = data["username"]
     room = data["room"]
+    
     join_room(room)
-
     # Broadcast that new user has joined
     send({"msg": username + " has joined the " + room + " room."}, room=room)
+
+@socketio.on('chat')
+def chat_history(data):
+    messages = ChatHistory.query.filter_by(room=data['room']).all()
+    json_messages = []
+    for msg in messages:
+        json_messages.append({'text':msg.message, 'username':msg.username, 'room':msg.room, 'time':msg.sent_on.strftime('%b-%d %I:%M%p')})
+    # Show the previous chats to user
+    emit('chat-history', {"messages": json_messages}, broadcast=True)
+    print(f"\n\n{json_messages}\n\n")
 
 
 @socketio.on('leave')
@@ -1052,5 +1069,5 @@ def background_process():
     print(f'Response link: {response_link}')
     print(f'Response args: {response_args}')
     print(f'Response value: {response_value}')
-    
+
     return jsonify(result_text=response_text, result_link=str(response_link), result_args=response_args, result_value=response_value)

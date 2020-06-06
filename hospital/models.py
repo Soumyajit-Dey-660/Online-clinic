@@ -204,6 +204,13 @@ class Announcement(db.Model):
     content = db.Column(db.Text, nullable=False)
     admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
 
+class ChatHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    message = db.Column(db.String(200), nullable=False)
+    username = db.Column(db.String(20), nullable=False) 
+    room = db.Column(db.String(15), nullable=False)
+    sent_on = db.Column(db.DateTime, nullable=False)
+
 # class Post(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     title = db.Column(db.String(100), nullable=False)

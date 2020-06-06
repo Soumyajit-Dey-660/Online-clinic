@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let room = "Lounge"
     joinRoom("Lounge");
 
+
     // Send messages
     document.querySelector('#send_message').onclick = () => {
         socket.emit('incoming-msg', {'msg': document.querySelector('#user_message').value,
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const p = document.createElement('p');
             const span_username = document.createElement('span');
             const span_timestamp = document.createElement('span');
-            const br = document.createElement('br')
+            const br = document.createElement('br');
             // Display user's own message
             if (data.username == username) {
                     p.setAttribute("class", "my-msg");
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 //Append
                 document.querySelector('#display-message-section').append(p);
+                
             }
             // Display system message
             else {
@@ -73,10 +75,64 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollDownChatWindow();
     });
 
+
+    socket.on('chat-history', data => {
+        //Show previous messages in message area
+        if(data.messages){
+            const p = document.createElement('p');
+            const span_username = document.createElement('span');
+            const span_timestamp = document.createElement('span');
+            const br = document.createElement('br');
+            for (var i = 0; i < data.messages.length; i++){
+                var counter = data.messages[i];
+                // Display user's own message
+                if (counter.username == username) {
+                        p.setAttribute("class", "my-msg");
+                        p.setAttribute("style", "margin-left:7em;margin-right:1em;padding: 0.5em 0.5em 0.5em 1em;border-radius: 5px;border-color: #206ED2;border-width: 1px;border-style: solid;")
+                        // Username
+                        span_username.setAttribute("class", "my-username");
+                        span_username.innerText = counter.username;
+
+                        // Timestamp
+                        span_timestamp.setAttribute("class", "timestamp");
+                        span_timestamp.innerText = counter.time;
+
+                        // HTML to append
+                        p.innerHTML += span_username.outerHTML + br.outerHTML + counter.text + br.outerHTML + span_timestamp.outerHTML + br.outerHTML;
+
+                        //Append
+                        document.querySelector('#display-message-section').append(p);
+                }
+                // Display other users' messages
+                else if (typeof counter.username !== 'undefined') {
+                    p.setAttribute("class", "others-msg");
+                    p.setAttribute("style", "margin-right:7em;margin-left: 1em;padding: 0.5em 0.5em 0.5em 1em;border-radius: 5px;border-color: grey;border-width: 0.5px;border-style: solid;background-color: #C2DBFB;");
+                    // Username
+                    span_username.setAttribute("class", "other-username");
+                    span_username.innerText = counter.username;
+
+                    // Timestamp
+                    span_timestamp.setAttribute("class", "timestamp");
+                    span_timestamp.innerText = counter.time;
+
+                    // HTML to append
+                    p.innerHTML += span_username.outerHTML + br.outerHTML + counter.text + br.outerHTML + span_timestamp.outerHTML +br.outerHTML;
+
+                    //Append
+                    document.querySelector('#display-message-section').append(p);
+                }
+            }
+    
+        }
+        scrollDownChatWindow();
+    });
+
+
+
     // Select a room
     document.querySelectorAll('.select-room').forEach(p => {
         p.onclick = () => {
-            let newRoom = p.innerHTML
+            let newRoom = p.innerHTML;
             // Check if user already in the room
             if (newRoom === room) {
                 msg = `You are already in ${room} room.`;
@@ -85,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 leaveRoom(room);
                 joinRoom(newRoom);
                 room = newRoom;
+                
             }
         };
     });
@@ -108,16 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Join room
         socket.emit('join', {'username': username, 'room': room});
-
         // Highlight selected room
         document.querySelector('#' + CSS.escape(room)).style.color = "#ffc107";
         document.querySelector('#' + CSS.escape(room)).style.backgroundColor = "white";
 
-        // Clear message area
+        
         document.querySelector('#display-message-section').innerHTML = '';
-
         // Autofocus on text box
         document.querySelector("#user_message").focus();
+        socket.emit('chat', {'username': username ,'room': room});
     }
 
     // Scroll chat window down
