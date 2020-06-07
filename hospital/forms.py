@@ -22,13 +22,13 @@ state_list = [('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Aruna
                     ('Odisha', 'Odisha'), ('Punjab', 'Punjab'), ('Rajasthan', 'Rajasthan'), ('Sikkim', 'Sikkim'), ('Tamil Nadu', 'Tamil Nadu'), ('Telangana', 'Telangana'), ('Tripura', 'Tripura'),
                     ('Uttar Pradesh', 'Uttar Pradesh'), ('Uttarakhand', 'Uttarakhand'), ('West Bengal', 'West Bengal')]
 
-doctor_list = []
+# doctor_list = []
 medicine_list = []
 
-docs = Doctor.query.all()
-for doc in docs:
-    doctor_list.append((doc.username, doc.username))
-doctor_list.sort()
+# docs = Doctor.query.all()
+# for doc in docs:
+#     doctor_list.append((doc.username, doc.username))
+# doctor_list.sort()
 
 medicines = Medicine.query.all()
 for medicine in medicines:
@@ -181,7 +181,7 @@ class ResetPasswordForm(FlaskForm):
 
 
 class AppointmentForm(FlaskForm):
-    doctor = SelectField(u'Doctor', choices=doctor_list)
+    doctor = SelectField(u'Doctor', choices=[])
     date = DateField('Date',format='%Y-%m-%d')
     submit = SubmitField('Book Appointment')
 

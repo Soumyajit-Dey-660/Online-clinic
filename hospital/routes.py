@@ -14,7 +14,7 @@ from hospital.forms import (AnnouncementForm, AppointmentForm, RegistrationForm,
                             EprescriptionForm, LoginForm, UpdateAccountForm,
                             RequestResetForm, CheckAppointmentForm, ResetPasswordForm,
                             ChooseMedicineForm, UpdateMedicineForm,
-                            ChooseDoctorForm, specialist_choices, doctor_list)
+                            ChooseDoctorForm, specialist_choices)
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
@@ -344,13 +344,14 @@ def chat():
 @login_required
 def new_appointment():
     form = AppointmentForm()
+    form.doctor.choices = [(doctor.username, doctor.username) for doctor in Doctor.query.all()]
     if form.validate_on_submit():
         today = date.today()
         if form.date.data <= today:
             flash("You cannot choose today's or any previous date!", 'danger')
             return redirect(url_for('new_appointment'))
         else:
-            name = dict(doctor_list).get(form.doctor.data)
+            name = form.doctor.data
             doctor = Doctor.query.filter_by(username=name).first()
             times = Timing.query.filter_by(doctor=doctor).first()
             #LOGIC for date handling
@@ -383,9 +384,6 @@ def new_appointment():
             if appointment_on_chosen_date:
                 flash('You have already booked an appointment with this doctor on this date!', 'danger')
                 return redirect(url_for('new_appointment'))
-            print(appointment_on_chosen_date)
-            print(f'Form date {form.date.data}')
-            print(f'Doctor {doctor}')
             if day_of_week == 'monday':
                 appointment = Appointment(booked_for=form.date.data, booked_for_time=times.monday,doctor_id=doctor.id, user=current_user)
             elif day_of_week == 'tuesday':
@@ -423,6 +421,7 @@ def update_appointment(appointment_id):
     if appointment.user != current_user:
         abort(403)
     form = AppointmentForm()
+    form.doctor.choices = [(doctor.username, doctor.username) for doctor in Doctor.query.all()]
     if form.validate_on_submit():
         today = date.today()
         day = form.date.data 
@@ -434,7 +433,7 @@ def update_appointment(appointment_id):
         if form.date.data >= date_after_three_months:
             flash("You cannot book an appointment 3 months in advance!", 'danger')
             return redirect(url_for('update_appointment', appointment_id=appointment.id))
-        name = dict(doctor_list).get(form.doctor.data)
+        name = form.doctor.data
         doctor = Doctor.query.filter_by(username=name).first()
         times = Timing.query.filter_by(doctor=doctor).first()
         
@@ -1026,7 +1025,6 @@ def chat_history(data):
         json_messages.append({'text':msg.message, 'username':msg.username, 'room':msg.room, 'time':msg.sent_on.strftime('%b-%d %I:%M%p')})
     # Show the previous chats to user
     emit('chat-history', {"messages": json_messages}, broadcast=True)
-    print(f"\n\n{json_messages}\n\n")
 
 
 @socketio.on('leave')

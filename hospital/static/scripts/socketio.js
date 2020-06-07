@@ -79,11 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('chat-history', data => {
         //Show previous messages in message area
         if(data.messages){
+            for (var i = 0; i < data.messages.length; i++){
             const p = document.createElement('p');
             const span_username = document.createElement('span');
             const span_timestamp = document.createElement('span');
             const br = document.createElement('br');
-            for (var i = 0; i < data.messages.length; i++){
                 var counter = data.messages[i];
                 // Display user's own message
                 if (counter.username == username) {
