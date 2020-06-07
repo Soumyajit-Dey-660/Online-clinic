@@ -10,6 +10,9 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bot_style.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     
@@ -35,6 +38,7 @@
         background-color: #dddddd;
       }
       </style>
+      {{ flask_util_js.js }}
 </head>
 <body>
     <header class="site-header">
@@ -117,7 +121,151 @@
             </div>
         </div>
         </main>
-
+        <button class="open-button" onclick="openForm()" style="right: 70px;">
+          <img src="static/images/lifebot.gif" alt="Avatar" class="avatar" style="right: 50px;">
+        </button>
+        <div class="container" id="myForm" style="display: none; width: 500px;z-index: 9;position: fixed;right: 15px;bottom: 0px;border: none;">
+          <div class="chat" style="display: flex;flex-direction: column;height: 80vh;width:490px;background: rgb(227, 230, 221);border-style: ridge;">
+             <div class="chat-header">
+                <div class="profile">
+                   <div class="left">
+                      <img src="static/images/lifebot.gif" class="pp" style="margin-bottom: 2px; width: 60px; height: 60px;">
+                      <button style="border-radius: 50%; position: fixed; right: 20px; bottom: 750px; padding-right: 5px; margin-right: 2px;background-color: white; border-width: thin;" onclick="closeForm()"><i class="fa fa-close" style="margin-left: 5px ;font-size:20px; cursor: pointer; "></i></button>
+                      <h3 style="margin-left: 18px; margin-bottom: 20px;">Life-Care Bot</h3>
+                      <span style="padding-top: 6px;color: white; margin-left: 8px; margin-bottom: 16px; font-size: 15px;">Ask me questions about this website</span>
+                   </div>
+                </div>
+             </div>
+             <div class="chat-box" style="background-image: url({{ url_for('static', filename='images/chat-back.jpg') }})">
+                <div class="chat-l">
+                   <div class="mess">
+                      <p id="bot-chat" style="display: inline;color:black;">Hi, how are you doing?</p> <a style="display: inline;" href="{{ url_for('home') }}" id="goto"></a>
+                   </div>
+                   <div class="sp"></div>
+                </div>
+                <div class="chat-r">
+                   <div class="sp"></div>
+                   <div class="mess mess-r">
+                      <p id="user-chat" style="margin-right: 2px; display: inline-block;color:black;"></p>
+                   </div>
+                </div>	
+             </div>
+        
+             <div class="chat-footer" style="margin-bottom: 6px;">
+                <form class="form-container" id="user_chat_form" style="white-space: nowrap;"> 
+                   <input type="text" size="40" name="query" autocomplete="off" placeholder="Ask me Something..." style="display: inline-block; color: black;" id="user-text">
+                <a href="" id="process_input" style="display: inline-block;color:black;"><button style="border-width: thin;font-size:25px;color:black; display: inline-block; border-radius: 50%; width:50px; height:50px; background-color: #2895f1; cursor: pointer; margin-right: 5px;" onclick="userMessage()"><i class="fa fa-send-o" style="border-radius: 50%;"></i></button></a>
+                </form>
+             </div>
+          </div>
+        </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script type=text/javascript>
+          var count = 1;
+         $(function() {
+           $('a#process_input').bind('click', function() {
+          const p = document.createElement('p');
+          const a = document.createElement('a');
+          const v1 = document.createElement('div');
+          const v2 = document.createElement('div');
+          const v3 = document.createElement('div');
+          
+          a.setAttribute("class", "user-chat");
+          a.setAttribute("style", "font-size: 18px");
+          console.log("Is it in background process?");
+          // Fetching The RESPONSE 
+             $.getJSON('/background_process', {
+               query: $('input[name="query"]').val(),
+             }, function(data) {
+             
+             // Cleaning the input text box after each message
+             document.getElementById('user-text').value = '';
+                 if (data.result_link == ""){
+                     } else if (data.result_args == ""){
+                      a.setAttribute("href", flask_util.url_for(data.result_link));  
+                      a.innerHTML += "here";
+                     }else{
+                         var args = data.result_args;
+                         var value = data.result_value;
+                         var link = data.result_link;
+                         if(args == "disease_type"){
+                            a.setAttribute("href", flask_util.url_for(data.result_link, {disease_type:value}));
+                         } else {
+                            a.setAttribute("href", flask_util.url_for(data.result_link)+"/"+value);
+                         }
+                         a.innerHTML += "here";
+                //console.log(flask_util.url_for(data.result_link));
+               }
+               p.innerHTML += data.result_text;
+               p.setAttribute("style", "color:black;display:inline;word-break: break-word;");
+               p.setAttribute("id", "bot-chat");
+        
+               v1.setAttribute("class", "chat-l");
+               v2.setAttribute("class", "mess");
+               v3.setAttribute("class", "sp");
+               v2.appendChild(p);
+               v2.appendChild(a);
+               v2.appendChild(v3);
+               v1.appendChild(v2);
+        
+               document.querySelector('.chat-box').append(v1);
+               scrollDownChatWindow();
+             //   document.querySelector('.chat-box').appendChild(p);
+             //   document.querySelector('.chat-box').appendChild(a);
+             });
+             return false;
+          
+           });
+         });
+        
+        function userMessage() {
+          if (count == 1){
+             document.getElementById('user-chat').innerHTML = document.getElementById('user-text').value;
+             count += 1;
+             
+          }
+          else{
+             const p = document.createElement('p');
+             const v1 = document.createElement('div');
+             const v2 = document.createElement('div');
+             const v3 = document.createElement('div');
+             
+             v1.setAttribute('class', 'chat-r');
+             v2.setAttribute('class', 'sp');
+             v3.setAttribute('class', 'mess mess-r')
+             // v3.setAttribute('style', 'float: right');
+             p.setAttribute("id", "user-chat");
+        
+             var user_message = document.getElementById('user-text').value;
+             p.setAttribute("style", "color:black");
+             p.setAttribute("font", "15px");
+             p.innerHTML += user_message;
+        
+             v1.appendChild(v2);
+             v3.appendChild(p);
+             v1.appendChild(v3);
+             
+             document.querySelector('.chat-box').append(v1);
+             scrollDownChatWindow();
+          }
+          // Clear input area
+          
+        }
+        function openForm() {
+         document.getElementById("myForm").style.display = "block";
+         document.querySelector("#user-text").focus();
+        }
+        
+        function closeForm() {
+         document.getElementById("myForm").style.display = "none";
+        }
+        
+        function scrollDownChatWindow() {
+          const chatWindow = document.querySelector(".chat-box");
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+        </script>
+        
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

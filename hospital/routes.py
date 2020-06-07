@@ -1065,9 +1065,4 @@ def background_process():
         response_link = response[txt_div+1:]
     else:
         response_text = response
-    print(f'Response text: {response_text}')
-    print(f'Response link: {response_link}')
-    print(f'Response args: {response_args}')
-    print(f'Response value: {response_value}')
-
     return jsonify(result_text=response_text, result_link=str(response_link), result_args=response_args, result_value=response_value)
