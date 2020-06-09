@@ -344,7 +344,12 @@ def chat():
 @login_required
 def new_appointment():
     form = AppointmentForm()
-    form.doctor.choices = [(doctor.username, doctor.username) for doctor in Doctor.query.all()]
+    all_docs = []
+    docs = Doctor.query.all()
+    for doc in docs:
+        all_docs.append((doc.username, doc.username))
+    all_docs.sort()
+    form.doctor.choices = all_docs
     if form.validate_on_submit():
         today = date.today()
         if form.date.data <= today:
@@ -421,7 +426,12 @@ def update_appointment(appointment_id):
     if appointment.user != current_user:
         abort(403)
     form = AppointmentForm()
-    form.doctor.choices = [(doctor.username, doctor.username) for doctor in Doctor.query.all()]
+    all_docs = []
+    docs = Doctor.query.all()
+    for doc in docs:
+        all_docs.append((doc.username, doc.username))
+    all_docs.sort()
+    form.doctor.choices = all_docs
     if form.validate_on_submit():
         today = date.today()
         day = form.date.data 
@@ -638,7 +648,7 @@ def medicines_disease():
 @app.route('/medicines/<string:disease_type>', methods=['GET', 'POST'])
 def medicines(disease_type):
     page = request.args.get('page', 1, type=int)
-    medicines = Medicine.query.filter_by(disease=disease_type).paginate(page=page, per_page=5)
+    medicines = Medicine.query.filter_by(disease=disease_type).paginate(page=page, per_page=12)
     return render_template('medicines.html', medicines=medicines, title="View medicines for"+disease_type, disease_type=disease_type)
 
 
@@ -649,7 +659,7 @@ def medicine_display(medicine_id):
     if substitute:
         sub = Medicine.query.filter_by(name=substitute).first()
     else:
-        sub=None
+        sub = None
     return render_template('medicine_display.html', title="Description of medicine", med=med, sub=sub)
 
 
@@ -847,18 +857,21 @@ def order_details(order_id):
         total += item.total_price
     return render_template('order_details.html', title="Order Details", items=items, order_id=order_id, total=total)
 
-@app.route('/necessary_information', methods=['GET', 'POST'])
+@app.route('/necessary_information')
 def necessary_information():
     return render_template('important_contacts.html', title="Necessary information")
 
-@app.route('/necessary_hospital_info', methods=['GET', 'POST'])
+@app.route('/necessary_hospital_info')
 def important_hospital_contacts():
     return render_template('important_hospital_contacts.html', title="Hospital Contacts")
 
-@app.route('/necessary_bloodbank_info', methods=['GET', 'POST'])
+@app.route('/necessary_bloodbank_info')
 def important_blood_bank_contacts():
     return render_template('important_blood_bank_contacts.html', title="Blood Bank Contacts")
 
+@app.route('/necessary_ambulance_info')
+def important_ambulance_contacts():
+    return render_template('important_ambulance_contacts.html', title="Ambulance Contacts")
 
 @app.route('/nearby_map')
 def nearby_map():
@@ -918,6 +931,12 @@ def view_announcement():
 @app.route('/update_medicine', methods=['GET', 'POST'])
 def choose_medicine():
     form = ChooseMedicineForm()
+    all_medicines = []
+    medicines = Medicine.query.all()
+    for medicine in medicines:
+        all_medicines.append((medicine.name, medicine.name))
+    all_medicines.sort()
+    form.medicine.choices = all_medicines
     if form.validate_on_submit():
         medicine = form.medicine.data
         return redirect(url_for('update_medicine', medicine_name=medicine))

@@ -22,14 +22,8 @@ state_list = [('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Aruna
                     ('Odisha', 'Odisha'), ('Punjab', 'Punjab'), ('Rajasthan', 'Rajasthan'), ('Sikkim', 'Sikkim'), ('Tamil Nadu', 'Tamil Nadu'), ('Telangana', 'Telangana'), ('Tripura', 'Tripura'),
                     ('Uttar Pradesh', 'Uttar Pradesh'), ('Uttarakhand', 'Uttarakhand'), ('West Bengal', 'West Bengal')]
 
-# doctor_list = []
+
 medicine_list = []
-
-# docs = Doctor.query.all()
-# for doc in docs:
-#     doctor_list.append((doc.username, doc.username))
-# doctor_list.sort()
-
 medicines = Medicine.query.all()
 for medicine in medicines:
     medicine_list.append((medicine.name, medicine.name))
@@ -53,7 +47,7 @@ class UserRegistrationForm(FlaskForm):
     state = SelectField(u'State', choices=state_list)
     city = StringField('City', validators=[DataRequired()])
     zipcode = StringField('Zipcode', validators=[DataRequired()])
-    phonenumber = StringField('Phone Number', validators=[DataRequired()])
+    phonenumber = StringField('10 Digit Phone Number', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
 
 
@@ -229,7 +223,7 @@ class AnnouncementForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class ChooseMedicineForm(FlaskForm):
-    medicine = SelectField(u'Medicine name', choices=medicine_list)
+    medicine = SelectField(u'Medicine name', choices=[])
     submit = SubmitField('Submit')
 
 class UpdateMedicineForm(FlaskForm):

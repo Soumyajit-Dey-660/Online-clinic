@@ -80,239 +80,246 @@
               {% endfor %}
             {% endif %}
           {% endwith %} 
-          <a class="btn btn-secondary btn-sm mt-2 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('nearby_bloodbank_map') }}">Blood Banks near me</a> 
-          <a class="btn btn-secondary btn-sm mt-2 mb-3 ml-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('important_hospital_contacts') }}">Hospital Contacts</a> 
-          <a class="btn btn-secondary btn-sm mt-2 mb-3 ml-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('important_ambulance_contacts') }}">Ambulance Contacts</a> 
+          
+          <a class="btn btn-secondary btn-sm mt-3 mb-4" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('important_hospital_contacts') }}">Hospital Contacts</a> 
+          <a class="btn btn-secondary btn-sm mt-3 mb-4 ml-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;" href="{{ url_for('important_blood_bank_contacts') }}">Blood Bank Contacts</a>
 
-            <h3 class="mb-4">Blood banks in Kolkata and their contact numbers</h3> 
+            <h3 class="mb-4">Ambulance services in Kolkata and their contact numbers</h3> 
             <table>
               <tr>
                <th>Serial No</th>
-                <th>Blood Banks </th>
+                <th>Ambulance Name</th>
                 <th>Location</th>
                 <th>Contact number</th>
               </tr>
               <tr>
-                  <td>1</td>
-                  <td>Ashok Blood Bank</td>
-                  <td>308, Jodhpur Park, Kolkata, West Bengal 700068</td>
-                  <td>033 2472 0333</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Association Of Voluntary Blood Donors W B</td>
-                  <td>20 A, Fordyce Lane, Entally, Kolkata - 700014</td>
-                  <td>033 2227 1022</td>
-                </tr>
-          
-          
-                <tr>
-                  <td>4</td>
-                  <td>Bani mondal lab</td>
-                  <td> 2, 7, Narkeldanga N Rd, Raja Nabakrishna Street, Narkeldanga, Kolkata, West Bengal 700011</td>
-                  <td>078902 77509</td>
-                </tr>
-                
-                <tr>
-                  <td>5</td>
-                  <td>Bhoruka Blood Bank</td>
-                  <td>No.63, Rafi Ahmed Kidwai Rd, Esplanade, Mullick Bazar, Taltala, Kolkata, West Bengal 700016</td>
-                  <td>033 2265 8092</td>
-                </tr>
-                <tr>
-                  <td>6</td>
-                  <td>Biotech Tie Up Pvt Ltd</td>
-                  <td> Fe12/2, Vidyasagar Pally, Baguiati, Kolkata - 700059</td>
-                  <td>033 2570 8323</td>
-                </tr>
-              <tr>
-                  <td>7</td>
-                  <td>Blood Bankk</td>
-                  <td>Calcutta Medical College, College Square, Kolkata, West Bengal 700073</td>
-                  <td>033 2255 1538</td>
-                </tr>
-                <tr>
-                  <td>8</td>
-                  <td>Blood Bankk(Barasat District Hospital)</td>
-                  <td> Banamalipur, Kolkata, West Bengal 700124</td>
-                  <td>033 2584 0268</td>
-                </tr>
-          
-          
-                <tr>
-                  <td>9</td>
-                  <td>Calcutta Hospital</td>
-                  <td>7/2, Diamond Harbour Road, Kolkata - 700027</td>
-                  <td>98244 03696</td>
-                </tr>
-                <tr>
-                  <td>10</td>
-                  <td>Calcutta National Medical College & Hospital Blood Bank</td>
-                  <td>24, Gorachand Rd, Beniapukur, Kolkata, West Bengal 700014</td>
-                  <td>033 2284 8397</td>
-                </tr>
-                <tr>
-                  <td>11</td>
-                  <td> Central Blood Bank</td>
-                  <td>Vivekananda Road, Beadon Street, Kolkata - 700006, Near Maniktalla More</td>
-                  <td>033 2351 0619</td>
-                </tr>
-                <tr>
-                  <td>12</td>
-                  <td>Chbttaranjan Hospital </td>
-                  <td>No 14 Gora Chand Road, Kolkata - 700014</td>
-                  <td>94280 00223</td>
-                </tr>
-          
-          
-                <tr>
-                  <td>13</td>
-                  <td>Federation of Indian Blood Donors Organisations(FIBDO)</td>
-                  <td>30/1/1, Nilmoni Mitra St, Girish Park, Garanhatta, Beniatola, Kolkata, West Bengal 700006</td>
-                  <td>098302 44388</td>
-                </tr>
-          
-                <tr>
-                  <td>14</td>
-                  <td>Health Point Blood Bank</td>
-                  <td>56, Sarat Bose Rd, Chakraberia, Ballygunge, Kolkata, West Bengal 700019</td>
-                  <td>033 3057 5735</td>
-                </tr>
-          
-              <tr>
-                  <td>15</td>
-                  <td>IBTM&IH</td>
-                  <td>205, Vivekananda Rd, Manicktala, Sahitya Parishad, Market(East, Kolkata, West Bengal 700006</td>
-                  <td>033 2351 0620</td>
-                </tr>
-                <tr>
-                  <td>16</td>
-                  <td>Indian Blood Bank</td>
-                  <td>8, Narkeldanga Main Road, Kadapara, Phool Bagan, Kankurgachi, Kolkata - 700010</td>
-                  <td>033 6461 0972</td>
-                </tr>
-                <tr>
-                  <td>17</td>
-                  <td>Indian Blood Bank</td>
-                  <td>81/C, Narkeldanga Main Rd, Near Swabhumi, Kadapara, Phool Bagan, Kankurgachi, Kolkata, West Bengal 700054</td>
-                  <td>090380 10972</td>
-                </tr>
-                <tr>
-                  <td>18</td>
-                  <td>Institute of Blood Transfusion</td>
-                  <td> 205, Vivekananda Rd, Manicktala, Garpar, Machuabazar, Kolkata, West Bengal 700009</td>
-                  <td>033 2351 0619</td>
-                </tr>
-          
-                <tr>
-                  <td>19</td>
-                  <td>Kothari Blood Bank</td>
-                  <td>8/3, Alipore Road, Alipore, Kolkata - 700027, Near Alipore Zoological Garden</td>
-                  <td>033 2456 7059</td>
-                </tr>
-          
-                <tr>
-                  <td>20</td>
-                  <td>Life Care Blood Bank</td>
-                  <td>204/1B, Linton St, Beniapukur, Kolkata, West Bengal 700014</td>
-                  <td>033 2284 2298</td>
-                </tr>
-              <tr>
+                <td>1</td>
+                <td>Addya Maa Ambulance & Medical Service</td>
+                <td>#108-A, Dr G S Bose Rd, Kata Pukur, Kasba, Kolkata, West Bengal 700039</td>
+                <td>+91 8420946146</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Air Ambulance Services in Kolkata - Panchmukhi</td>
+                <td> Waterloo Street, Cossipore, Lalbajar, College Square, Kolkata, West Bengal 700012</td>
+                <td>+91 9825263125</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Air Ambulance Services in Kolkata - Panchmukhi</td>
+                <td>Benia Para Ln, Beniapukur, Kolkata, West Bengal 700014</td>
+                <td>+91 </td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Air Rescuers World Wide Pvt.Ltd</td>
+                <td> No. 3, Motilal Colony, Airport, PO, Dum Dum, Kolkata, West Bengal 700081</td>
+                <td>+91 9977331118</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Ambulance Sadharan Sammilani</td>
+                <td> 149, Haridhan Chakraborty Sarani, Aghor Sarani Thakur Pur More, Paschatya Para, Sonarpur, Kolkata, West Bengal 700150</td>
+                <td>+91 8017175441</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Anjuman Mufidul Islam</td>
+                <td>20, Noor Ali Ln, Beniapukur, Kolkata, West Bengal 700014</td>
+                <td>033 2284 7728</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Aradhya Ambulance</td>
+                <td>MR BANGUR HOSPITAL</td>
+                <td>+91 9830516703</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>BISWAJIT AMBULANCE Service Saltlake</td>
+                <td>Anandalok hospital,saltlake, Dk7/3, DK Block, Sector II, Bidhannagar, Kolkata, West Bengal 700091</td>
+                <td>+91 8420977575</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Bluebells Ambulance Service</td>
+                <td>35 A, Shyama Prasad Mukherjee Rd, Jatin Das Park, Shyama Prasad Colony, Bhowanipore, Kolkata, West Bengal 700025</td>
+                <td>+91 9830034475</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Book My Ambulance</td>
+                <td> Topsia More, East Topsia, Topsia, Kolkata, West Bengal 700046</td>
+                <td>+91 8100010154</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Essential Service Centre </td>
+                <td>42/8, Bedia Danga 2nd Ln, LALKUTHY, Kasba, Kolkata, West Bengal 700039</td>
+                <td>+91 9774535256</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Falcon Emergency Train Rail Ambulance Services In Kolkata</td>
+                <td>Girish Vidya Ratna Ln, Machuabazar, Kolkata, West Bengal 700009</td>
+                <td>+91 9205909876</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>Hindustan Ambulance Service</td>
+                <td>P-147, Prosanta Sure Nagar, Near 18B/1 Bus Stand, Ruby Hospital, West Bengal 700107</td>
+                <td>+91 9836909839</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>Hindusthan Ambulance Services</td>
+                <td>  No. 182, 1-B, Bose Pukur Rd, Bosepukur, Gariahat, Kolkata, West Bengal 700029</td>
+                <td>+91 9521245124</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>Ishan Ambulance Service Provider</td>
+                <td> Plot No-BE 70, East Kolkata Township, K.M.D.A Project, P.O Varba, West Bengal 700107</td>
+                <td>+91 9836072444</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>King Air and Train Ambulance Services</td>
+                <td> Dr Lalit Banerjee Sarani, Calcutta Medical College, College Square, Kolkata, West Bengal 700012</td>
+                <td>+91 7091360310</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td>KMC Ambulance Service</td>
+                <td>Chittaranjan Ave, Calcutta University, Bowbazar, Kolkata, West Bengal 700073</td>
+                <td>033 2219 7202</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td>LOKENATH AMBULANCE SERVICE</td>
+                <td>CK Block-44, ANANDALOK HOSPITAL ,Sector II, Bidhannagar, near 9 No. Water Tank, Kolkata, West Bengal 700091</td>
+                <td>+91 9831341671</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>LOKENATH AMBULANCE SERVICE</td>
+                <td>1F, Raja Subodh Chandra Mallick Rd, Jadavpur, Kolkata, West Bengal 700032</td>
+                <td>+91 8013476160</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>M/s. Jain Kalyan Singh</td>
+                <td> 265, Rabindra Sarani, Chitpur, Pathuriaghata St, Malapara, Santoshpur, Beniatola, Kolkata, West Bengal 700007</td>
+                <td>033 2474 6190</td>
+            </tr>
+            <tr>
                 <td>21</td>
-                <td>Lions District 322B1 Blood Bank</td>
-                <td>27, 5, Esplanade, Chowringhee North, Bow Barracks, Kolkata, West Bengal 700069</td>
-                <td>033 2248 5778</td>
-              </tr>
-             
-          
-               <tr>
-                  <td>22</td>
-                  <td>MRS Blood Bank Mgd by Lions BBD Bag Foundation</td>
-                  <td>225/227, Rabindra Sarani, Raja Katra, Jorasanko, Kolkata, West Bengal 700007</td>
-                  <td>033 2274 5675</td>
-                </tr>
-          
-                <tr>
-                  <td>23</td>
-                  <td>Nrs Blood Bank</td>
-                  <td>Raja Bazar, Sealdah, Kolkata - 700014</td>
-                  <td>82553 34560</td>
-                </tr>
-          
-              
+                <td>Medivic Aviation Air Ambulance Services in Kolkata</td>
+                <td>Nilachal Rd, Nilachal, Birati, North Dumdum, West Bengal 700134</td>
+                <td>+91 </td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>Medivic Train Rail Ambulance Services in Kolkata</td>
+                <td>Nawab Abdul Latif St, Maula Ali, Taltala, Kolkata, West Bengal 700014</td>
+                <td>+91 95806123829</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td>Meera Seva Kendra</td>
+                <td>255, Petrol Pump, 23, Netaji Subhash Chandra Bose Rd, beside Naktala, Suryanagar, Regent Grove, Bansdroni, Kolkata, West Bengal 700047</td>
+                <td>+91 6291317341</td>
+            </tr>
+            <tr>
                 <td>24</td>
-                <td>OM Blood Bank Kolkata</td>
-                <td>133, H/1, Beleghata Main Rd, Seal Lane, Tangra, Kolkata, West Bengal 700015</td>
-                <td> 033 2251 8191</td>
-              </tr>
-          
-              <tr>
+                <td>MM AMBULANCE Service</td>
+                <td>KB Block, Sector III, Bidhannagar, Kolkata, West Bengal 700098</td>
+                <td>+91 8671539937</td>
+            </tr>
+            <tr>
                 <td>25</td>
-                <td>People`s Blood Bank</td>
-                <td>Ashutosh College, Shyama Prasad Mukherjee Rd, near, Lake Market, Bhowanipore, Kolkata, West Bengal 700025</td>
-                <td> 033 2455 5164</td>
-              </tr>
-             
-              <tr>
-                  <td>26</td>
-                  <td>Quadra</td>
-                  <td>S-D-4, Bus Stop, Sonarpur Bhangor Road, Sonarpur Bazar, Bus Stand, Sonarpur, Kolkata, West Bengal 700150</td>
-                  <td> 033 2428 0098</td>
-                </tr>
-              
-          
-          
-              <tr>
-                  <td>27</td>
-                  <td>R G Kar Medical College Blood Bank</td>
-                  <td>203, Vivekananda Rd, Manicktala, Garpar, Kolkata, West Bengal 700006</td>
-                  <td>033 25331277</td>
-              </tr>
-              <tr>
-                  <td>28</td>
-                  <td>Ramakrishna Mission Seva Pratisthan Blood Bank</td>
-                  <td>99, Sarat Bose Road, Kalighat, Kolkata - 700026, Near Ramkrishna Mission Seva Pratisthan</td>
-                  <td>033 2475 3636</td>
-              </tr>
-              <tr>
-                  <td>29</td>
-                  <td>Rotary Narayana Blood Bank</td>
-                  <td>C N 5, Kolkata - 700091, Sector 5, Near Wipro</td>
-                  <td>033 2367 3313</td>
-              </tr>
-                  
-          
-               <tr>
-                  <td>30</td>
-                  <td>Sales Marketing Blood</td>
-                  <td> Dna 54a, Bidhan Nagar, Bidhan Nagar, Kolkata, West Bengal 700091</td>
-                  <td>033 2367 3423</td>
-              </tr>
-          
-               <tr>
-                  <td>31</td>
-                  <td>Specialist Corner</td>
-                  <td>90, Santoshpur Road, Jadavpur, Rani Rashmoni Bagan, Santoshpur, Kolkata, West Bengal 700032</td>
-                  <td>033 2416 7636</td>
-              </tr>
-              <tr>
+                <td>Narayan Ambulance Service</td>
+                <td>241, DPS Rd, Opp.M R Bangur Hospital, Tollygunge, Kolkata, West Bengal 700033</td>
+                <td>+91 9163635162</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td>Nirbhar Ambulance & Hearse Van service</td>
+                <td>Madhya Para, Shantiniketan Apartment, NIRBHAR VIP near Airport, Narayanpur Rd, Kaikhali, West Bengal 700052</td>
+                <td>+91 8582935898</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td>Panchmukhi Air and Train Ambulance Services</td>
+                <td> Lansdowne Pl, Dover Terrace, Ballygunge, Kolkata, West Bengal 700019</td>
+                <td>+91 </td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td>Pritam Ambulance Services</td>
+                <td> P-14/1, Jadavpur Station Rd, Jadavpur, Kolkata, West Bengal 700032</td>
+                <td>+91 7059484445</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td>RADHA KRISHNA AMBULANCE SERVICE</td>
+                <td>DK 7/3 , ANANDALAK HOSPITAL, Bidhannagar, Sector II, Kolkata, West Bengal 700091</td>
+                <td>+91 9830354617</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td>RAJKUMAR DAY NIGHT AMBULANCE SERVICE</td>
+                <td>MOHANPUR KUNDU BARI KALAYANI HIGH ROAD,NONA -CHANDANPUKUR, Kolkata, West Bengal 700122</td>
+                <td>+91 9831342643</td>
+            </tr>
+            <tr>
+                <td>31</td>
+                <td>St John Ambulance</td>
+                <td>41/1A, Townshend Rd, Paddapukur, Bhowanipore, Kolkata, West Bengal 700025</td>
+                <td>033 2486 3926</td>
+            </tr>
+            <tr>
                 <td>32</td>
-                <td>SSKM Hospital Blood Bank</td>
-                <td>Shikha Sarkar Rd, S.S.K.M. Hospital, Bhowanipore, Kolkata, West Bengal 700020</td>
-                <td>033 2204 1233</td>
-              </tr>
-              <tr>
-                  <td>33</td>
-                  <td>Swasti SRL</td>
-                  <td>21/1, Gora Chand Road, Entally, Kolkata - 700014, Near chitranjan hospital </td>
-                  <td>89266 21803</td>
-              </tr>
-              <tr>
-                  <td>34</td>
-                  <td>Swastik Blood Bank</td>
-                  <td>Hazra, Sarat Bose Road, Kalighat, Kolkata - 700026 </td>
-                  <td>99342 08632</td>
-                </tr>
+                <td>St. John Ambulance Association</td>
+                <td>Hem Chandra Naskar Rd, Phool Bagan, Kankurgachi, Kolkata, West Bengal 700010</td>
+                <td>+91 9830023653</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td>St. John Ambulance Association</td>
+                <td>71/1, Bagbazar St, Bag Bazar Colony, Baghbazar, Kolkata, West Bengal 700003</td>
+                <td>+91 9831520999</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td>Swargadut</td>
+                <td>RG KAR MEDICAL COLLEGE</td>
+                <td>+91 9830955965</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td>Tapas Ambulance</td>
+                <td> Mohanpur uttarpara Barrackpore, Kolkata, West Bengal 700121</td>
+                <td>+91 9830751716</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td>The Golden Hour</td>
+                <td>Near Kalighat Metro Station, Gariahat Rd, Kolkata, West Bengal 700029</td>
+                <td>+91 9831444428</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td>The Golden Hour </td>
+                <td>Gariahat, Near, Triangular Park, Kolkata, West Bengal 700029</td>
+                <td>+91 9748835218</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td>UTTAM AMBULANCE SERVICE</td>
+                <td> 57/6, Barrackpore Trunk Rd, Phool Bagan, Cossipore, Kolkata, West Bengal 700002</td>
+                <td>+91 94613424513</td>
+            </tr>  
           </table>
             </div>
             <div class="col-md-4">

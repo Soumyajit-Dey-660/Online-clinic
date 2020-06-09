@@ -42,22 +42,27 @@
     },
     {"tag": "blood_bank_details",
     "patterns": ["Lookup for blood bank details", "Searching for blood banks in kolkata", "I want to search blood bank contact details", "Blood banks list", "Location of blood banks"],
-    "responses": ["Go to this link to get the list of blood banks in kolkata |important_blood_bank_contacts", "You can find the list of blood banks in kolkata here |important_blood_bank_contacts"],
+    "responses": ["Go to this link to get the list of blood banks in kolkata |important_blood_bank_contacts", "You can find the list of blood banks in kolkata |important_blood_bank_contacts"],
     "context": ["search_blood_bank_details"]
     },
     {"tag": "hospital_details",
     "patterns": ["Lookup for hospital details", "Searching for hospitals in kolkata", "I want to search hospital contact details", "Hospitals list", "Location of hospitals"],
-    "responses": ["Go to this link to get the list of hospitals in kolkata |important_hospital_contacts", "You can find the list of hospitals in kolkata here |important_hospital_contacts"],
+    "responses": ["Go to this link to get the list of hospitals in kolkata |important_hospital_contacts", "You can find the list of hospitals in kolkata |important_hospital_contacts"],
     "context": ["search_hospital_details"]
+    },
+    {"tag": "ambulance details",
+    "patterns": ["Look up for ambulance details", "Searching for ambulances in kolkata", "Ambulance contact details", "Ambulance details"],
+    "responses": ["Go to this link to get the list of ambulances in kolkata |important_ambulance_contacts", "You can find the list of ambulances in kolkata |important_ambulance_contacts"],
+    "context": ["ambulance_details"]
     },
     {"tag": "list of doctors",
     "patterns": ["Show me the doctors available", "Show me the full list of doctors", "I want to search for a doctor", "Doctors list", "Who are the doctors"],
-    "responses": ["Go to this link to get the list of doctors |all_doctors", "You can find the list of doctors in life care here |all_doctors"],
+    "responses": ["Go to this link to get the list of doctors |all_doctors", "You can find the list of doctors in life care |all_doctors"],
     "context": ["search_for_doctors"]
     },
     {"tag": "specialist doctors",
     "patterns": ["How many types of specialist doctors do you have", "I want to choose a specialist doctor", "I want to choose a doctor"],
-    "responses": ["Go to this link to get the list of doctors |choose_doctor", "You can find the list of doctors in life care here |choose_doctor", "You can choose a doctor here |choose_doctor"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor", "You can find the list of doctors in life care |choose_doctor", "You can choose a doctor |choose_doctor"],
     "context": ["search_for_specialist_doctors"]
     },
     {"tag": "family physician doctors",
@@ -102,12 +107,12 @@
     },
     {"tag": "endocrinologist doctors",
     "patterns": ["Give me the list of endocrinologist doctors", "I want to choose a endocrinologist", "Who are the endocrinologists in life care"],
-    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Endocrinologist", "You can find the list of doctors in life care |choose_doctor(speciality{Endocrinologist", "You can choose a doctor here |choose_doctor(speciality{Endocrinologist"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Endocrinologist", "You can find the list of doctors in life care |choose_doctor(speciality{Endocrinologist", "You can choose a doctor |choose_doctor(speciality{Endocrinologist"],
     "context": ["search_for_endocrinologist"]
     },
     {"tag": "gastroenterologist doctors",
     "patterns": ["Give me the list of gastroenterologist doctors", "I want to choose a gastroenterologist", "Who are the gastroenterologists in life care"],
-    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Gastroenterologist", "You can find the list of doctors in life care |choose_doctor(speciality{Gastroenterologist", "You can choose a doctor here |choose_doctor(speciality{Gastroenterologist"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Gastroenterologist", "You can find the list of doctors in life care |choose_doctor(speciality{Gastroenterologist", "You can choose a doctor |choose_doctor(speciality{Gastroenterologist"],
     "context": ["search_for_gastroenterologist"]
     },
     {"tag": "infectious disease physician doctors",
@@ -117,7 +122,7 @@
     },
     {"tag": "nephrologist doctors",
     "patterns": ["Give me the list of nephrologist doctors", "I want to choose a nephrologist", "Who are the nephrologists in life care"],
-    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Nephrologist", "You can find the list of doctors in life care |choose_doctor(speciality{Nephrologist", "You can choose a doctor here |choose_doctor(speciality{Nephrologist"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Nephrologist", "You can find the list of doctors in life care |choose_doctor(speciality{Nephrologist", "You can choose a doctor |choose_doctor(speciality{Nephrologist"],
     "context": ["search_for_nephrologist"]
     },
     {"tag": "ophthalmologist doctors",
@@ -132,7 +137,7 @@
     },
     {"tag": "pulmonologist doctors",
     "patterns": ["Give me the list of pulmonologist doctors", "I want to choose a pulmonologist", "Who are the pulmonologists in life care"],
-    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Pulmonologist", "You can find the list of doctors in life care |choose_doctor(speciality{Pulmonologist", "You can choose a doctor here |choose_doctor(speciality{Pulmonologist"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Pulmonologist", "You can find the list of doctors in life care |choose_doctor(speciality{Pulmonologist", "You can choose a doctor |choose_doctor(speciality{Pulmonologist"],
     "context": ["search_for_pulmonologist"]
     },
     {"tag": "neurologist doctors",
@@ -267,8 +272,13 @@
     },
     {"tag": "view announcements",
     "patterns": ["I want to show the announcements made", "Show me the announcements", "What are the recent announcements", "Show me the latest offers"],
-    "responses": ["You can view the latest announcements |view_announcements", "Announcements history |view_announcements", "You can find all the announcements and offers here |view_announcements"],
+    "responses": ["You can view the latest announcements |view_announcements", "Announcements history |view_announcements", "You can find all the announcements and offers |view_announcements"],
     "context": ["view_announcements"]
+    },
+    {"tag": "order history",
+    "patterns": ["I want to view my order history", "Show me the order history", "Show me the order details", "My order details", "My order history"],
+    "responses": ["You can view your order history |order_history", "Your order history |order_history", "You can find all your orders|view_announcements"],
+    "context": ["order_history"]
     }
 ]
 }
