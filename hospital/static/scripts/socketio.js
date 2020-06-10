@@ -141,7 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 leaveRoom(room);
                 joinRoom(newRoom);
                 room = newRoom;
-                
+                if (room === 'Premium') {
+                    $('#premiumModal').modal('show');
+                }                
             }
         };
     });

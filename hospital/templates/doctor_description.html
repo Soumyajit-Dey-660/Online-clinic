@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Site Icons -->
-   <link rel="shortcut icon" href="static/images/fevicon.ico.png" type="image/x-icon" />
+   <link rel="shortcut icon" href="{{ url_for('static', filename='images/fevicon.ico.png') }}" type="image/x-icon" />
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -22,6 +22,44 @@
     {% else %}
         <title>Hospital</title>
     {% endif %}
+    <style>
+      .article-title {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size:24px;
+ margin-top: 5px; margin-bottom: 8px;
+        font-weight: normal;
+        color: #222;
+        
+      }
+      .article-metadata{
+        font-family: times, Times New Roman, times-roman, georgia, serif;
+        font-size: 25px;
+        line-height: 40px;
+        letter-spacing: -1px;
+        color: #444;
+      }
+      .article-content{
+        font-family: times, Times New Roman, times-roman, georgia, serif;
+        font-size: 18px;
+        line-height: 20px;
+        color: #444;
+      }
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
     {{ flask_util_js.js }}
 </head>
 <body>
@@ -69,62 +107,95 @@
                 <div class="article-metadata">
                     <h3 class="mr-2" >Doctor: {{ doc.username }}</h3>
                 </div>
-                <h4 class="article-title mr-2">Specialist: </h4><p>{{ doc.specialist }}</p>
-                <h4 class="article-title mr-2">Consultation fee: </h4><p>{{ doc.consultation_fee }}</p>
+                <div class="article-title mr-2">
+                <h4 style="display: inline;">Specialist: </h4><p style="display: inline; font-size: 18px; margin-left: 10px;"> {{ doc.specialist }}</p>
+              </div>
+              <div class="article-title mr-2">
+                <h4 class="article-title mr-2" style="display: inline;">Consultation fee: </h4><p style="display: inline; font-size: 18px; margin-left: 10px;">{{ doc.consultation_fee }}</p>
+              </div>
                 <h4 class="article-title mr-2">Achievements: </h4>
                 <p class="article-content mr-2">{{ doc.description }}</p>
                 <h4 class="article-title mr-2">Chamber Address: </h4>
                 <p class="article-content mr-2">{{ doc.location }}</p>
-                <h4 class="article-title">Timings: </h4>
-                {% if timing.monday != "" %}
-                <p class="article-content">Monday: {{ timing.monday }}</p>
-                {% else %}
-                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Monday</p>
-                {% endif %}
-                {% if timing.tuesday != "" %}
-                <p class="article-content">Tuesday: {{ timing.tuesday }}</p>
-                {% else %}
-                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Tuesday</p>
-                {% endif %}
-                {% if timing.wednesday != "" %}
-                <p class="article-content">Wednesday: {{ timing.wednesday }}</p>
-                {% else %}
-                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Wednesday</p>
-                {% endif %}
-                {% if timing.thursday != "" %}
-                <p class="article-content">Thursday: {{ timing.thursday }}</p>
-                {% else %}
-                <p class="article-content">Sorry, {{ doc.username }} don't attend patients on Thursday</p>
-                {% endif %}
-                {% if timing.friday != "" %}
-                <p class="article-content">Friday: {{ timing.friday }}</p>
-                {% else %}
-                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Friday</p>
-                {% endif %}
-                {% if timing.saturday != "" %}
-                <p class="article-content">Saturday: {{ timing.saturday }}</p>
-                {% else %}
-                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Saturday</p>
-                {% endif %}
-                {% if timing.sunday != "" %}
-                <p class="article-content">Sunday: {{ timing.monday }}</p>
-                {% else %}
-                <p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Sunday</p>
-                {% endif %}
+                <h4 class="article-title" style="margin-bottom: 10px;">Timings: </h4>
+                <table>
+                  <tr>
+                  <th>Day Of Week</th>
+                  <th>Timing</th>
+                  </tr>
+                  <tr>
+                    <td>Monday</td>
+                    {% if timing.monday != "" %}
+                    <td><p class="article-content">{{ timing.monday }}</p></td>
+                    {% else %}
+                    <td><p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Monday</p></td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Tuesday</td>
+                    {% if timing.tuesday != "" %}
+                    <td><p class="article-content">{{ timing.tuesday }}</p></td>
+                    {% else %}
+                    <td><p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Tuesday</p></td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Wednesday</td>
+                    {% if timing.wednesday != "" %}
+                    <td><p class="article-content">{{ timing.wednesday }}</p></td>
+                    {% else %}
+                    <td><p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Wednesday</p></td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Thursday</td>
+                    {% if timing.thursday != "" %}
+                    <td><p class="article-content">{{ timing.thursday }}</p></td>
+                    {% else %}
+                    <td><p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Thursday</p></td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Friday</td>
+                    {% if timing.friday != "" %}
+                    <td><p class="article-content">{{ timing.friday }}</p></td>
+                    {% else %}
+                    <td><p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Friday</p></td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Saturday</td>
+                    {% if timing.saturday != "" %}
+                    <td><p class="article-content">{{ timing.saturday }}</p></td>
+                    {% else %}
+                    <td><p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Saturday</p></td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Sunday</td>
+                    {% if timing.sunday != "" %}
+                    <td><p class="article-content">{{ timing.sunday }}</p></td>
+                    {% else %}
+                    <td><p class="article-content">Sorry, {{ doc.username }} doesn't attend patients on Sunday</p></td>
+                    {% endif %}
+                  </tr>
+                </table>
+                <div id="spacing" style="margin-bottom: 10px;">
+                </div>
                 </div>
             </article>
            </div>
         </div>
     </main>
     <button class="open-button" onclick="openForm()" style="right: 70px;">
-      <img src="static/images/lifebot.gif" alt="Avatar" class="avatar" style="right: 50px;">
+      <img src="{{ url_for('static', filename='images/lifebot.gif') }}" alt="Avatar" class="avatar" style="right: 50px;">
     </button>
     <div class="container" id="myForm" style="display: none; width: 500px;z-index: 9;position: fixed;right: 15px;bottom: 0px;border: none;">
       <div class="chat" style="display: flex;flex-direction: column;height: 80vh;width:490px;background: rgb(227, 230, 221);border-style: ridge;">
          <div class="chat-header">
             <div class="profile">
                <div class="left">
-                  <img src="static/images/lifebot.gif" class="pp" style="margin-bottom: 2px; width: 60px; height: 60px;">
+                  <img src="{{ url_for('static', filename='images/lifebot.gif') }}" class="pp" style="margin-bottom: 2px; width: 60px; height: 60px;">
                   <button style="border-radius: 50%; position: fixed; right: 20px; bottom: 750px; padding-right: 5px; margin-right: 2px;background-color: white; border-width: thin;" onclick="closeForm()"><i class="fa fa-close" style="margin-left: 5px ;font-size:20px; cursor: pointer; "></i></button>
                   <h3 style="margin-left: 18px; margin-bottom: 20px;">Life-Care Bot</h3>
                   <span style="padding-top: 6px;color: white; margin-left: 8px; margin-bottom: 16px; font-size: 15px;">Ask me questions about this website</span>

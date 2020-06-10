@@ -9,7 +9,8 @@
 
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <!-- Custom css for chat pages -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/chat_style.css') }}">
     </head>
@@ -86,6 +87,27 @@
 
         <!-- Get username -->
         <span id="get-username">{{ username }}</span>
+
+        <!-- Modal -->
+        <div class="modal fade" id="premiumModal" tabindex="-1" role="dialog" aria-labelledby="premiumModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="premiumModalLabel">Premium Chat Room</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                <p>Welcome to premium chat room. Here our doctors will be available on weekdays for certain time period only to answer your queries. Although it is a paid service.</p>
+                <p><strong>Please note:&nbsp;</strong>The functionality is not available yet.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-info " data-dismiss="modal" style="width: 72px; height: 39px; text-align: center; background-color: rgb(15, 150, 204)">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
         <!-- Custom chat JS -->
         <script src="{{ url_for('static', filename='scripts/chat_page.js') }}"></script>
