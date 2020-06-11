@@ -976,7 +976,7 @@ def update_medicine(medicine_name):
 @app.route('/all_doctors', methods=['GET', 'POST'])
 def all_doctors():
     page = request.args.get('page', 1, type=int)
-    doctors = Doctor.query.paginate(page=page, per_page=15)
+    doctors = Doctor.query.order_by(Doctor.specialist.asc()).paginate(page=page, per_page=15)
     return render_template('all_doctors.html', title="All doctors", doctors=doctors)
 
 

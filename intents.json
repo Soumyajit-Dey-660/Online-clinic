@@ -145,6 +145,11 @@
     "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Neurologist", "You can find the list of doctors in life care |choose_doctor(speciality{Neurologist", "You can choose a doctor |choose_doctor(speciality{Neurologist"],
     "context": ["search_for_neurologist"]
     },
+    {"tag": "dentist doctors",
+    "patterns": ["Give me the list of dentist doctors", "I want to choose a dentist", "Who are the dentists in life care"],
+    "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Dentist", "You can find the list of doctors in life care |choose_doctor(speciality{Dentist", "You can choose a doctor |choose_doctor(speciality{Dentist"],
+    "context": ["search_for_dentist"]
+    },
     {"tag": "physician executive doctors",
     "patterns": ["Give me the list of physician executive doctors", "I want to choose a physician executive", "Who are the physician executives in life care"],
     "responses": ["Go to this link to get the list of doctors |choose_doctor(speciality{Physician Executive", "You can find the list of doctors in life care |choose_doctor(speciality{Physician Executive", "You can choose a doctor |choose_doctor(speciality{Physician Executive"],

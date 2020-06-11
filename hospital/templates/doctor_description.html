@@ -105,17 +105,17 @@
                 <img class="rounded float-left article-img" src="{{ url_for('static', filename='profile_pics/' + doc.image_file) }}">
                 <div class="media-body">
                 <div class="article-metadata">
-                    <h3 class="mr-2" >Doctor: {{ doc.username }}</h3>
+                    <h3 class="mr-2" >{{ doc.username }}</h3>
                 </div>
                 <div class="article-title mr-2">
-                <h4 style="display: inline;">Specialist: </h4><p style="display: inline; font-size: 18px; margin-left: 10px;"> {{ doc.specialist }}</p>
+                <p style="display: inline; font-size: 18px;"> {{ doc.specialist }}</p>
               </div>
               <div class="article-title mr-2">
                 <h4 class="article-title mr-2" style="display: inline;">Consultation fee: </h4><p style="display: inline; font-size: 18px; margin-left: 10px;">{{ doc.consultation_fee }}</p>
               </div>
-                <h4 class="article-title mr-2">Achievements: </h4>
+                <h4 class="article-title mr-2">Description: </h4>
                 <p class="article-content mr-2">{{ doc.description }}</p>
-                <h4 class="article-title mr-2">Chamber Address: </h4>
+                <h4 class="article-title mr-2">Address: </h4>
                 <p class="article-content mr-2">{{ doc.location }}</p>
                 <h4 class="article-title" style="margin-bottom: 10px;">Timings: </h4>
                 <table>

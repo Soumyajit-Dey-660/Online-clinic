@@ -84,7 +84,7 @@
             <h3 class="mb-4">All doctors list</h3> 
             <table>
               <tr>
-                <th>Doctor name</th>
+                <th>Doctor</th>
                 <th>Specialist</th>
                 <th>Location</th>
                 <th>Consultancy fee</th>
@@ -101,9 +101,9 @@
           {% for page_num in doctors.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
                 {% if doctors.page == page_num %}
-                    <a class="btn btn-info mb-4 mt-2" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
+                    <a class="btn btn-info mb-4 mt-2 mr-2" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
                 {% else %}
-                    <a class="btn btn-outline-info mb-4 mt-2" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
+                    <a class="btn btn-outline-info mb-4 mt-2 mr-2" href="{{ url_for('all_doctors', page=page_num) }}">{{ page_num }}</a>
                 {% endif %}
             {% else %}
                 ...

@@ -10,9 +10,9 @@ from hospital import app
 from hospital.models import User, Appointment, Doctor, Eprescription, Medicine, Admin
 
 
-specialist_choices = [('Family Physician', 'Family Physician'), ('Internal Medicine Physician', 'Internal Medicine Physician'), ('Pediatrician', 'Pediatrician'), ('Obstetrician/Gynecologist', 'Obstetrician/Gynecologist'),
-                         ('Surgeon', 'Surgeon'), ('Psychiatrist', 'Psychiatrist'), ('Cardiologist', 'Cardiologist'), ('Dermatologist', 'Dermatologist'), ('Endocrinologist', 'Endocrinologist'), ('Gastroenterologist', 'Gastroenterologist'), 
-                         ('Gastroenterologist', 'Gastroenterologist'), ('Infectious Disease Physician', 'Infectious Disease Physician'), ('Nephrologist', 'Nephrologist'), ('Ophthalmologist', 'Ophthalmologist'), ('Otolaryngologist', 'Otolaryngologist'),
+specialist_choices = [('Family Physician', 'Family Physician'), ('Internal Medicine Physician', 'Internal Medicine Physician'), ('Pediatrician', 'Pediatrician'), ('Gynecologist', 'Gynecologist'),
+                         ('Surgeon', 'Surgeon'), ('Psychiatrist', 'Psychiatrist'), ('Cardiologist', 'Cardiologist'), ('Dentist', 'Dentist'), ('Dermatologist', 'Dermatologist'), ('Endocrinologist', 'Endocrinologist'), ('Gastroenterologist', 'Gastroenterologist'), 
+                         ('Infectious Disease Physician', 'Infectious Disease Physician'), ('Nephrologist', 'Nephrologist'), ('Ophthalmologist', 'Ophthalmologist'), ('Otolaryngologist', 'Otolaryngologist'),
                          ('Pulmonologist', 'Pulmonologist'), ('Neurologist', 'Neurologist'), ('Physician Executive', 'Physician Executive'), ('Radiologist', 'Radiologist'), ('Anesthesiologist', 'Anesthesiologist'), ('Oncologist', 'Oncologist')]
 specialist_choices.sort()
 
