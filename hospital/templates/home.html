@@ -69,7 +69,7 @@
                   <div class="header-info">
                      <div class="info-inner">
                         <span class="icontop"><img src="static/images/phone-icon.png" alt="#"></span>
-                        <span class="iconcont"><a href="tel:8001114444">800111444</a></span>	
+                        <span class="iconcont"><a href="tel:+918100380370">8100380370</a></span>	
                      </div>
                      <div class="info-inner">
                         <span class="icontop"><i class="fa fa-envelope" aria-hidden="true"></i></span>
@@ -162,8 +162,8 @@
                   <div class="service-time one" style="background:#2895f1;">
                      <span class="info-icon"><i class="fa fa-ambulance" aria-hidden="true"></i></span>
                      <h3>Emergency Case</h3>
-                     <p>During any sort of emergency you can dial on the toll free number below, aid would reach you within 30 minutes assured.</p>
-                      <p>11204050</p>
+                     <p>During any sort of emergency you can search for nearby hospitals, blood banks and pharmacies as well.</p>
+                      <p>You can find the list of all hospitals, blood banks and ambulances in our <a style="color: white;" href="{{ url_for('necessary_information') }}"><b>necessary information </b></a>section.</p>
                   </div>
                </div>
             </div>
@@ -171,12 +171,12 @@
                <div class="row">
                   <div class="service-time middle" style="background:#0071d1;">
                      <span class="info-icon"><i class="fa fa-clock-o" aria-hidden="true"></i></span> 
-                     <h3>Working Hours</h3>
+                     <h3>Our Services</h3>
                      <div class="time-table-section">
                         <ul>
-                           <li><span class="left">Monday - Friday</span><span class="right">8.00 – 18.00</span></li>
-                           <li><span class="left">Saturday</span><span class="right">8.00 – 16.00</span></li>
-                           <li><span class="left">Sunday</span><span class="right">8.00 – 13.00</span></li>
+                           <li><span class="left" style="font-size: 16px;">Book appointment</span><span class="right" style="font-size: 16px;">Chat</span></li>
+                           <li><span class="left" style="font-size: 16px;">Medicine delivery in</span><span class="right" style="font-size: 16px;">2 Days</span></li>
+                           <li><span class="left" style="font-size: 16px;">Convinient yet simple</span><span class="right" style="font-size: 16px;">24x7</span></li>
                         </ul>
                      </div>
                   </div>
@@ -187,7 +187,9 @@
                   <div class="service-time three" style="background:#0060b1;">
                      <span class="info-icon"><i class="fa fa-hospital-o" aria-hidden="true"></i></span>
                      <h3>Chemist and Druggist</h3>
-                     <p>We avail all medicine and drugs prescribed by the doctor at our clinics as well as at your doorstep.</p>
+                     <p>E-prescription facility.</p>
+                     <p>We avail all medicine and drugs prescribed by the doctor at your doorstep.</p>
+                     <p>Get flat 30% off on your first order and 20% off afterwards.</p>
                   </div>
                </div>
             </div>
@@ -414,10 +416,10 @@
                         <img src="static/images/shutterstock_287380919.jpg" alt="" class="img-responsive img-rounded">
                         <div class="widget-title">
                             <h3>Tushar Vora</h3>
-                            <small>Child Specialist</small>
+                            <small><a href="{{ url_for('specialist_doctor', speciality='Cardiologist') }}"> Cardiologist </a></small>
                         </div>
                         <!-- end title -->
-                        <p>Hello guys, I am Tushar from Kolkata. I am a child specialist at Life care.</p>
+                        <p>Hello guys, I am Tushar from Kolkata. I am with Life care for 4 years.</p>
 
                         <div class="footer-social">
                             <a href="#" class="btn grd1"><i class="fa fa-facebook"></i></a>
@@ -433,10 +435,10 @@
                         <img src="static/images/preeti.jfif" alt="" class="img-responsive img-rounded">
                         <div class="widget-title">
                             <h3>Preeti Singhania</h3>
-                            <small>Internal Diseases</small>
+                            <small> <a href="{{ url_for('specialist_doctor', speciality='Internal Medicine Physician') }}">Internal Medicine Physician</a></small>
                         </div>
                         <!-- end title -->
-                        <p>Hello guys, I am Preeti from Kolkata. I am a surgeon at Life Care.</p>
+                        <p>Hello guys, I am Preeti from Kolkata. I am a internal medicine physician.</p>
 
                         <div class="footer-social">
                             <a href="#" class="btn grd1"><i class="fa fa-facebook"></i></a>
@@ -452,10 +454,10 @@
                         <img src="static/images/varsha.jfif" alt="" class="img-responsive img-rounded">
                         <div class="widget-title">
                             <h3>Varsha Shaw</h3>
-                            <small>Orthopedics Expert</small>
+                            <small><a href="{{ url_for('specialist_doctor', speciality='Psychiatrist') }}">Psychiatrist</a></small>
                         </div>
                         <!-- end title -->
-                        <p>Hello guys, I am Varsha from Kolkata. I am a senior cardiologist at life care.</p>
+                        <p>Hello guys, I am Varsha from Kolkata. I am a Psychiatrist and have been working with Life Care for 4 years now.</p>
 
                         <div class="footer-social">
                             <a href="#" class="btn grd1"><i class="fa fa-facebook"></i></a>
@@ -467,7 +469,7 @@
                 </div><!-- end col -->
 
             </div><!-- end row -->
-            <a href="{{ url_for('all_doctors') }}" class="card-text" style="text-align: center;">See the full doctors list</a>
+            <a href="{{ url_for('all_doctors') }}" class="btn btn-secondary btn-sm mt-3 mb-3" style="font-size: 16px ;background-color: rgb(15, 150, 204); border-color: rgb(15, 150, 204); color:white;">&nbsp;Full doctors list&nbsp;</a>
         </div><!-- end container -->
     </div>
 	  
@@ -608,12 +610,12 @@
                <div class="col-md-6 col-sm-12 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
                   <div class="testimonial clearfix">
                      <div class="desc">
-                        <h3><i class="fa fa-quote-left"></i> Life care is an amazing clinic! Wonderful Support!</h3>
-                        <p class="lead">They have got my treatment on time with the competition with  highly skilled, and experienced & professional team.</p>
+                        <h3><i class="fa fa-quote-left"></i> Life care is an amazing service!</h3>
+                        <p class="lead">Life Care has an simple interface for appointment booking and there were no issues regarding my booking updation. No hastle at the doctor's chamber as well.</p>
                      </div>
                      <div class="testi-meta">
                         <img src="static/images/sbi.jfif" alt="" class="img-responsive alignleft">
-                        <h4>Mayur Vora <small>- Manager of SBI</small></h4>
+                        <h4>Mayur Vora <small>- An IT employee</small></h4>
                      </div>
                      <!-- end testi-meta -->
                   </div>
@@ -623,12 +625,12 @@
                <div class="col-md-6 col-sm-12 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.4s">
                   <div class="testimonial clearfix">
                      <div class="desc">
-                        <h3><i class="fa fa-quote-left"></i> Appreciating the team</h3>
-                        <p class="lead">They did my treatment with utmost care and comfortable ambience .</p>
+                        <h3><i class="fa fa-quote-left"></i> Life Saver!</h3>
+                        <p class="lead">I had an medical emergency where I had to book an ambulance as quickly as possible and Life Care came to the rescue. They have all the necessary information available on their website.</p>
                      </div>
                      <div class="testi-meta">
                         <img src="static/images/dubey.jfif" alt="" class="img-responsive alignleft">
-                        <h4>Ashish Dubey <small>- CEO Britanca</small></h4>
+                        <h4>Sushant Dubey <small>- Businessman</small></h4>
                      </div>
                      <!-- end testi-meta -->
                   </div>
@@ -642,12 +644,12 @@
                <div class="col-md-6 col-sm-12 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.6s">
                   <div class="testimonial clearfix">
                      <div class="desc">
-                        <h3><i class="fa fa-quote-left"></i> The amazing clinic! Wonderful Support!</h3>
-                        <p class="lead">Life care provides full child care facility. My child was suffering through acute stomach aches. They provided best medicinal support and perfect care and ensured quicket reecovery .</p>
+                        <h3><i class="fa fa-quote-left"></i>Amazing service!</h3>
+                        <p class="lead">I have never faced an issue with ordering medicine from Life Care. Most of your desired medicines are available on their site and on time delivery as well. Great job.</p>
                      </div>
                      <div class="testi-meta">
                         <img src="static/images/parent.jfif" alt="" class="img-responsive alignleft">
-                        <h4>Priyanka Jain <small>- Parent</small></h4>
+                        <h4>Priyanka Ghosh <small>- Housewife</small></h4>
                      </div>
                      <!-- end testi-meta -->
                   </div>
@@ -657,8 +659,8 @@
                <div class="col-md-6 col-sm-12 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
                   <div class="testimonial clearfix">
                      <div class="desc">
-                        <h3><i class="fa fa-quote-left"></i> Thanks for Help us!</h3>
-                        <p class="lead">They have got my project on time with the competition with a sed highly skilled, and experienced & professional team.</p>
+                        <h3><i class="fa fa-quote-left"></i>Simple and Convinient!</h3>
+                        <p class="lead">I was having a minor stomach ache, not that serious to visit a doctor. Life Care made the solution easy for me. I consulted a general physician through their chat facility and got the medicines from a nearby pharmacy which Life Care can help you find. AMAZING!</p>
                      </div>
                      <div class="testi-meta">
                         <img src="static/images/testi_01.png" alt="" class="img-responsive alignleft">
@@ -734,7 +736,7 @@
                      <h3>CONTACT US</h3>
                      <p><i class="fa fa-map-marker" aria-hidden="true"></i> 39/2A Ballygunge street, kolkata 700050</p>
                      <p><i class="fa fa-paper-plane" aria-hidden="true"></i> info@gmail.com</p>
-                     <p><i class="fa fa-phone" aria-hidden="true"></i> (+1) 800 123 456</p>
+                     <p><i class="fa fa-phone" aria-hidden="true"></i> (+91) 8100380370</p>
                   </div>
                </div>
                <div class="col-md-4">

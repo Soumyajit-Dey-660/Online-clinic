@@ -352,8 +352,12 @@ def new_appointment():
     form.doctor.choices = all_docs
     if form.validate_on_submit():
         today = date.today()
+        date_after_three_months = today + timedelta(days=90)
         if form.date.data <= today:
             flash("You cannot choose today's or any previous date!", 'danger')
+            return redirect(url_for('new_appointment'))
+        if form.date.data >= date_after_three_months:
+            flash("You cannot book an appointment 3 months in advance!", 'danger')
             return redirect(url_for('new_appointment'))
         else:
             name = form.doctor.data
