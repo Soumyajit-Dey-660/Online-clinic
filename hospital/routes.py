@@ -841,7 +841,7 @@ def place_order():
             db.session.add(my_ordered_items)
             db.session.delete(item)
     db.session.commit()
-    # send_order_acknowledgement(current_user)
+    send_order_acknowledgement(current_user)
     flash('Your order has been placed!', 'success')
     return render_template('order_acknowledgement.html', title="Order Placed Successfully")
 

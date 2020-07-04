@@ -1,5 +1,5 @@
-{% extends "layout.html" %} {% block content %} {% if announcements != None %}
-{% for announcement in announcements.items %}
+{% extends "layout.html" %} {% block content %} {% if announcements.total == 0
+%} {% for announcement in announcements.items %}
 <h3 class="mb-3">Announcement by {{ announcement.admin.username }}</h3>
 <article class="media content-section">
   <img
