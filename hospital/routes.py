@@ -173,7 +173,7 @@ def user_register():
         db.session.add(cart)
         db.session.commit()
         user = User.query.filter_by(email=form.email.data).first()
-        #send_registration_mail(user)
+        send_registration_mail(user)
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('user_register.html', title='User-Register', form=form)
